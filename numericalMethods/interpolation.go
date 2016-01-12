@@ -1,10 +1,6 @@
-// package numericalMethods
-
-package main
+package numericalMethods
 
 import "errors"
-import "log"
-import "fmt"
 
 // NewtonDividedDifference is for calculating the coefficients for newton's divided-difference interpolating polynomial
 func NewtonDividedDifference(xValues []float64, functionValues []float64) ([]float64, error) {
@@ -27,16 +23,4 @@ func NewtonDividedDifference(xValues []float64, functionValues []float64) ([]flo
 	}
 
 	return functionValues, nil
-}
-
-func main() {
-	xValues := []float64{1, 1.3, 1.6, 1.9, 2.2}
-	functionValues := []float64{0.7651977, 0.6200860, 0.4554022, 0.2818186, 0.1103623}
-	results, err := NewtonDividedDifference(xValues, functionValues)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println(results)
 }
