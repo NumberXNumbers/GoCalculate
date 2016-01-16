@@ -1,4 +1,10 @@
-package numericalMethods
+//package numericalMethods
+package main
+
+import (
+       "fmt"
+       "math"
+)
 
 // Euler1D is for solving the numerical integration 1D euler method
 func Euler1D(a float64, b float64, N int, initValue float64, f func(float64, float64) float64) float64 {
@@ -39,4 +45,8 @@ func SimpsonRule(a float64, b float64, N int, f func(float64) float64) float64 {
 	 x += h
      }
      return h/6 * omega
+}
+
+func main() {
+     fmt.Printf("%f\n", SimpsonRule(0, 1, 10000, func (x float64) float64 { return math.Sqrt(x+1) }))
 }
