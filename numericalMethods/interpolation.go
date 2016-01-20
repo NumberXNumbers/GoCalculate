@@ -140,7 +140,6 @@ func NaturalCubicSpline(xValues []float64, functionValues []float64) ([][]float6
 	alpha := make([]float64, size-1)
 
 	for i := 1; i < size-1; i++ {
-		// fmt.Printf("%v", i)
 		alpha[i] = 3.0*(functionValues[i+1]-functionValues[i])/stepLengthSet[i] - 3.0*(functionValues[i]-functionValues[i-1])/stepLengthSet[i-1]
 	}
 
@@ -173,7 +172,75 @@ func NaturalCubicSpline(xValues []float64, functionValues []float64) ([][]float6
 
 	for i := sizeSolutionSet - 1; i >= 0; i-- {
 		solutionSetC[i] = solvingSetC[i] - solvingSetB[i]*solutionSetC[i+1]
-		solutionSetB[i] = (functionValues[i+1]-functionValues[i])/stepLengthSet[i] - stepLengthSet[i]*(solutionSetC[i+1]+2*solutionSetC[i])/3.0
+		solutionSetB[i] = (functionValues[i+1]-functionValues[i])/stepLengthSet[i] - stepLengthSet[i]*(solutionSetC[i+1]+2.0*solutionSetC[i])/3.0
+		solutionSetD[i] = (solutionSetC[i+1] - solutionSetC[i]) / (3.0 * stepLengthSet[i])
+	}
+
+	solutionSetC = solutionSetC[:size-1]
+
+	solutionTable := [][]float64{}
+
+	solutionTable = append(solutionTable, solutionSetA)
+	solutionTable = append(solutionTable, solutionSetB)
+	solutionTable = append(solutionTable, solutionSetC)
+	solutionTable = append(solutionTable, solutionSetD)
+
+	return solutionTable, nil
+}
+
+// ClampedCubicSpline is for finding the coefficients solution set of the clamped cubic spline
+func ClampedCubicSpline(xValues []float64, functionValues []float64, df0 float64, dfN float64) ([][]float64, error) {
+	size := len(xValues)
+
+	if size != len(functionValues) {
+		return nil, errors.New("Length of x values array and function values array does not match")
+	}
+
+	stepLengthSet := make([]float64, size-1)
+
+	for i := 0; i < size-1; i++ {
+		stepLengthSet[i] = xValues[i+1] - xValues[i]
+	}
+
+	alpha := make([]float64, size)
+
+	alpha[0] = 3.0*(functionValues[1]-functionValues[0])/stepLengthSet[0] - 3.0*df0
+	alpha[size-1] = 3.0*dfN - 3.0*(functionValues[size-1]-functionValues[size-2])/stepLengthSet[size-2]
+
+	for i := 1; i < size-1; i++ {
+		alpha[i] = 3.0*(functionValues[i+1]-functionValues[i])/stepLengthSet[i] - 3.0*(functionValues[i]-functionValues[i-1])/stepLengthSet[i-1]
+	}
+
+	solvingSetA := make([]float64, size)
+	solvingSetB := make([]float64, size-1)
+	solvingSetC := make([]float64, size)
+
+	solvingSetA[0] = 2.0 * stepLengthSet[0]
+	solvingSetB[0] = 0.5
+	solvingSetC[0] = alpha[0] / solvingSetA[0]
+
+	for i := 1; i < size-1; i++ {
+		solvingSetA[i] = 2.0*(xValues[i+1]-xValues[i-1]) - stepLengthSet[i-1]*solvingSetB[i-1]
+		solvingSetB[i] = stepLengthSet[i] / solvingSetA[i]
+		solvingSetC[i] = (alpha[i] - stepLengthSet[i-1]*solvingSetC[i-1]) / solvingSetA[i]
+	}
+
+	solvingSetA[size-1] = stepLengthSet[size-2] * (2.0 - solvingSetB[size-2])
+	solvingSetC[size-1] = (alpha[size-1] - stepLengthSet[size-2]*solvingSetC[size-2]) / solvingSetA[size-1]
+
+	var solutionSetA []float64
+	solutionSetA = functionValues[:size-1]
+	solutionSetB := make([]float64, size-1)
+	solutionSetC := make([]float64, size)
+	solutionSetD := make([]float64, size-1)
+
+	solutionSetC[size-1] = solvingSetC[size-1]
+
+	sizeSolutionSet := len(solutionSetB)
+
+	for i := sizeSolutionSet - 1; i >= 0; i-- {
+		solutionSetC[i] = solvingSetC[i] - solvingSetB[i]*solutionSetC[i+1]
+		solutionSetB[i] = (functionValues[i+1]-functionValues[i])/stepLengthSet[i] - stepLengthSet[i]*(solutionSetC[i+1]+2.0*solutionSetC[i])/3.0
 		solutionSetD[i] = (solutionSetC[i+1] - solutionSetC[i]) / (3.0 * stepLengthSet[i])
 	}
 
