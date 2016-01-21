@@ -255,3 +255,33 @@ func ClampedCubicSpline(xValues []float64, functionValues []float64, df0 float64
 
 	return solutionTable, nil
 }
+
+// BezierCurve is for constructing the cubic bezier curves in parametric form
+func BezierCurve(endpoints [][2]float64, leftGuidepoints [][2]float64, rightGuidepoints [][2]float64) ([][][4]float64, error) {
+	size := len(endpoints)
+
+	if size-1 != len(leftGuidepoints) && size-1 != len(rightGuidepoints) {
+		return nil, errors.New("Endpoints lengths are not correct")
+	}
+
+	solutionSetA := make([][4]float64, size-1)
+	solutionSetB := make([][4]float64, size-1)
+
+	for i := 0; i < size-1; i++ {
+		solutionSetA[i][0] = endpoints[i][0]
+		solutionSetB[i][0] = endpoints[i][1]
+		solutionSetA[i][1] = 3.0 * (leftGuidepoints[i][0] - endpoints[i][0])
+		solutionSetB[i][1] = 3.0 * (leftGuidepoints[i][1] - endpoints[i][1])
+		solutionSetA[i][2] = 3.0 * (endpoints[i][0] + rightGuidepoints[i][0] - 2.0*leftGuidepoints[i][0])
+		solutionSetB[i][2] = 3.0 * (endpoints[i][1] + rightGuidepoints[i][1] - 2.0*leftGuidepoints[i][1])
+		solutionSetA[i][3] = endpoints[i+1][0] - endpoints[i][0] + 3.0*(leftGuidepoints[i][0]-rightGuidepoints[i][0])
+		solutionSetB[i][3] = endpoints[i+1][1] - endpoints[i][1] + 3.0*(leftGuidepoints[i][1]-rightGuidepoints[i][1])
+	}
+
+	solutionTable := make([][][4]float64, 2)
+
+	solutionTable[0] = solutionSetA
+	solutionTable[1] = solutionSetB
+
+	return solutionTable, nil
+}
