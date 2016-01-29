@@ -5,24 +5,18 @@ import (
 	"reflect"
 )
 
-// Matrix is the base matirx interface.
+// Matrix is the main matirx interface for real matrices.
 type Matrix interface {
-	// Returns dimensions of Matrix.
-	Size() (rows, cols int)
-
-	// Returns number of elements of Matrix
-	NumElements() int
-
-	// Returns true is a Matrix is square, Else false
-	IsSquare() bool
+	baseMatrix
 
 	// Type of Matrix
-	Type() reflect.Type
-}
+	Type() reflect.Kind
 
-// MatrixReal is a Matrix with only real Elements
-type MatrixReal interface {
-	Matrix
+	// Transpose of a Matrix
+	Trans() Matrix
+
+	// Returns all Elements
+	GetElements() [][]float64
 
 	// Trace of Matrix. Returns error if matrix is not square
 	Tr() (float64, error)
@@ -31,263 +25,126 @@ type MatrixReal interface {
 	// Det() (float64, error)
 
 	// TODO Inverse of Matrix. Returns error if there is no inverse
-	// Inv() (float64, error)
-}
+	// Inv() (MatrixReal, error)
 
-// MatrixComplex is a Matrix with complex values.
-type MatrixComplex interface {
-	Matrix
+	// Get element at location (row, col)
+	Get(row int, col int) float64
 
-	// Trace of Matrix. Returns error if matrix is not square
-	Tr() (complex128, error)
-
-	// TODO Determinate of Matrix. Returns error is there is no determinate
-	// Det() (complex128, error)
-
-	// TODO Inverse of Matrix. Returns error if there is no inverse
-	// Inv() (complex128, error)
-}
-
-// MatrixInt is a MatrixReal with int elements
-type MatrixInt interface {
-	MatrixReal
-
-	// Get Method for int MatrixInt
-	Get(row int, col int) (int, error)
-}
-
-// MatrixFloat32 is a MatrixReal with float32 elements
-type MatrixFloat32 interface {
-	MatrixReal
-
-	// Get Method for int MatrixFloat32
-	Get(row int, col int) (float32, error)
-}
-
-// MatrixFloat64 is a MatrixReal with float64 elements
-type MatrixFloat64 interface {
-	MatrixReal
-
-	// Get Method for int MatrixFloat64
-	Get(row int, col int) (float64, error)
-}
-
-// MatrixComplex64 is a MatrixComplex with complex64 elements
-type MatrixComplex64 interface {
-	MatrixComplex
-
-	// Get Method for int MatrixComplex64
-	Get(row int, col int) (complex64, error)
-}
-
-// MatrixComplex128 is a MatrixComplex with complex128 elements
-type MatrixComplex128 interface {
-	MatrixComplex
-
-	// Get Method for int MatrixComplex128
-	Get(row int, col int) (complex128, error)
+	// Set element at location (row, col)
+	Set(row int, col int, value float64)
 }
 
 type matrix struct {
-	numRows int
-	numCols int
+	numRows    int
+	numCols    int
+	matrixType reflect.Kind
+	elements   [][]float64
 }
 
-type matrixInt struct {
-	matrix
-	elements [][]int
-}
-
-type matrixFloat32 struct {
-	matrix
-	elements [][]float32
-}
-
-type matrixFloat64 struct {
-	matrix
-	elements [][]float64
-}
-
-type matrixComplex64 struct {
-	matrix
-	elements [][]complex64
-}
-
-type matrixComplex128 struct {
-	matrix
-	elements [][]complex128
-}
-
-// implementation of Size methods
+// implementation of Size method
 func (m matrix) Size() (rows, cols int) { return m.numRows, m.numCols }
 
-// implementation of NumElements methods
+// implementation of NumElements method
 func (m matrix) NumElements() int { return m.numCols * m.numRows }
 
-// implementation of Type methods
-func (m matrixInt) Type() reflect.Type        { return reflect.TypeOf(m.elements) }
-func (m matrixFloat32) Type() reflect.Type    { return reflect.TypeOf(m.elements) }
-func (m matrixFloat64) Type() reflect.Type    { return reflect.TypeOf(m.elements) }
-func (m matrixComplex64) Type() reflect.Type  { return reflect.TypeOf(m.elements) }
-func (m matrixComplex128) Type() reflect.Type { return reflect.TypeOf(m.elements) }
+// implementation of Type method
+func (m matrix) Type() reflect.Kind { return m.matrixType }
 
-// implementation of IsSquare methods
-func (m matrix) IsSquare() bool {
-	if m.numCols == m.numRows {
-		return true
-	}
+// implementation of GetRows method
+func (m matrix) GetNumRows() int { return m.numRows }
 
-	return false
+// implementation of GetColumns method
+func (m matrix) GetNumCols() int { return m.numCols }
+
+// implementation of IsSquare method
+func (m matrix) IsSquare() bool { return m.GetNumCols() == m.GetNumRows() }
+
+// implementation of GetElements method
+func (m matrix) GetElements() [][]float64 { return m.elements }
+
+// implementation of Get method
+func (m matrix) Get(row int, col int) float64 { return m.elements[row][col] }
+
+// implementation of Set method
+func (m matrix) Set(row int, col int, value float64) { m.elements[row][col] = value }
+
+// implementation of IsIdentity method
+func (m matrix) IsIdentity() bool {
+	return reflect.DeepEqual(m, MakeIdentityMatrix(m.GetNumRows()))
 }
 
-// implementation of Get methods
-func (m matrixInt) Get(row int, col int) (int, error) {
-	var element int
-
-	if row >= m.numRows || row < 0 {
-		return element, errors.New("Row value is out of bounds")
-	}
-
-	if col >= m.numCols || col < 0 {
-		return element, errors.New("Column value is out of bounds")
-	}
-
-	return m.elements[row][col], nil
-}
-
-func (m matrixFloat32) Get(row int, col int) (float32, error) {
-	var element float32
-
-	if row >= m.numRows || row < 0 {
-		return element, errors.New("Row value is out of bounds")
-	}
-
-	if col >= m.numCols || col < 0 {
-		return element, errors.New("Column value is out of bounds")
-	}
-
-	return m.elements[row][col], nil
-}
-
-func (m matrixFloat64) Get(row int, col int) (float64, error) {
-	var element float64
-
-	if row >= m.numRows || row < 0 {
-		return element, errors.New("Row value is out of bounds")
-	}
-
-	if col >= m.numCols || col < 0 {
-		return element, errors.New("Column value is out of bounds")
-	}
-
-	return m.elements[row][col], nil
-}
-
-func (m matrixComplex64) Get(row int, col int) (complex64, error) {
-	var element complex64
-
-	if row >= m.numRows || row < 0 {
-		return element, errors.New("Row value is out of bounds")
-	}
-
-	if col >= m.numCols || col < 0 {
-		return element, errors.New("Column value is out of bounds")
-	}
-
-	return m.elements[row][col], nil
-}
-
-func (m matrixComplex128) Get(row int, col int) (complex128, error) {
-	var element complex128
-
-	if row >= m.numRows || row < 0 {
-		return element, errors.New("Row value is out of bounds")
-	}
-
-	if col >= m.numCols || col < 0 {
-		return element, errors.New("Column value is out of bounds")
-	}
-
-	return m.elements[row][col], nil
-}
-
-// implementation of Tr methods
-func (m matrixInt) Tr() (float64, error) {
+// implementation of Tr method
+func (m matrix) Tr() (float64, error) {
 	var trace float64
-	var currentValue int
 
 	if !m.IsSquare() {
 		return trace, errors.New("Matrix is not square")
 	}
 
 	for i := 0; i < len(m.elements); i++ {
-		currentValue, _ = m.Get(i, i)
-		trace += float64(currentValue)
+		trace += m.Get(i, i)
 	}
 
 	return trace, nil
 }
 
-func (m matrixFloat32) Tr() (float64, error) {
-	var trace float64
-	var currentValue float32
+// implementation of Trans method
+func (m matrix) Trans() Matrix {
+	transMatrixNumCols := m.numRows
+	transMatrixNumRows := m.numCols
+	transMatrixType := m.Type()
+	transMatrixElements := make([][]float64, transMatrixNumRows)
 
-	if !m.IsSquare() {
-		return trace, errors.New("Matrix is not square")
+	for i := 0; i < len(transMatrixElements); i++ {
+		transMatrixElements[i] = make([]float64, transMatrixNumCols)
 	}
 
-	for i := 0; i < len(m.elements); i++ {
-		currentValue, _ = m.Get(i, i)
-		trace += float64(currentValue)
+	for i := 0; i < transMatrixNumRows; i++ {
+		for j := 0; j < transMatrixNumCols; j++ {
+			transMatrixElements[i][j] = m.Get(j, i)
+		}
 	}
 
-	return trace, nil
+	transposeMatrix := MakeMatrixWithElements(transMatrixNumRows, transMatrixNumCols, transMatrixType, transMatrixElements)
+
+	return transposeMatrix
 }
 
-func (m matrixFloat64) Tr() (float64, error) {
-	var trace float64
-	var currentValue float64
+// MakeMatrix returns a new matrix of type Matrix
+func MakeMatrix(rows int, cols int, matrixType reflect.Kind) Matrix {
+	matrix := new(matrix)
+	matrix.numRows = rows
+	matrix.numCols = cols
+	matrix.matrixType = matrixType
 
-	if !m.IsSquare() {
-		return trace, errors.New("Matrix is not square")
+	matrixElements := make([][]float64, rows)
+
+	for i := 0; i < rows; i++ {
+		matrixElements[i] = make([]float64, cols)
 	}
 
-	for i := 0; i < len(m.elements); i++ {
-		currentValue, _ = m.Get(i, i)
-		trace += currentValue
-	}
+	matrix.elements = matrixElements
 
-	return trace, nil
+	return matrix
 }
 
-func (m matrixComplex64) Tr() (complex128, error) {
-	var trace complex128
-	var currentValue complex64
-
-	if !m.IsSquare() {
-		return trace, errors.New("Matrix is not square")
-	}
-
-	for i := 0; i < len(m.elements); i++ {
-		currentValue, _ = m.Get(i, i)
-		trace += complex128(currentValue)
-	}
-
-	return trace, nil
+// MakeMatrixWithElements returns a new matrix of type Matrix with predefined elements
+func MakeMatrixWithElements(rows int, cols int, matrixType reflect.Kind, elements [][]float64) Matrix {
+	matrix := new(matrix)
+	matrix.numRows = rows
+	matrix.numCols = cols
+	matrix.matrixType = matrixType
+	matrix.elements = elements
+	return matrix
 }
 
-func (m matrixComplex128) Tr() (complex128, error) {
-	var trace complex128
-	var currentValue complex128
+// MakeIdentityMatrix returns a new Identity Matrix of size (degree, degree)
+func MakeIdentityMatrix(degree int) Matrix {
+	matrix := MakeMatrix(degree, degree, reflect.Float64)
 
-	if !m.IsSquare() {
-		return trace, errors.New("Matrix is not square")
+	for i := 0; i < degree; i++ {
+		matrix.Set(i, i, float64(1))
 	}
 
-	for i := 0; i < len(m.elements); i++ {
-		currentValue, _ = m.Get(i, i)
-		trace += currentValue
-	}
-
-	return trace, nil
+	return matrix
 }
