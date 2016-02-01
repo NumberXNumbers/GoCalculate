@@ -2,6 +2,7 @@ package coreTypes
 
 import (
 	"errors"
+	"math/cmplx"
 	"reflect"
 )
 
@@ -11,6 +12,9 @@ type MatrixComplex interface {
 
 	// Transpose of a Matrix
 	Trans() MatrixComplex
+
+	// Returns copy of MatrixComplex
+	Copy() MatrixComplex
 
 	// Returns all Elements
 	GetElements() [][]complex128
@@ -32,8 +36,7 @@ type MatrixComplex interface {
 }
 
 type matrixComplex struct {
-	numRows    int
-	numCols    int
+	matrixBase
 	matrixType reflect.Kind
 	elements   [][]complex128
 }
@@ -70,6 +73,11 @@ func (m matrixComplex) IsIdentity() bool {
 	return reflect.DeepEqual(m, MakeIdentityComplexMatrix(m.GetNumRows()))
 }
 
+//implementation of Copy method
+func (m matrixComplex) Copy() MatrixComplex {
+	return MakeComplexMatrixWithElements(m.GetNumRows(), m.GetNumCols(), m.GetElements())
+}
+
 // implementation of Tr method
 func (m matrixComplex) Tr() (complex128, error) {
 	var trace complex128
@@ -89,7 +97,6 @@ func (m matrixComplex) Tr() (complex128, error) {
 func (m matrixComplex) Trans() MatrixComplex {
 	transMatrixNumCols := m.numRows
 	transMatrixNumRows := m.numCols
-	transMatrixType := m.Type()
 	transMatrixElements := make([][]complex128, transMatrixNumRows)
 
 	for i := 0; i < len(transMatrixElements); i++ {
@@ -98,22 +105,21 @@ func (m matrixComplex) Trans() MatrixComplex {
 
 	for i := 0; i < transMatrixNumRows; i++ {
 		for j := 0; j < transMatrixNumCols; j++ {
-			transMatrixElements[i][j] = m.Get(j, i)
+			transMatrixElements[i][j] = cmplx.Conj(m.Get(j, i))
 		}
 	}
 
-	transposeMatrix := MakeComplexMatrixWithElements(transMatrixNumRows, transMatrixNumCols, transMatrixType, transMatrixElements)
+	transposeMatrix := MakeComplexMatrixWithElements(transMatrixNumRows, transMatrixNumCols, transMatrixElements)
 
 	return transposeMatrix
 }
 
 // MakeComplexMatrix returns a new matrix of type MatrixComplex128
-func MakeComplexMatrix(rows int, cols int, matrixType reflect.Kind) MatrixComplex {
+func MakeComplexMatrix(rows int, cols int) MatrixComplex {
 	matrix := new(matrixComplex)
 	matrix.numRows = rows
 	matrix.numCols = cols
-	matrix.matrixType = matrixType
-	matrix.matrixType = matrixType
+	matrix.matrixType = reflect.Complex128
 
 	matrixElements := make([][]complex128, rows)
 
@@ -122,27 +128,42 @@ func MakeComplexMatrix(rows int, cols int, matrixType reflect.Kind) MatrixComple
 	}
 
 	matrix.elements = matrixElements
-
 	return matrix
 }
 
 // MakeComplexMatrixWithElements returns a new matrix of type MatrixComplex128 with predefined elements
-func MakeComplexMatrixWithElements(rows int, cols int, matrixType reflect.Kind, elements [][]complex128) MatrixComplex {
+func MakeComplexMatrixWithElements(rows int, cols int, elements [][]complex128) MatrixComplex {
 	matrix := new(matrixComplex)
 	matrix.numRows = rows
 	matrix.numCols = cols
-	matrix.matrixType = matrixType
-	matrix.elements = elements
+	matrix.matrixType = reflect.Complex128
+	matrix.matrixType = reflect.Complex128
+
+	matrixElements := make([][]complex128, rows)
+
+	for i := 0; i < rows; i++ {
+		matrixElements[i] = make([]complex128, cols)
+		copy(matrixElements[i], elements[i])
+	}
+
+	matrix.elements = matrixElements
 	return matrix
 }
 
 // MakeIdentityComplexMatrix returns a new Identity Matrix with complex128 diagonal values of size (degree, degree)
 func MakeIdentityComplexMatrix(degree int) MatrixComplex {
-	matrix := MakeComplexMatrix(degree, degree, reflect.Float64)
+	matrix := MakeComplexMatrix(degree, degree)
 
 	for i := 0; i < degree; i++ {
 		matrix.Set(i, i, complex128(1))
 	}
 
 	return matrix
+}
+
+// MakeNewConjMatrix returns a new conj matrix of matrix
+func MakeNewConjMatrix(m matrixComplex) {
+	conjMatrix := m.Copy()
+	conjMatrix.Trans()
+	return conjMatrix
 }

@@ -9,11 +9,11 @@ import (
 type Matrix interface {
 	baseMatrix
 
-	// Type of Matrix
-	Type() reflect.Kind
-
 	// Transpose of a Matrix
 	Trans() Matrix
+
+	// Returns a copy of Matrix
+	Copy() Matrix
 
 	// Returns all Elements
 	GetElements() [][]float64
@@ -35,8 +35,7 @@ type Matrix interface {
 }
 
 type matrix struct {
-	numRows    int
-	numCols    int
+	matrixBase
 	matrixType reflect.Kind
 	elements   [][]float64
 }
@@ -73,6 +72,11 @@ func (m matrix) IsIdentity() bool {
 	return reflect.DeepEqual(m, MakeIdentityMatrix(m.GetNumRows()))
 }
 
+//implementation of Copy method
+func (m matrix) Copy() Matrix {
+	return MakeMatrixWithElements(m.GetNumRows(), m.GetNumCols(), m.GetElements())
+}
+
 // implementation of Tr method
 func (m matrix) Tr() (float64, error) {
 	var trace float64
@@ -92,7 +96,6 @@ func (m matrix) Tr() (float64, error) {
 func (m matrix) Trans() Matrix {
 	transMatrixNumCols := m.numRows
 	transMatrixNumRows := m.numCols
-	transMatrixType := m.Type()
 	transMatrixElements := make([][]float64, transMatrixNumRows)
 
 	for i := 0; i < len(transMatrixElements); i++ {
@@ -105,17 +108,17 @@ func (m matrix) Trans() Matrix {
 		}
 	}
 
-	transposeMatrix := MakeMatrixWithElements(transMatrixNumRows, transMatrixNumCols, transMatrixType, transMatrixElements)
+	transposeMatrix := MakeMatrixWithElements(transMatrixNumRows, transMatrixNumCols, transMatrixElements)
 
 	return transposeMatrix
 }
 
 // MakeMatrix returns a new matrix of type Matrix
-func MakeMatrix(rows int, cols int, matrixType reflect.Kind) Matrix {
+func MakeMatrix(rows int, cols int) Matrix {
 	matrix := new(matrix)
 	matrix.numRows = rows
 	matrix.numCols = cols
-	matrix.matrixType = matrixType
+	matrix.matrixType = reflect.Float64
 
 	matrixElements := make([][]float64, rows)
 
@@ -124,23 +127,30 @@ func MakeMatrix(rows int, cols int, matrixType reflect.Kind) Matrix {
 	}
 
 	matrix.elements = matrixElements
-
 	return matrix
 }
 
 // MakeMatrixWithElements returns a new matrix of type Matrix with predefined elements
-func MakeMatrixWithElements(rows int, cols int, matrixType reflect.Kind, elements [][]float64) Matrix {
+func MakeMatrixWithElements(rows int, cols int, elements [][]float64) Matrix {
 	matrix := new(matrix)
 	matrix.numRows = rows
 	matrix.numCols = cols
-	matrix.matrixType = matrixType
-	matrix.elements = elements
+	matrix.matrixType = reflect.Float64
+
+	matrixElements := make([][]float64, rows)
+
+	for i := 0; i < rows; i++ {
+		matrixElements[i] = make([]float64, cols)
+		copy(matrixElements[i], elements[i])
+	}
+
+	matrix.elements = matrixElements
 	return matrix
 }
 
 // MakeIdentityMatrix returns a new Identity Matrix of size (degree, degree)
 func MakeIdentityMatrix(degree int) Matrix {
-	matrix := MakeMatrix(degree, degree, reflect.Float64)
+	matrix := MakeMatrix(degree, degree)
 
 	for i := 0; i < degree; i++ {
 		matrix.Set(i, i, float64(1))

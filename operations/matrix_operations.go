@@ -2,41 +2,32 @@ package operations
 
 import (
 	"errors"
-	"reflect"
 
 	ct "github.com/traviscox1990/GoCalculate/coreTypes"
 )
 
-// MatrixMultiplicationSimple is an operation that will multiple two matrices of any size together
-func MatrixMultiplicationSimple(matrixA [][]float64, matrixB [][]float64) ([][]float64, error) {
-	numberRowsMatrixA := len(matrixA)
-	numberColsMatrixA := len(matrixA[0])
-	numberRowsMatrixB := len(matrixB)
-	numberColsMatrixB := len(matrixB[0])
-
-	if numberColsMatrixA != numberRowsMatrixB {
-		return nil, errors.New("Length of columns of matrix A not equal to length of rows of matrix B")
-	}
-
-	matrixAB := make([][]float64, numberRowsMatrixA)
-
-	for i := 0; i < len(matrixAB); i++ {
-		matrixAB[i] = make([]float64, numberColsMatrixB)
-	}
-
-	var sum float64
-
-	for i := 0; i < numberRowsMatrixA; i++ {
-		for j := 0; j < numberColsMatrixB; j++ {
-			sum = float64(0)
-			for k := 0; k < numberColsMatrixA; k++ {
-				sum += matrixA[i][k] * matrixB[k][j]
-			}
-			matrixAB[i][j] = sum
+// MatrixScalarMulti is an operation for multiplying a Matrix by a scalar float64 value
+func MatrixScalarMulti(scalar float64, matrix ct.Matrix) ct.Matrix {
+	newMatrix := matrix.Copy()
+	for i := 0; i < matrix.GetNumRows(); i++ {
+		for j := 0; j < matrix.GetNumCols(); j++ {
+			newMatrix.Set(i, j, scalar*matrix.Get(i, j))
 		}
 	}
 
-	return matrixAB, nil
+	return newMatrix
+}
+
+// MatrixComplexScalarMulti is an operation for multiplying a Matrix by a scalar float64 value
+func MatrixComplexScalarMulti(scalar complex128, matrix ct.MatrixComplex) ct.MatrixComplex {
+	newMatrix := matrix.Copy()
+	for i := 0; i < matrix.GetNumRows(); i++ {
+		for j := 0; j < matrix.GetNumCols(); j++ {
+			newMatrix.Set(i, j, scalar*matrix.Get(i, j))
+		}
+	}
+
+	return newMatrix
 }
 
 // MatrixMultiSimple is an operation that will multiple two matrices of any size together
@@ -55,7 +46,7 @@ func MatrixMultiSimple(matrixA ct.Matrix, matrixB ct.Matrix) (ct.Matrix, error) 
 
 	var sum float64
 
-	matrixAB := ct.MakeMatrix(matrixA.GetNumRows(), matrixB.GetNumCols(), reflect.Float64)
+	matrixAB := ct.MakeMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
 
 	for i := 0; i < matrixA.GetNumRows(); i++ {
 		for j := 0; j < matrixB.GetNumCols(); j++ {
@@ -86,7 +77,7 @@ func MatrixComplexMultiSimple(matrixA ct.MatrixComplex, matrixB ct.MatrixComplex
 
 	var sum complex128
 
-	matrixAB := ct.MakeComplexMatrix(matrixA.GetNumRows(), matrixB.GetNumRows(), reflect.Complex128)
+	matrixAB := ct.MakeComplexMatrix(matrixA.GetNumRows(), matrixB.GetNumRows())
 
 	for i := 0; i < matrixA.GetNumRows(); i++ {
 		for j := 0; j < matrixB.GetNumCols(); j++ {
@@ -107,7 +98,7 @@ func MatrixAddition(matrixA ct.Matrix, matrixB ct.Matrix) (ct.Matrix, error) {
 		return nil, errors.New("Matrices do not have equivalent dimensions")
 	}
 
-	matrixAB := ct.MakeMatrix(matrixA.GetNumRows(), matrixB.GetNumCols(), reflect.Float64)
+	matrixAB := ct.MakeMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
 
 	for i := 0; i < matrixA.GetNumRows(); i++ {
 		for j := 0; j < matrixA.GetNumCols(); j++ {
@@ -124,7 +115,7 @@ func MatrixComplexAddition(matrixA ct.MatrixComplex, matrixB ct.MatrixComplex) (
 		return nil, errors.New("Matrices do not have equivalent dimensions")
 	}
 
-	matrixAB := ct.MakeComplexMatrix(matrixA.GetNumRows(), matrixB.GetNumCols(), reflect.Complex128)
+	matrixAB := ct.MakeComplexMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
 
 	for i := 0; i < matrixA.GetNumRows(); i++ {
 		for j := 0; j < matrixA.GetNumCols(); j++ {
@@ -141,7 +132,7 @@ func MatrixSubtraction(matrixA ct.Matrix, matrixB ct.Matrix) (ct.Matrix, error) 
 		return nil, errors.New("Matrices do not have equivalent dimensions")
 	}
 
-	matrixAB := ct.MakeMatrix(matrixA.GetNumRows(), matrixB.GetNumCols(), reflect.Float64)
+	matrixAB := ct.MakeMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
 
 	for i := 0; i < matrixA.GetNumRows(); i++ {
 		for j := 0; j < matrixA.GetNumCols(); j++ {
@@ -158,7 +149,7 @@ func MatrixComplexSubtraction(matrixA ct.MatrixComplex, matrixB ct.MatrixComplex
 		return nil, errors.New("Matrices do not have equivalent dimensions")
 	}
 
-	matrixAB := ct.MakeComplexMatrix(matrixA.GetNumRows(), matrixB.GetNumCols(), reflect.Complex128)
+	matrixAB := ct.MakeComplexMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
 
 	for i := 0; i < matrixA.GetNumRows(); i++ {
 		for j := 0; j < matrixA.GetNumCols(); j++ {
