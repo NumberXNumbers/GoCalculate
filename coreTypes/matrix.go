@@ -41,44 +41,44 @@ type matrix struct {
 }
 
 // implementation of Size method
-func (m matrix) Size() (rows, cols int) { return m.numRows, m.numCols }
+func (m *matrix) Size() (rows, cols int) { return m.numRows, m.numCols }
 
 // implementation of NumElements method
-func (m matrix) NumElements() int { return m.numCols * m.numRows }
+func (m *matrix) NumElements() int { return m.numCols * m.numRows }
 
 // implementation of Type method
-func (m matrix) Type() reflect.Kind { return m.matrixType }
+func (m *matrix) Type() reflect.Kind { return m.matrixType }
 
 // implementation of GetRows method
-func (m matrix) GetNumRows() int { return m.numRows }
+func (m *matrix) GetNumRows() int { return m.numRows }
 
 // implementation of GetColumns method
-func (m matrix) GetNumCols() int { return m.numCols }
+func (m *matrix) GetNumCols() int { return m.numCols }
 
 // implementation of IsSquare method
-func (m matrix) IsSquare() bool { return m.GetNumCols() == m.GetNumRows() }
+func (m *matrix) IsSquare() bool { return m.GetNumCols() == m.GetNumRows() }
 
 // implementation of GetElements method
-func (m matrix) GetElements() [][]float64 { return m.elements }
+func (m *matrix) GetElements() [][]float64 { return m.elements }
 
 // implementation of Get method
-func (m matrix) Get(row int, col int) float64 { return m.elements[row][col] }
+func (m *matrix) Get(row int, col int) float64 { return m.elements[row][col] }
 
 // implementation of Set method
-func (m matrix) Set(row int, col int, value float64) { m.elements[row][col] = value }
+func (m *matrix) Set(row int, col int, value float64) { m.elements[row][col] = value }
 
 // implementation of IsIdentity method
-func (m matrix) IsIdentity() bool {
+func (m *matrix) IsIdentity() bool {
 	return reflect.DeepEqual(m, MakeIdentityMatrix(m.GetNumRows()))
 }
 
 //implementation of Copy method
 func (m matrix) Copy() Matrix {
-	return MakeMatrixWithElements(m.GetNumRows(), m.GetNumCols(), m.GetElements())
+	return MakeMatrixWithElements(m.GetElements())
 }
 
 // implementation of Tr method
-func (m matrix) Tr() (float64, error) {
+func (m *matrix) Tr() (float64, error) {
 	var trace float64
 
 	if !m.IsSquare() {
@@ -93,7 +93,7 @@ func (m matrix) Tr() (float64, error) {
 }
 
 // implementation of Trans method
-func (m matrix) Trans() Matrix {
+func (m *matrix) Trans() Matrix {
 	transMatrixNumCols := m.numRows
 	transMatrixNumRows := m.numCols
 	transMatrixElements := make([][]float64, transMatrixNumRows)
@@ -108,7 +108,7 @@ func (m matrix) Trans() Matrix {
 		}
 	}
 
-	transposeMatrix := MakeMatrixWithElements(transMatrixNumRows, transMatrixNumCols, transMatrixElements)
+	transposeMatrix := MakeMatrixWithElements(transMatrixElements)
 
 	return transposeMatrix
 }
@@ -131,8 +131,10 @@ func MakeMatrix(rows int, cols int) Matrix {
 }
 
 // MakeMatrixWithElements returns a new matrix of type Matrix with predefined elements
-func MakeMatrixWithElements(rows int, cols int, elements [][]float64) Matrix {
+func MakeMatrixWithElements(elements [][]float64) Matrix {
 	matrix := new(matrix)
+	rows := len(elements)
+	cols := len(elements[0])
 	matrix.numRows = rows
 	matrix.numCols = cols
 	matrix.matrixType = reflect.Float64

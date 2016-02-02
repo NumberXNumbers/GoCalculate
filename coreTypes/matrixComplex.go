@@ -42,44 +42,44 @@ type matrixComplex struct {
 }
 
 // implementation of Size method
-func (m matrixComplex) Size() (rows, cols int) { return m.numRows, m.numCols }
+func (m *matrixComplex) Size() (rows, cols int) { return m.numRows, m.numCols }
 
 // implementation of NumElements method
-func (m matrixComplex) NumElements() int { return m.numCols * m.numRows }
+func (m *matrixComplex) NumElements() int { return m.numCols * m.numRows }
 
 // implementation of Type method
-func (m matrixComplex) Type() reflect.Kind { return m.matrixType }
+func (m *matrixComplex) Type() reflect.Kind { return m.matrixType }
 
 // implementation of GetRows method
-func (m matrixComplex) GetNumRows() int { return m.numRows }
+func (m *matrixComplex) GetNumRows() int { return m.numRows }
 
 // implementation of GetColumns method
-func (m matrixComplex) GetNumCols() int { return m.numCols }
+func (m *matrixComplex) GetNumCols() int { return m.numCols }
 
 // implementation of IsSquare method
-func (m matrixComplex) IsSquare() bool { return m.GetNumCols() == m.GetNumRows() }
+func (m *matrixComplex) IsSquare() bool { return m.GetNumCols() == m.GetNumRows() }
 
 // implementation of GetElements method
-func (m matrixComplex) GetElements() [][]complex128 { return m.elements }
+func (m *matrixComplex) GetElements() [][]complex128 { return m.elements }
 
 // implementation of Get method
-func (m matrixComplex) Get(row int, col int) complex128 { return m.elements[row][col] }
+func (m *matrixComplex) Get(row int, col int) complex128 { return m.elements[row][col] }
 
 // implementation of Set method
-func (m matrixComplex) Set(row int, col int, value complex128) { m.elements[row][col] = value }
+func (m *matrixComplex) Set(row int, col int, value complex128) { m.elements[row][col] = value }
 
 // implementation of IsIdentity method
-func (m matrixComplex) IsIdentity() bool {
+func (m *matrixComplex) IsIdentity() bool {
 	return reflect.DeepEqual(m, MakeIdentityComplexMatrix(m.GetNumRows()))
 }
 
 //implementation of Copy method
-func (m matrixComplex) Copy() MatrixComplex {
-	return MakeComplexMatrixWithElements(m.GetNumRows(), m.GetNumCols(), m.GetElements())
+func (m *matrixComplex) Copy() MatrixComplex {
+	return MakeComplexMatrixWithElements(m.GetElements())
 }
 
 // implementation of Tr method
-func (m matrixComplex) Tr() (complex128, error) {
+func (m *matrixComplex) Tr() (complex128, error) {
 	var trace complex128
 
 	if !m.IsSquare() {
@@ -94,7 +94,7 @@ func (m matrixComplex) Tr() (complex128, error) {
 }
 
 // implementation of Trans method
-func (m matrixComplex) Trans() MatrixComplex {
+func (m *matrixComplex) Trans() MatrixComplex {
 	transMatrixNumCols := m.numRows
 	transMatrixNumRows := m.numCols
 	transMatrixElements := make([][]complex128, transMatrixNumRows)
@@ -109,7 +109,7 @@ func (m matrixComplex) Trans() MatrixComplex {
 		}
 	}
 
-	transposeMatrix := MakeComplexMatrixWithElements(transMatrixNumRows, transMatrixNumCols, transMatrixElements)
+	transposeMatrix := MakeComplexMatrixWithElements(transMatrixElements)
 
 	return transposeMatrix
 }
@@ -132,8 +132,10 @@ func MakeComplexMatrix(rows int, cols int) MatrixComplex {
 }
 
 // MakeComplexMatrixWithElements returns a new matrix of type MatrixComplex128 with predefined elements
-func MakeComplexMatrixWithElements(rows int, cols int, elements [][]complex128) MatrixComplex {
+func MakeComplexMatrixWithElements(elements [][]complex128) MatrixComplex {
 	matrix := new(matrixComplex)
+	rows := len(elements)
+	cols := len(elements[0])
 	matrix.numRows = rows
 	matrix.numCols = cols
 	matrix.matrixType = reflect.Complex128
@@ -162,7 +164,7 @@ func MakeIdentityComplexMatrix(degree int) MatrixComplex {
 }
 
 // MakeNewConjMatrix returns a new conj matrix of matrix
-func MakeNewConjMatrix(m matrixComplex) {
+func MakeNewConjMatrix(m matrixComplex) MatrixComplex {
 	conjMatrix := m.Copy()
 	conjMatrix.Trans()
 	return conjMatrix

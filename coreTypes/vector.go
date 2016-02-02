@@ -1,14 +1,13 @@
 package coreTypes
 
-import (
-	"math"
-
-	"github.com/traviscox1990/GoCalculate/operations"
-)
+import "math"
 
 // Vector is the main vector interface for real vectors
 type Vector interface {
 	baseVector
+
+	// Returns Elements of Vector
+	GetElements() []float64
 
 	// Get returns element at index in vector
 	Get(index int) float64
@@ -16,7 +15,7 @@ type Vector interface {
 	// Set will set a value at index in a vector
 	Set(index int, value float64)
 
-	// Return norm of vectorBase
+	// Return norm of vector
 	Norm() float64
 
 	// Returns a new Copy of vector
@@ -29,20 +28,23 @@ type vector struct {
 }
 
 // implementation of Get method
-func (v vector) Get(index int) float64 { return v.elements[index] }
+func (v *vector) Get(index int) float64 { return v.elements[index] }
 
 // implementation of Set method
-func (v vector) Set(index int, value float64) { v.elements[index] = value }
+func (v *vector) Set(index int, value float64) { v.elements[index] = value }
 
 // implementation of Dim method
-func (v vector) Dim() int { return len(v.elements) }
+func (v *vector) Dim() int { return len(v.elements) }
+
+// implementation of GetElements method
+func (v *vector) GetElements() []float64 { return v.elements }
 
 // implementation of Copy method
-func (v vectorComplex) Copy() Vector { return MakeVector(v.Dim(), v.Type()) }
+func (v *vector) Copy() Vector { return MakeVectorWithElements(v.Dim(), v.Type(), v.GetElements()) }
 
 // implementation of Trans method
-func (v vectorBase) Trans() {
-	if v.Type() == column {
+func (v *vector) Trans() {
+	if v.Type() == ColVector {
 		v.vectorType = RowVector
 	} else {
 		v.vectorType = ColVector
@@ -50,27 +52,29 @@ func (v vectorBase) Trans() {
 }
 
 // implementation of Norm method
-func (v vector) Norm() float64 {
+func (v *vector) Norm() float64 {
 	var norm float64
 	var dotProduct float64
-	dotProduct, _ = operations.InnerProduct(v, v)
+	for i := 0; i < v.Dim(); i++ {
+		dotProduct += v.Get(i) * v.Get(i)
+	}
 	norm = math.Sqrt(dotProduct)
 	return norm
 }
 
 // MakeVector returns zero vector of size length
 func MakeVector(length int, vectorType string) Vector {
-	vector := new(vectorComplex)
+	vector := new(vector)
 	vector.vectorType = vectorType
 	vector.elements = make([]float64, length)
-	return v
+	return vector
 }
 
 // MakeVectorWithElements returns zero vector of size length
-func MakeVectorWithElements(length int, vectorType string, elements []float64) VectorComplex {
-	vector := new(vectorComplex)
+func MakeVectorWithElements(length int, vectorType string, elements []float64) Vector {
+	vector := new(vector)
 	vector.vectorType = vectorType
 	vector.elements = make([]float64, length)
 	copy(vector.elements, elements)
-	return v
+	return vector
 }
