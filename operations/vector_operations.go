@@ -84,7 +84,7 @@ func InnerProduct(vectorA ct.Vector, vectorB ct.Vector) (float64, error) {
 }
 
 // InnerProductComplex returns the inner product for complex Vectors
-func InnerProductComplex(vectorA ct.Vector, vectorB ct.Vector) (complex128, error) {
+func InnerProductComplex(vectorA ct.VectorComplex, vectorB ct.VectorComplex) (complex128, error) {
 	if vectorA.Dim() != vectorB.Dim() {
 		return nil, errors.New("Length of vectors does not match")
 	}
