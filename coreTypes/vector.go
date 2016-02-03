@@ -40,7 +40,7 @@ func (v *vector) Dim() int { return len(v.elements) }
 func (v *vector) GetElements() []float64 { return v.elements }
 
 // implementation of Copy method
-func (v *vector) Copy() Vector { return MakeVectorWithElements(v.Dim(), v.Type(), v.GetElements()) }
+func (v *vector) Copy() Vector { return MakeVectorWithElements(v.GetElements(), v.Type()) }
 
 // implementation of Trans method
 func (v *vector) Trans() {
@@ -71,10 +71,10 @@ func MakeVector(length int, vectorType string) Vector {
 }
 
 // MakeVectorWithElements returns zero vector of size length
-func MakeVectorWithElements(length int, vectorType string, elements []float64) Vector {
+func MakeVectorWithElements(elements []float64, vectorType string) Vector {
 	vector := new(vector)
 	vector.vectorType = vectorType
-	vector.elements = make([]float64, length)
+	vector.elements = make([]float64, len(elements))
 	copy(vector.elements, elements)
 	return vector
 }

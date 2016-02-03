@@ -10,9 +10,6 @@ import (
 type MatrixComplex interface {
 	baseMatrix
 
-	// Transpose of a Matrix
-	Trans() MatrixComplex
-
 	// Returns copy of MatrixComplex
 	Copy() MatrixComplex
 
@@ -41,8 +38,8 @@ type matrixComplex struct {
 	elements   [][]complex128
 }
 
-// implementation of Size method
-func (m *matrixComplex) Size() (rows, cols int) { return m.numRows, m.numCols }
+// implementation of Dim method
+func (m *matrixComplex) Dim() (rows, cols int) { return m.numRows, m.numCols }
 
 // implementation of NumElements method
 func (m *matrixComplex) NumElements() int { return m.numCols * m.numRows }
@@ -94,7 +91,7 @@ func (m *matrixComplex) Tr() (complex128, error) {
 }
 
 // implementation of Trans method
-func (m *matrixComplex) Trans() MatrixComplex {
+func (m *matrixComplex) Trans() {
 	transMatrixNumCols := m.numRows
 	transMatrixNumRows := m.numCols
 	transMatrixElements := make([][]complex128, transMatrixNumRows)
@@ -109,9 +106,9 @@ func (m *matrixComplex) Trans() MatrixComplex {
 		}
 	}
 
-	transposeMatrix := MakeComplexMatrixWithElements(transMatrixElements)
-
-	return transposeMatrix
+	m.numRows = transMatrixNumRows
+	m.numCols = transMatrixNumCols
+	m.elements = transMatrixElements
 }
 
 // MakeComplexMatrix returns a new matrix of type MatrixComplex128
@@ -164,7 +161,7 @@ func MakeIdentityComplexMatrix(degree int) MatrixComplex {
 }
 
 // MakeNewConjMatrix returns a new conj matrix of matrix
-func MakeNewConjMatrix(m matrixComplex) MatrixComplex {
+func MakeNewConjMatrix(m MatrixComplex) MatrixComplex {
 	conjMatrix := m.Copy()
 	conjMatrix.Trans()
 	return conjMatrix

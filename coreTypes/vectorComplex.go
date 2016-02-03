@@ -41,7 +41,7 @@ func (v *vectorComplex) GetElements() []complex128 { return v.elements }
 
 // implementation of Copy method
 func (v *vectorComplex) Copy() VectorComplex {
-	return MakeComplexVectorWithElements(v.Dim(), v.Type(), v.GetElements())
+	return MakeComplexVectorWithElements(v.GetElements(), v.Type())
 }
 
 // implementation of Trans method
@@ -78,16 +78,16 @@ func MakeComplexVector(length int, vectorType string) VectorComplex {
 }
 
 // MakeComplexVectorWithElements returns zero vector of size length
-func MakeComplexVectorWithElements(length int, vectorType string, elements []complex128) VectorComplex {
+func MakeComplexVectorWithElements(elements []complex128, vectorType string) VectorComplex {
 	vector := new(vectorComplex)
 	vector.vectorType = vectorType
-	vector.elements = make([]complex128, length)
+	vector.elements = make([]complex128, len(elements))
 	copy(vector.elements, elements)
 	return vector
 }
 
 // MakeNewConjVector returns a new conj vector of vector
-func MakeNewConjVector(v *vectorComplex) VectorComplex {
+func MakeNewConjVector(v VectorComplex) VectorComplex {
 	conjVector := v.Copy()
 	conjVector.Trans()
 	return conjVector
