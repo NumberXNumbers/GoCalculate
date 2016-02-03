@@ -7,7 +7,7 @@ import (
 
 type baseMatrix interface {
 	// Returns dimensions of Matrix.
-	Size() (rows, cols int)
+	Dim() (rows, cols int)
 
 	// Returns number of elements of Matrix
 	NumElements() int
@@ -26,6 +26,9 @@ type baseMatrix interface {
 
 	// Type of Matrix
 	Type() reflect.Kind
+
+	// Transpose of a Matrix
+	Trans()
 }
 
 type matrixBase struct {

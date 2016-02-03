@@ -9,9 +9,6 @@ import (
 type Matrix interface {
 	baseMatrix
 
-	// Transpose of a Matrix
-	Trans() Matrix
-
 	// Returns a copy of Matrix
 	Copy() Matrix
 
@@ -40,8 +37,8 @@ type matrix struct {
 	elements   [][]float64
 }
 
-// implementation of Size method
-func (m *matrix) Size() (rows, cols int) { return m.numRows, m.numCols }
+// implementation of Dim method
+func (m *matrix) Dim() (rows, cols int) { return m.numRows, m.numCols }
 
 // implementation of NumElements method
 func (m *matrix) NumElements() int { return m.numCols * m.numRows }
@@ -93,7 +90,7 @@ func (m *matrix) Tr() (float64, error) {
 }
 
 // implementation of Trans method
-func (m *matrix) Trans() Matrix {
+func (m *matrix) Trans() {
 	transMatrixNumCols := m.numRows
 	transMatrixNumRows := m.numCols
 	transMatrixElements := make([][]float64, transMatrixNumRows)
@@ -108,9 +105,9 @@ func (m *matrix) Trans() Matrix {
 		}
 	}
 
-	transposeMatrix := MakeMatrixWithElements(transMatrixElements)
-
-	return transposeMatrix
+	m.numRows = transMatrixNumRows
+	m.numCols = transMatrixNumCols
+	m.elements = transMatrixElements
 }
 
 // MakeMatrix returns a new matrix of type Matrix
