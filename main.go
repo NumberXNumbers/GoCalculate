@@ -1,5 +1,15 @@
 package main
 
+import (
+	"fmt"
+	"os"
+
+	"github.com/traviscox1990/GoCalculate/cmd"
+)
+
 func main() {
-	// Place holder for cli
+	if err := cmd.GoCalulateCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
 }

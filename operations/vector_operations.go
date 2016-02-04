@@ -10,71 +10,77 @@ import (
 
 // VectorScalarMulti multiplies a real vector by a scalar
 func VectorScalarMulti(scalar float64, vector ct.Vector) ct.Vector {
-	newVector := MakeVector(vector.Dim(), vector.Type())
+	newVector := ct.MakeVector(vector.Dim(), vector.Type())
 	for i := 0; i < vector.Dim(); i++ {
 		newVector.Set(i, scalar*vector.Get(i))
 	}
+
+	return newVector
 }
 
 // VectorComplexScalarMulti multiplies a complex vector by a scalar
-func VectorComplexScalarMulti(scalar float64, vector ct.VectorComplex) ct.VectorComplex {
-	newVector := MakeComplexVector(vector.Dim(), vector.Type())
+func VectorComplexScalarMulti(scalar complex128, vector ct.VectorComplex) ct.VectorComplex {
+	newVector := ct.MakeComplexVector(vector.Dim(), vector.Type())
 	for i := 0; i < vector.Dim(); i++ {
 		newVector.Set(i, scalar*vector.Get(i))
 	}
+
+	return newVector
 }
 
 // AngleTheta returns the angle theta between Vector A and Vector B using the dot product
 func AngleTheta(vectorA ct.Vector, vectorB ct.Vector) (float64, error) {
 	normA := vectorA.Norm()
 	normB := vectorB.Norm()
+	var theta float64
 
 	if normA == 0 || normB == 0 {
-		return nil, errors.New("Either Vector A or Vector B is the zero vector")
+		return theta, errors.New("Either Vector A or Vector B is the zero vector")
 	}
 
 	dotProduct, err := InnerProduct(vectorA, vectorB)
 
 	if err != nil {
-		return nil, err
+		return theta, err
 	}
 
-	theta := math.Acos(dotProduct / (normA * normB))
+	theta = math.Acos(dotProduct / (normA * normB))
 
-	return theta
+	return theta, nil
 }
 
 // AngleThetaComplex returns the angle theta between VectorComplex A and VectorComplex B using the dot product
 func AngleThetaComplex(vectorA ct.VectorComplex, vectorB ct.VectorComplex) (complex128, error) {
 	normA := vectorA.Norm()
 	normB := vectorB.Norm()
+	var theta complex128
 
 	if normA == 0 || normB == 0 {
-		return nil, errors.New("Either Vector A or Vector B is the zero vector")
+		return theta, errors.New("Either Vector A or Vector B is the zero vector")
 	}
 
 	dotProduct, err := InnerProductComplex(vectorA, vectorB)
 
 	if err != nil {
-		return nil, err
+		return theta, err
 	}
 
-	theta := cmplx.Acos(dotProduct / (normA * normB))
+	theta = cmplx.Acos(dotProduct / (normA * normB))
 
-	return theta
+	return theta, nil
 }
 
 // InnerProduct returns the inner product for real Vectors
 func InnerProduct(vectorA ct.Vector, vectorB ct.Vector) (float64, error) {
-	if vectorA.Dim() != vectorB.Dim() {
-		return nil, errors.New("Length of vectors does not match")
-	}
-
-	if vectorA.Type() != ct.RowVector || vectorB != ColVector {
-		return nil, errors.New("One or both vector types are not consistent with the vector inner product")
-	}
-
 	var product float64
+
+	if vectorA.Dim() != vectorB.Dim() {
+		return product, errors.New("Length of vectors does not match")
+	}
+
+	if vectorA.Type() != ct.RowVector || vectorB.Type() != ct.ColVector {
+		return product, errors.New("One or both vector types are not consistent with the vector inner product")
+	}
 
 	for i := 0; i < vectorA.Dim(); i++ {
 		product += vectorA.Get(i) * vectorB.Get(i)
@@ -85,15 +91,15 @@ func InnerProduct(vectorA ct.Vector, vectorB ct.Vector) (float64, error) {
 
 // InnerProductComplex returns the inner product for complex Vectors
 func InnerProductComplex(vectorA ct.VectorComplex, vectorB ct.VectorComplex) (complex128, error) {
-	if vectorA.Dim() != vectorB.Dim() {
-		return nil, errors.New("Length of vectors does not match")
-	}
-
-	if vectorA.Type() != ct.RowVector || vectorB != ColVector {
-		return nil, errors.New("One or both vector types are not consistent with the vector inner product")
-	}
-
 	var product complex128
+
+	if vectorA.Dim() != vectorB.Dim() {
+		return product, errors.New("Length of vectors does not match")
+	}
+
+	if vectorA.Type() != ct.RowVector || vectorB.Type() != ct.ColVector {
+		return product, errors.New("One or both vector types are not consistent with the vector inner product")
+	}
 
 	for i := 0; i < vectorA.Dim(); i++ {
 		product += vectorA.Get(i) * vectorB.Get(i)
@@ -104,7 +110,7 @@ func InnerProductComplex(vectorA ct.VectorComplex, vectorB ct.VectorComplex) (co
 
 // OuterProduct returns the outer product for real Vectors
 func OuterProduct(vectorA ct.Vector, vectorB ct.Vector) (ct.Matrix, error) {
-	if vectorA.Type() != ct.ColVector || vectorB.Typ() != ct.RowVector {
+	if vectorA.Type() != ct.ColVector || vectorB.Type() != ct.RowVector {
 		return nil, errors.New("One or both vector types are not consistent with the vector inner product")
 	}
 
@@ -146,10 +152,10 @@ func VectorAddition(vectorA ct.Vector, vectorB ct.Vector) (ct.Vector, error) {
 		return nil, errors.New("Vectors are not same dimensions")
 	}
 
-	vertor := ct.MakeVector(vectorA.Dim(), vectorA.Type())
+	vector := ct.MakeVector(vectorA.Dim(), vectorA.Type())
 
-	for i := 0; i < vectorA.Din(); i++ {
-		vertor.Set(i, vectorA.Get(i)+vectorB.Get(i))
+	for i := 0; i < vectorA.Dim(); i++ {
+		vector.Set(i, vectorA.Get(i)+vectorB.Get(i))
 	}
 
 	return vector, nil
@@ -165,10 +171,10 @@ func VectorComplexAddition(vectorA ct.VectorComplex, vectorB ct.VectorComplex) (
 		return nil, errors.New("Vectors are not same dimensions")
 	}
 
-	vertor := ct.MakeComplexVector(vectorA.Dim(), vectorA.Type())
+	vector := ct.MakeComplexVector(vectorA.Dim(), vectorA.Type())
 
-	for i := 0; i < vectorA.Din(); i++ {
-		vertor.Set(i, vectorA.Get(i)+vectorB.Get(i))
+	for i := 0; i < vectorA.Dim(); i++ {
+		vector.Set(i, vectorA.Get(i)+vectorB.Get(i))
 	}
 
 	return vector, nil
@@ -184,10 +190,10 @@ func VectorSubtraction(vectorA ct.Vector, vectorB ct.Vector) (ct.Vector, error) 
 		return nil, errors.New("Vectors are not same dimensions")
 	}
 
-	vertor := ct.MakeVector(vectorA.Dim(), vectorA.Type())
+	vector := ct.MakeVector(vectorA.Dim(), vectorA.Type())
 
-	for i := 0; i < vectorA.Din(); i++ {
-		vertor.Set(i, vectorA.Get(i)-vectorB.Get(i))
+	for i := 0; i < vectorA.Dim(); i++ {
+		vector.Set(i, vectorA.Get(i)-vectorB.Get(i))
 	}
 
 	return vector, nil
@@ -203,10 +209,10 @@ func VectorComplexSubtraction(vectorA ct.VectorComplex, vectorB ct.VectorComplex
 		return nil, errors.New("Vectors are not same dimensions")
 	}
 
-	vertor := ct.MakeComplexVector(vectorA.Dim(), vectorA.Type())
+	vector := ct.MakeComplexVector(vectorA.Dim(), vectorA.Type())
 
-	for i := 0; i < vectorA.Din(); i++ {
-		vertor.Set(i, vectorA.Get(i)-vectorB.Get(i))
+	for i := 0; i < vectorA.Dim(); i++ {
+		vector.Set(i, vectorA.Get(i)-vectorB.Get(i))
 	}
 
 	return vector, nil
