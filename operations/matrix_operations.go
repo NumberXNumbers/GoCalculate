@@ -94,7 +94,7 @@ func MatrixComplexMultiSimple(matrixA ct.MatrixComplex, matrixB ct.MatrixComplex
 
 // MatrixAddition is an operation that will add two matrices together
 func MatrixAddition(matrixA ct.Matrix, matrixB ct.Matrix) (ct.Matrix, error) {
-	if matrixA.GetNumCols() != matrixB.GetNumCols() && matrixA.GetNumRows() != matrixB.GetNumRows() {
+	if matrixA.GetNumCols() != matrixB.GetNumCols() || matrixA.GetNumRows() != matrixB.GetNumRows() {
 		return nil, errors.New("Matrices do not have equivalent dimensions")
 	}
 
@@ -111,7 +111,7 @@ func MatrixAddition(matrixA ct.Matrix, matrixB ct.Matrix) (ct.Matrix, error) {
 
 // MatrixComplexAddition is an operation that will add two complex matrices together
 func MatrixComplexAddition(matrixA ct.MatrixComplex, matrixB ct.MatrixComplex) (ct.MatrixComplex, error) {
-	if matrixA.GetNumCols() != matrixB.GetNumCols() && matrixA.GetNumRows() != matrixB.GetNumRows() {
+	if matrixA.GetNumCols() != matrixB.GetNumCols() || matrixA.GetNumRows() != matrixB.GetNumRows() {
 		return nil, errors.New("Matrices do not have equivalent dimensions")
 	}
 
@@ -128,7 +128,7 @@ func MatrixComplexAddition(matrixA ct.MatrixComplex, matrixB ct.MatrixComplex) (
 
 // MatrixSubtraction is an operation that will subtract two matrices from one another
 func MatrixSubtraction(matrixA ct.Matrix, matrixB ct.Matrix) (ct.Matrix, error) {
-	if matrixA.GetNumCols() != matrixB.GetNumCols() && matrixA.GetNumRows() != matrixB.GetNumRows() {
+	if matrixA.GetNumCols() != matrixB.GetNumCols() || matrixA.GetNumRows() != matrixB.GetNumRows() {
 		return nil, errors.New("Matrices do not have equivalent dimensions")
 	}
 
@@ -145,7 +145,7 @@ func MatrixSubtraction(matrixA ct.Matrix, matrixB ct.Matrix) (ct.Matrix, error) 
 
 // MatrixComplexSubtraction is an operation that will subtract two complex matrices from one another
 func MatrixComplexSubtraction(matrixA ct.MatrixComplex, matrixB ct.MatrixComplex) (ct.MatrixComplex, error) {
-	if matrixA.GetNumCols() != matrixB.GetNumCols() && matrixA.GetNumRows() != matrixB.GetNumRows() {
+	if matrixA.GetNumCols() != matrixB.GetNumCols() || matrixA.GetNumRows() != matrixB.GetNumRows() {
 		return nil, errors.New("Matrices do not have equivalent dimensions")
 	}
 
