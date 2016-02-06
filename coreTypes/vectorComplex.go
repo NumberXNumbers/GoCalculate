@@ -2,7 +2,7 @@ package coreTypes
 
 import "math/cmplx"
 
-// VectorComplex is the main vector interface for real vectors
+// VectorComplex is the main vector interface for complex vectors
 type VectorComplex interface {
 	baseVector
 
