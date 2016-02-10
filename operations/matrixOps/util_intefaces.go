@@ -1,4 +1,4 @@
-package operations
+package matrixOps
 
 import "github.com/traviscox1990/GoCalculate/coreTypes"
 

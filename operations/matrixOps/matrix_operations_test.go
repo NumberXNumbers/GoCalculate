@@ -1,4 +1,4 @@
-package operations
+package matrixOps
 
 import (
 	"reflect"
