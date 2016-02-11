@@ -1,4 +1,4 @@
-package functionOps
+package fops
 
 import "math/cmplx"
 

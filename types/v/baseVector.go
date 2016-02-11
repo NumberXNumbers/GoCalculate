@@ -1,4 +1,4 @@
-package coreTypes
+package v
 
 const (
 	// ColVector is a vectorType Column Vector

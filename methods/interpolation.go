@@ -1,4 +1,4 @@
-package numericalMethods
+package methods
 
 import "errors"
 

@@ -1,4 +1,4 @@
-package vectorOps
+package vops
 
 import (
 	"errors"
