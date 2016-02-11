@@ -1,50 +1,53 @@
-package vectorOps
+package vops
 
-import "github.com/traviscox1990/GoCalculate/coreTypes"
+import (
+	"github.com/NumberXNumbers/GoCalculate/types/m"
+	"github.com/NumberXNumbers/GoCalculate/types/v"
+)
 
 const (
 	// RowVector for operations
-	RowVector = coreTypes.RowVector
+	RowVector = v.RowVector
 	// ColVector for operations
-	ColVector = coreTypes.ColVector
+	ColVector = v.ColVector
 )
 
 // Vector is an interface over coreTypes Vector for operations
 type Vector interface {
-	coreTypes.Vector
+	v.Vector
 }
 
 // VectorComplex is an interface over coreTypes VectorComplex for operations
 type VectorComplex interface {
-	coreTypes.VectorComplex
+	v.VectorComplex
 }
 
 func makeComplexVector(length int, vectorType string) (vector VectorComplex) {
-	vector = coreTypes.MakeComplexVector(length, vectorType)
+	vector = v.MakeComplexVector(length, vectorType)
 	return
 }
 
 func makeVector(length int, vectorType string) (vector Vector) {
-	vector = coreTypes.MakeVector(length, vectorType)
+	vector = v.MakeVector(length, vectorType)
 	return
 }
 
 // Matrix is an interface over the coreTypes Matrix Type meant for operations
 type Matrix interface {
-	coreTypes.Matrix
+	m.Matrix
 }
 
 // MatrixComplex is an interface over the coreTypes MatrixComplex Type meant for operations
 type MatrixComplex interface {
-	coreTypes.MatrixComplex
+	m.MatrixComplex
 }
 
 func makeMatrix(rows int, cols int) (matrix Matrix) {
-	matrix = coreTypes.MakeMatrix(rows, cols)
+	matrix = m.MakeMatrix(rows, cols)
 	return
 }
 
 func makeComplexMatrix(rows int, cols int) (matrix MatrixComplex) {
-	matrix = coreTypes.MakeComplexMatrix(rows, cols)
+	matrix = m.MakeComplexMatrix(rows, cols)
 	return
 }

@@ -1,21 +1,22 @@
-package vectorOps
+package vops
 
 import (
 	"math"
 	"reflect"
 	"testing"
 
-	ct "github.com/traviscox1990/GoCalculate/coreTypes"
+	"github.com/NumberXNumbers/GoCalculate/types/m"
+	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
 
 func TestVectorScalarMulti(t *testing.T) {
 	testElementsA := []float64{1, 2, 3}
-	testVectorA := ct.MakeVectorWithElements(testElementsA, ct.RowVector)
+	testVectorA := v.MakeVectorWithElements(testElementsA, ct.RowVector)
 
 	testScalarA := 2.0
 
 	solutionElementsA := []float64{2, 4, 6}
-	solutionVectorA := ct.MakeVectorWithElements(solutionElementsA, ct.RowVector)
+	solutionVectorA := v.MakeVectorWithElements(solutionElementsA, ct.RowVector)
 
 	resultVectorA := VectorScalarMulti(testScalarA, testVectorA)
 
@@ -24,12 +25,12 @@ func TestVectorScalarMulti(t *testing.T) {
 	}
 
 	testElementsB := []complex128{1, 2, 3}
-	testVectorB := ct.MakeComplexVectorWithElements(testElementsB, ct.RowVector)
+	testVectorB := v.MakeComplexVectorWithElements(testElementsB, ct.RowVector)
 
 	testScalarB := 2.0 + 1i
 
 	solutionElementsB := []complex128{2 + 1i, 4 + 2i, 6 + 3i}
-	solutionVectorB := ct.MakeComplexVectorWithElements(solutionElementsB, ct.RowVector)
+	solutionVectorB := v.MakeComplexVectorWithElements(solutionElementsB, ct.RowVector)
 
 	resultVectorB := VectorComplexScalarMulti(testScalarB, testVectorB)
 
@@ -40,13 +41,13 @@ func TestVectorScalarMulti(t *testing.T) {
 
 func TestVectorAddition(t *testing.T) {
 	testElementsAa := []float64{1, 2, 3}
-	testVectorAa := ct.MakeVectorWithElements(testElementsAa, ct.RowVector)
+	testVectorAa := v.MakeVectorWithElements(testElementsAa, ct.RowVector)
 
 	testElementsAb := []float64{1, 2, 3}
-	testVectorAb := ct.MakeVectorWithElements(testElementsAb, ct.RowVector)
+	testVectorAb := v.MakeVectorWithElements(testElementsAb, ct.RowVector)
 
 	solutionElementsA := []float64{2, 4, 6}
-	solutionVectorA := ct.MakeVectorWithElements(solutionElementsA, ct.RowVector)
+	solutionVectorA := v.MakeVectorWithElements(solutionElementsA, ct.RowVector)
 
 	resultVectorA, errA := VectorAddition(testVectorAa, testVectorAb)
 
@@ -59,13 +60,13 @@ func TestVectorAddition(t *testing.T) {
 	}
 
 	testElementsBa := []complex128{1, 2, 3}
-	testVectorBa := ct.MakeComplexVectorWithElements(testElementsBa, ct.RowVector)
+	testVectorBa := v.MakeComplexVectorWithElements(testElementsBa, ct.RowVector)
 
 	testElementsBb := []complex128{1 + 1i, 2 + 2i, 3 + 3i}
-	testVectorBb := ct.MakeComplexVectorWithElements(testElementsBb, ct.RowVector)
+	testVectorBb := v.MakeComplexVectorWithElements(testElementsBb, ct.RowVector)
 
 	solutionElementsB := []complex128{2 + 1i, 4 + 2i, 6 + 3i}
-	solutionVectorB := ct.MakeComplexVectorWithElements(solutionElementsB, ct.RowVector)
+	solutionVectorB := v.MakeComplexVectorWithElements(solutionElementsB, ct.RowVector)
 
 	resultVectorB, errB := VectorComplexAddition(testVectorBa, testVectorBb)
 
@@ -78,10 +79,10 @@ func TestVectorAddition(t *testing.T) {
 	}
 
 	testElementsCa := []float64{1, 2, 3}
-	testVectorCa := ct.MakeVectorWithElements(testElementsCa, ct.RowVector)
+	testVectorCa := v.MakeVectorWithElements(testElementsCa, ct.RowVector)
 
 	testElementsCb := []float64{2, 4, 6}
-	testVectorCb := ct.MakeVectorWithElements(testElementsCb, ct.ColVector)
+	testVectorCb := v.MakeVectorWithElements(testElementsCb, ct.ColVector)
 
 	_, errC := VectorAddition(testVectorCa, testVectorCb)
 
@@ -90,10 +91,10 @@ func TestVectorAddition(t *testing.T) {
 	}
 
 	testElementsDa := []complex128{1, 2, 3}
-	testVectorDa := ct.MakeComplexVectorWithElements(testElementsDa, ct.ColVector)
+	testVectorDa := v.MakeComplexVectorWithElements(testElementsDa, ct.ColVector)
 
 	testElementsDb := []complex128{2 + 1i, 4 + 2i, 6 + 3i}
-	testVectorDb := ct.MakeComplexVectorWithElements(testElementsDb, ct.RowVector)
+	testVectorDb := v.MakeComplexVectorWithElements(testElementsDb, ct.RowVector)
 
 	_, errD := VectorComplexAddition(testVectorDa, testVectorDb)
 
@@ -102,10 +103,10 @@ func TestVectorAddition(t *testing.T) {
 	}
 
 	testElementsEa := []float64{1, 2}
-	testVectorEa := ct.MakeVectorWithElements(testElementsEa, ct.RowVector)
+	testVectorEa := v.MakeVectorWithElements(testElementsEa, ct.RowVector)
 
 	testElementsEb := []float64{2, 4, 6}
-	testVectorEb := ct.MakeVectorWithElements(testElementsEb, ct.RowVector)
+	testVectorEb := v.MakeVectorWithElements(testElementsEb, ct.RowVector)
 
 	_, errE := VectorAddition(testVectorEa, testVectorEb)
 
@@ -114,10 +115,10 @@ func TestVectorAddition(t *testing.T) {
 	}
 
 	testElementsFa := []complex128{1, 2, 3}
-	testVectorFa := ct.MakeComplexVectorWithElements(testElementsFa, ct.ColVector)
+	testVectorFa := v.MakeComplexVectorWithElements(testElementsFa, ct.ColVector)
 
 	testElementsFb := []complex128{2 + 1i, 6 + 3i}
-	testVectorFb := ct.MakeComplexVectorWithElements(testElementsFb, ct.ColVector)
+	testVectorFb := v.MakeComplexVectorWithElements(testElementsFb, ct.ColVector)
 
 	_, errF := VectorComplexAddition(testVectorFa, testVectorFb)
 
@@ -128,13 +129,13 @@ func TestVectorAddition(t *testing.T) {
 
 func TestVectorSubtraction(t *testing.T) {
 	testElementsAa := []float64{1, 2, 3}
-	testVectorAa := ct.MakeVectorWithElements(testElementsAa, ct.RowVector)
+	testVectorAa := v.MakeVectorWithElements(testElementsAa, ct.RowVector)
 
 	testElementsAb := []float64{1, 2, 3}
-	testVectorAb := ct.MakeVectorWithElements(testElementsAb, ct.RowVector)
+	testVectorAb := v.MakeVectorWithElements(testElementsAb, ct.RowVector)
 
 	solutionElementsA := []float64{0, 0, 0}
-	solutionVectorA := ct.MakeVectorWithElements(solutionElementsA, ct.RowVector)
+	solutionVectorA := v.MakeVectorWithElements(solutionElementsA, ct.RowVector)
 
 	resultVectorA, errA := VectorSubtraction(testVectorAa, testVectorAb)
 
@@ -147,13 +148,13 @@ func TestVectorSubtraction(t *testing.T) {
 	}
 
 	testElementsBa := []complex128{1, 2, 3}
-	testVectorBa := ct.MakeComplexVectorWithElements(testElementsBa, ct.RowVector)
+	testVectorBa := v.MakeComplexVectorWithElements(testElementsBa, ct.RowVector)
 
 	testElementsBb := []complex128{1 + 1i, 2 + 2i, 3 + 3i}
-	testVectorBb := ct.MakeComplexVectorWithElements(testElementsBb, ct.RowVector)
+	testVectorBb := v.MakeComplexVectorWithElements(testElementsBb, ct.RowVector)
 
 	solutionElementsB := []complex128{-1i, -2i, -3i}
-	solutionVectorB := ct.MakeComplexVectorWithElements(solutionElementsB, ct.RowVector)
+	solutionVectorB := v.MakeComplexVectorWithElements(solutionElementsB, ct.RowVector)
 
 	resultVectorB, errB := VectorComplexSubtraction(testVectorBa, testVectorBb)
 
@@ -166,10 +167,10 @@ func TestVectorSubtraction(t *testing.T) {
 	}
 
 	testElementsCa := []float64{1, 2, 3}
-	testVectorCa := ct.MakeVectorWithElements(testElementsCa, ct.RowVector)
+	testVectorCa := v.MakeVectorWithElements(testElementsCa, ct.RowVector)
 
 	testElementsCb := []float64{2, 4, 6}
-	testVectorCb := ct.MakeVectorWithElements(testElementsCb, ct.ColVector)
+	testVectorCb := v.MakeVectorWithElements(testElementsCb, ct.ColVector)
 
 	_, errC := VectorSubtraction(testVectorCa, testVectorCb)
 
@@ -178,10 +179,10 @@ func TestVectorSubtraction(t *testing.T) {
 	}
 
 	testElementsDa := []complex128{1, 2, 3}
-	testVectorDa := ct.MakeComplexVectorWithElements(testElementsDa, ct.ColVector)
+	testVectorDa := v.MakeComplexVectorWithElements(testElementsDa, ct.ColVector)
 
 	testElementsDb := []complex128{2 + 1i, 4 + 2i, 6 + 3i}
-	testVectorDb := ct.MakeComplexVectorWithElements(testElementsDb, ct.RowVector)
+	testVectorDb := v.MakeComplexVectorWithElements(testElementsDb, ct.RowVector)
 
 	_, errD := VectorComplexSubtraction(testVectorDa, testVectorDb)
 
@@ -190,10 +191,10 @@ func TestVectorSubtraction(t *testing.T) {
 	}
 
 	testElementsEa := []float64{1, 2}
-	testVectorEa := ct.MakeVectorWithElements(testElementsEa, ct.RowVector)
+	testVectorEa := v.MakeVectorWithElements(testElementsEa, ct.RowVector)
 
 	testElementsEb := []float64{2, 4, 6}
-	testVectorEb := ct.MakeVectorWithElements(testElementsEb, ct.RowVector)
+	testVectorEb := v.MakeVectorWithElements(testElementsEb, ct.RowVector)
 
 	_, errE := VectorSubtraction(testVectorEa, testVectorEb)
 
@@ -202,10 +203,10 @@ func TestVectorSubtraction(t *testing.T) {
 	}
 
 	testElementsFa := []complex128{1, 2, 3}
-	testVectorFa := ct.MakeComplexVectorWithElements(testElementsFa, ct.ColVector)
+	testVectorFa := v.MakeComplexVectorWithElements(testElementsFa, ct.ColVector)
 
 	testElementsFb := []complex128{2 + 1i, 6 + 3i}
-	testVectorFb := ct.MakeComplexVectorWithElements(testElementsFb, ct.ColVector)
+	testVectorFb := v.MakeComplexVectorWithElements(testElementsFb, ct.ColVector)
 
 	_, errF := VectorComplexSubtraction(testVectorFa, testVectorFb)
 
@@ -216,10 +217,10 @@ func TestVectorSubtraction(t *testing.T) {
 
 func TestInnerProduct(t *testing.T) {
 	testElementsAa := []float64{1, 2, 3}
-	testVectorAa := ct.MakeVectorWithElements(testElementsAa, ct.RowVector)
+	testVectorAa := v.MakeVectorWithElements(testElementsAa, ct.RowVector)
 
 	testElementsAb := []float64{1, 2, 3}
-	testVectorAb := ct.MakeVectorWithElements(testElementsAb, ct.ColVector)
+	testVectorAb := v.MakeVectorWithElements(testElementsAb, ct.ColVector)
 
 	solutionA := float64(14)
 
@@ -234,10 +235,10 @@ func TestInnerProduct(t *testing.T) {
 	}
 
 	testElementsBa := []complex128{1, 2, 3}
-	testVectorBa := ct.MakeComplexVectorWithElements(testElementsBa, ct.RowVector)
+	testVectorBa := v.MakeComplexVectorWithElements(testElementsBa, ct.RowVector)
 
 	testElementsBb := []complex128{1 + 1i, 2 + 2i, 3 + 3i}
-	testVectorBb := ct.MakeComplexVectorWithElements(testElementsBb, ct.ColVector)
+	testVectorBb := v.MakeComplexVectorWithElements(testElementsBb, ct.ColVector)
 
 	solutionB := complex128(14 + 14i)
 
@@ -252,10 +253,10 @@ func TestInnerProduct(t *testing.T) {
 	}
 
 	testElementsCa := []float64{1, 2, 3}
-	testVectorCa := ct.MakeVectorWithElements(testElementsCa, ct.ColVector)
+	testVectorCa := v.MakeVectorWithElements(testElementsCa, ct.ColVector)
 
 	testElementsCb := []float64{2, 4, 6}
-	testVectorCb := ct.MakeVectorWithElements(testElementsCb, ct.RowVector)
+	testVectorCb := v.MakeVectorWithElements(testElementsCb, ct.RowVector)
 
 	_, errC := InnerProduct(testVectorCa, testVectorCb)
 
@@ -264,10 +265,10 @@ func TestInnerProduct(t *testing.T) {
 	}
 
 	testElementsDa := []complex128{1, 2, 3}
-	testVectorDa := ct.MakeComplexVectorWithElements(testElementsDa, ct.ColVector)
+	testVectorDa := v.MakeComplexVectorWithElements(testElementsDa, ct.ColVector)
 
 	testElementsDb := []complex128{2 + 1i, 4 + 2i, 6 + 3i}
-	testVectorDb := ct.MakeComplexVectorWithElements(testElementsDb, ct.RowVector)
+	testVectorDb := v.MakeComplexVectorWithElements(testElementsDb, ct.RowVector)
 
 	_, errD := InnerProductComplex(testVectorDa, testVectorDb)
 
@@ -276,10 +277,10 @@ func TestInnerProduct(t *testing.T) {
 	}
 
 	testElementsEa := []float64{1, 2}
-	testVectorEa := ct.MakeVectorWithElements(testElementsEa, ct.RowVector)
+	testVectorEa := v.MakeVectorWithElements(testElementsEa, ct.RowVector)
 
 	testElementsEb := []float64{2, 4, 6}
-	testVectorEb := ct.MakeVectorWithElements(testElementsEb, ct.RowVector)
+	testVectorEb := v.MakeVectorWithElements(testElementsEb, ct.RowVector)
 
 	_, errE := InnerProduct(testVectorEa, testVectorEb)
 
@@ -288,10 +289,10 @@ func TestInnerProduct(t *testing.T) {
 	}
 
 	testElementsFa := []complex128{1, 2, 3}
-	testVectorFa := ct.MakeComplexVectorWithElements(testElementsFa, ct.ColVector)
+	testVectorFa := v.MakeComplexVectorWithElements(testElementsFa, ct.ColVector)
 
 	testElementsFb := []complex128{2 + 1i, 6 + 3i}
-	testVectorFb := ct.MakeComplexVectorWithElements(testElementsFb, ct.ColVector)
+	testVectorFb := v.MakeComplexVectorWithElements(testElementsFb, ct.ColVector)
 
 	_, errF := InnerProductComplex(testVectorFa, testVectorFb)
 
@@ -302,10 +303,10 @@ func TestInnerProduct(t *testing.T) {
 
 func TestAngleTheta(t *testing.T) {
 	testElementsAa := []float64{1, 0}
-	testVectorAa := ct.MakeVectorWithElements(testElementsAa, ct.RowVector)
+	testVectorAa := v.MakeVectorWithElements(testElementsAa, ct.RowVector)
 
 	testElementsAb := []float64{0, 1}
-	testVectorAb := ct.MakeVectorWithElements(testElementsAb, ct.ColVector)
+	testVectorAb := v.MakeVectorWithElements(testElementsAb, ct.ColVector)
 
 	solutionA := float64(math.Pi / float64(2))
 
@@ -320,10 +321,10 @@ func TestAngleTheta(t *testing.T) {
 	}
 
 	testElementsBa := []complex128{1, 0}
-	testVectorBa := ct.MakeComplexVectorWithElements(testElementsBa, ct.RowVector)
+	testVectorBa := v.MakeComplexVectorWithElements(testElementsBa, ct.RowVector)
 
 	testElementsBb := []complex128{0, 1}
-	testVectorBb := ct.MakeComplexVectorWithElements(testElementsBb, ct.ColVector)
+	testVectorBb := v.MakeComplexVectorWithElements(testElementsBb, ct.ColVector)
 
 	solutionB := complex128(math.Pi / complex128(2))
 
@@ -338,10 +339,10 @@ func TestAngleTheta(t *testing.T) {
 	}
 
 	testElementsCa := []float64{0, 0}
-	testVectorCa := ct.MakeVectorWithElements(testElementsCa, ct.ColVector)
+	testVectorCa := v.MakeVectorWithElements(testElementsCa, ct.ColVector)
 
 	testElementsCb := []float64{0, 0}
-	testVectorCb := ct.MakeVectorWithElements(testElementsCb, ct.RowVector)
+	testVectorCb := v.MakeVectorWithElements(testElementsCb, ct.RowVector)
 
 	_, errC := AngleTheta(testVectorCa, testVectorCb)
 
@@ -350,10 +351,10 @@ func TestAngleTheta(t *testing.T) {
 	}
 
 	testElementsDa := []complex128{0, 0}
-	testVectorDa := ct.MakeComplexVectorWithElements(testElementsDa, ct.ColVector)
+	testVectorDa := v.MakeComplexVectorWithElements(testElementsDa, ct.ColVector)
 
 	testElementsDb := []complex128{0, 0}
-	testVectorDb := ct.MakeComplexVectorWithElements(testElementsDb, ct.RowVector)
+	testVectorDb := v.MakeComplexVectorWithElements(testElementsDb, ct.RowVector)
 
 	_, errD := AngleThetaComplex(testVectorDa, testVectorDb)
 
@@ -362,10 +363,10 @@ func TestAngleTheta(t *testing.T) {
 	}
 
 	testElementsEa := []float64{1, 2}
-	testVectorEa := ct.MakeVectorWithElements(testElementsEa, ct.RowVector)
+	testVectorEa := v.MakeVectorWithElements(testElementsEa, ct.RowVector)
 
 	testElementsEb := []float64{2, 4, 6}
-	testVectorEb := ct.MakeVectorWithElements(testElementsEb, ct.RowVector)
+	testVectorEb := v.MakeVectorWithElements(testElementsEb, ct.RowVector)
 
 	_, errE := AngleTheta(testVectorEa, testVectorEb)
 
@@ -374,10 +375,10 @@ func TestAngleTheta(t *testing.T) {
 	}
 
 	testElementsFa := []complex128{1, 2, 3}
-	testVectorFa := ct.MakeComplexVectorWithElements(testElementsFa, ct.ColVector)
+	testVectorFa := v.MakeComplexVectorWithElements(testElementsFa, ct.ColVector)
 
 	testElementsFb := []complex128{2 + 1i, 6 + 3i}
-	testVectorFb := ct.MakeComplexVectorWithElements(testElementsFb, ct.ColVector)
+	testVectorFb := v.MakeComplexVectorWithElements(testElementsFb, ct.ColVector)
 
 	_, errF := AngleThetaComplex(testVectorFa, testVectorFb)
 
@@ -388,13 +389,13 @@ func TestAngleTheta(t *testing.T) {
 
 func TestOuterProduct(t *testing.T) {
 	testElementsAa := []float64{1, 0}
-	testVectorAa := ct.MakeVectorWithElements(testElementsAa, ct.ColVector)
+	testVectorAa := v.MakeVectorWithElements(testElementsAa, ct.ColVector)
 
 	testElementsAb := []float64{0, 1}
-	testVectorAb := ct.MakeVectorWithElements(testElementsAb, ct.RowVector)
+	testVectorAb := v.MakeVectorWithElements(testElementsAb, ct.RowVector)
 
 	solutionElementsA := [][]float64{{0, 1}, {0, 0}}
-	solutionMatrixA := ct.MakeMatrixWithElements(solutionElementsA)
+	solutionMatrixA := m.MakeMatrixWithElements(solutionElementsA)
 
 	resultMatrixA, errA := OuterProduct(testVectorAa, testVectorAb)
 
@@ -407,13 +408,13 @@ func TestOuterProduct(t *testing.T) {
 	}
 
 	testElementsBa := []complex128{1, 0}
-	testVectorBa := ct.MakeComplexVectorWithElements(testElementsBa, ct.ColVector)
+	testVectorBa := v.MakeComplexVectorWithElements(testElementsBa, ct.ColVector)
 
 	testElementsBb := []complex128{0, 1}
-	testVectorBb := ct.MakeComplexVectorWithElements(testElementsBb, ct.RowVector)
+	testVectorBb := v.MakeComplexVectorWithElements(testElementsBb, ct.RowVector)
 
 	solutionElementsB := [][]complex128{{0, 1}, {0, 0}}
-	solutionMatrixB := ct.MakeComplexMatrixWithElements(solutionElementsB)
+	solutionMatrixB := m.MakeComplexMatrixWithElements(solutionElementsB)
 
 	resultMatrixB, errB := OuterProductComplex(testVectorBa, testVectorBb)
 
@@ -426,10 +427,10 @@ func TestOuterProduct(t *testing.T) {
 	}
 
 	testElementsCa := []float64{1, 2}
-	testVectorCa := ct.MakeVectorWithElements(testElementsCa, ct.RowVector)
+	testVectorCa := v.MakeVectorWithElements(testElementsCa, ct.RowVector)
 
 	testElementsCb := []float64{2, 4, 6}
-	testVectorCb := ct.MakeVectorWithElements(testElementsCb, ct.RowVector)
+	testVectorCb := v.MakeVectorWithElements(testElementsCb, ct.RowVector)
 
 	_, errC := OuterProduct(testVectorCa, testVectorCb)
 
@@ -438,10 +439,10 @@ func TestOuterProduct(t *testing.T) {
 	}
 
 	testElementsDa := []complex128{1, 2, 3}
-	testVectorDa := ct.MakeComplexVectorWithElements(testElementsDa, ct.ColVector)
+	testVectorDa := v.MakeComplexVectorWithElements(testElementsDa, ct.ColVector)
 
 	testElementsDb := []complex128{2 + 1i, 6 + 3i}
-	testVectorDb := ct.MakeComplexVectorWithElements(testElementsDb, ct.ColVector)
+	testVectorDb := v.MakeComplexVectorWithElements(testElementsDb, ct.ColVector)
 
 	_, errD := OuterProductComplex(testVectorDa, testVectorDb)
 

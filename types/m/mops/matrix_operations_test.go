@@ -1,36 +1,36 @@
-package matrixOps
+package mops
 
 import (
 	"reflect"
 	"testing"
 
-	ct "github.com/traviscox1990/GoCalculate/coreTypes"
+	"github.com/NumberXNumbers/GoCalculate/types/m"
 )
 
 func TestMatrixScalarMulti(t *testing.T) {
 	testElementsA := [][]float64{{1, 0}, {0, 1}}
-	testMatrixA := ct.MakeMatrixWithElements(testElementsA)
+	testMatrixA := m.MakeMatrixWithElements(testElementsA)
 
 	testScalarA := 2.0
 
 	resultMatrixA := MatrixScalarMulti(testScalarA, testMatrixA)
 
 	solutionElementsA := [][]float64{{2, 0}, {0, 2}}
-	solutionMatrixA := ct.MakeMatrixWithElements(solutionElementsA)
+	solutionMatrixA := m.MakeMatrixWithElements(solutionElementsA)
 
 	if !reflect.DeepEqual(solutionMatrixA, resultMatrixA) {
 		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsB := [][]complex128{{1, 0}, {0, 1}}
-	testMatrixB := ct.MakeComplexMatrixWithElements(testElementsB)
+	testMatrixB := m.MakeComplexMatrixWithElements(testElementsB)
 
 	testScalarB := 2.0 + 1i
 
 	resultMatrixB := MatrixComplexScalarMulti(testScalarB, testMatrixB)
 
 	solutionElementsB := [][]complex128{{2 + 1i, 0}, {0, 2 + 1i}}
-	solutionMatrixB := ct.MakeComplexMatrixWithElements(solutionElementsB)
+	solutionMatrixB := m.MakeComplexMatrixWithElements(solutionElementsB)
 
 	if !reflect.DeepEqual(solutionMatrixB, resultMatrixB) {
 		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixB, resultMatrixB))
@@ -39,13 +39,13 @@ func TestMatrixScalarMulti(t *testing.T) {
 
 func TestMatrixMultiSimple(t *testing.T) {
 	testElementsAa := [][]float64{{1, 0}, {0, 1}}
-	testMatrixAa := ct.MakeMatrixWithElements(testElementsAa)
+	testMatrixAa := m.MakeMatrixWithElements(testElementsAa)
 
 	testElementsAb := [][]float64{{0, 1}, {1, 0}}
-	testMatrixAb := ct.MakeMatrixWithElements(testElementsAb)
+	testMatrixAb := m.MakeMatrixWithElements(testElementsAb)
 
 	solutionElementsA := [][]float64{{0, 1}, {1, 0}}
-	solutionMatrixA := ct.MakeMatrixWithElements(solutionElementsA)
+	solutionMatrixA := m.MakeMatrixWithElements(solutionElementsA)
 
 	resultMatrixA, errA := MatrixMultiSimple(testMatrixAa, testMatrixAb)
 
@@ -58,13 +58,13 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	testElementsBa := [][]float64{{2, 0}, {0, 2}}
-	testMatrixBa := ct.MakeMatrixWithElements(testElementsBa)
+	testMatrixBa := m.MakeMatrixWithElements(testElementsBa)
 
 	testElementsBb := [][]float64{{0, 1}, {1, 0}}
-	testMatrixBb := ct.MakeMatrixWithElements(testElementsBb)
+	testMatrixBb := m.MakeMatrixWithElements(testElementsBb)
 
 	solutionElementsB := [][]float64{{0, 2}, {2, 0}}
-	solutionMatrixB := ct.MakeMatrixWithElements(solutionElementsB)
+	solutionMatrixB := m.MakeMatrixWithElements(solutionElementsB)
 
 	resultMatrixB, errB := MatrixMultiSimple(testMatrixBa, testMatrixBb)
 
@@ -77,13 +77,13 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	testElementsCa := [][]float64{{0, 1}, {1, 0}}
-	testMatrixCa := ct.MakeMatrixWithElements(testElementsCa)
+	testMatrixCa := m.MakeMatrixWithElements(testElementsCa)
 
 	testElementsCb := [][]float64{{1, 0}, {0, 1}}
-	testMatrixCb := ct.MakeMatrixWithElements(testElementsCb)
+	testMatrixCb := m.MakeMatrixWithElements(testElementsCb)
 
 	solutionElementsC := [][]float64{{0, 1}, {1, 0}}
-	solutionMatrixC := ct.MakeMatrixWithElements(solutionElementsC)
+	solutionMatrixC := m.MakeMatrixWithElements(solutionElementsC)
 
 	resultMatrixC, errC := MatrixMultiSimple(testMatrixCa, testMatrixCb)
 
@@ -96,10 +96,10 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	testElementsDa := [][]float64{{1, 0}, {0, 1}, {0, 1}}
-	testMatrixDa := ct.MakeMatrixWithElements(testElementsDa)
+	testMatrixDa := m.MakeMatrixWithElements(testElementsDa)
 
 	testElementsDb := [][]float64{{0, 1}, {1, 0}, {0, 1}}
-	testMatrixDb := ct.MakeMatrixWithElements(testElementsDb)
+	testMatrixDb := m.MakeMatrixWithElements(testElementsDb)
 
 	_, errD := MatrixMultiSimple(testMatrixDa, testMatrixDb)
 
@@ -108,13 +108,13 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	testElementsEa := [][]complex128{{1, 0}, {0, 1}}
-	testMatrixEa := ct.MakeComplexMatrixWithElements(testElementsEa)
+	testMatrixEa := m.MakeComplexMatrixWithElements(testElementsEa)
 
 	testElementsEb := [][]complex128{{0, 1}, {1, 0}}
-	testMatrixEb := ct.MakeComplexMatrixWithElements(testElementsEb)
+	testMatrixEb := m.MakeComplexMatrixWithElements(testElementsEb)
 
 	solutionElementsE := [][]complex128{{0, 1}, {1, 0}}
-	solutionMatrixE := ct.MakeComplexMatrixWithElements(solutionElementsE)
+	solutionMatrixE := m.MakeComplexMatrixWithElements(solutionElementsE)
 
 	resultMatrixE, errE := MatrixComplexMultiSimple(testMatrixEa, testMatrixEb)
 
@@ -127,13 +127,13 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	testElementsFa := [][]complex128{{2, 0}, {0, 2}}
-	testMatrixFa := ct.MakeComplexMatrixWithElements(testElementsFa)
+	testMatrixFa := m.MakeComplexMatrixWithElements(testElementsFa)
 
 	testElementsFb := [][]complex128{{0, 1}, {1, 0}}
-	testMatrixFb := ct.MakeComplexMatrixWithElements(testElementsFb)
+	testMatrixFb := m.MakeComplexMatrixWithElements(testElementsFb)
 
 	solutionElementsF := [][]complex128{{0, 2}, {2, 0}}
-	solutionMatrixF := ct.MakeComplexMatrixWithElements(solutionElementsF)
+	solutionMatrixF := m.MakeComplexMatrixWithElements(solutionElementsF)
 
 	resultMatrixF, errF := MatrixComplexMultiSimple(testMatrixFa, testMatrixFb)
 
@@ -146,13 +146,13 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	testElementsGa := [][]complex128{{0, 1}, {1, 0}}
-	testMatrixGa := ct.MakeComplexMatrixWithElements(testElementsGa)
+	testMatrixGa := m.MakeComplexMatrixWithElements(testElementsGa)
 
 	testElementsGb := [][]complex128{{1, 0}, {0, 1}}
-	testMatrixGb := ct.MakeComplexMatrixWithElements(testElementsGb)
+	testMatrixGb := m.MakeComplexMatrixWithElements(testElementsGb)
 
 	solutionElementsG := [][]complex128{{0, 1}, {1, 0}}
-	solutionMatrixG := ct.MakeComplexMatrixWithElements(solutionElementsG)
+	solutionMatrixG := m.MakeComplexMatrixWithElements(solutionElementsG)
 
 	resultMatrixG, errG := MatrixComplexMultiSimple(testMatrixGa, testMatrixGb)
 
@@ -165,10 +165,10 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	testElementsHa := [][]complex128{{1, 0}, {0, 1}, {0, 1}}
-	testMatrixHa := ct.MakeComplexMatrixWithElements(testElementsHa)
+	testMatrixHa := m.MakeComplexMatrixWithElements(testElementsHa)
 
 	testElementsHb := [][]complex128{{0, 1}, {1, 0}, {0, 1}}
-	testMatrixHb := ct.MakeComplexMatrixWithElements(testElementsHb)
+	testMatrixHb := m.MakeComplexMatrixWithElements(testElementsHb)
 
 	_, errH := MatrixComplexMultiSimple(testMatrixHa, testMatrixHb)
 
@@ -179,13 +179,13 @@ func TestMatrixMultiSimple(t *testing.T) {
 
 func TestMatrixAddition(t *testing.T) {
 	testElementsAa := [][]float64{{1, 0}, {0, 1}}
-	testMatrixAa := ct.MakeMatrixWithElements(testElementsAa)
+	testMatrixAa := m.MakeMatrixWithElements(testElementsAa)
 
 	testElementsAb := [][]float64{{0, 1}, {1, 0}}
-	testMatrixAb := ct.MakeMatrixWithElements(testElementsAb)
+	testMatrixAb := m.MakeMatrixWithElements(testElementsAb)
 
 	solutionElementsA := [][]float64{{1, 1}, {1, 1}}
-	solutionMatrixA := ct.MakeMatrixWithElements(solutionElementsA)
+	solutionMatrixA := m.MakeMatrixWithElements(solutionElementsA)
 
 	resultMatrixA, errA := MatrixAddition(testMatrixAa, testMatrixAb)
 
@@ -198,13 +198,13 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	testElementsBa := [][]float64{{2, 0}, {0, 2}, {2, 0}}
-	testMatrixBa := ct.MakeMatrixWithElements(testElementsBa)
+	testMatrixBa := m.MakeMatrixWithElements(testElementsBa)
 
 	testElementsBb := [][]float64{{0, 1}, {1, 0}, {1, 0}}
-	testMatrixBb := ct.MakeMatrixWithElements(testElementsBb)
+	testMatrixBb := m.MakeMatrixWithElements(testElementsBb)
 
 	solutionElementsB := [][]float64{{2, 1}, {1, 2}, {3, 0}}
-	solutionMatrixB := ct.MakeMatrixWithElements(solutionElementsB)
+	solutionMatrixB := m.MakeMatrixWithElements(solutionElementsB)
 
 	resultMatrixB, errB := MatrixAddition(testMatrixBa, testMatrixBb)
 
@@ -217,13 +217,13 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	testElementsCa := [][]float64{{0, 1, 0}, {1, 0, 1}}
-	testMatrixCa := ct.MakeMatrixWithElements(testElementsCa)
+	testMatrixCa := m.MakeMatrixWithElements(testElementsCa)
 
 	testElementsCb := [][]float64{{1, 0, 1}, {0, 1, 0}}
-	testMatrixCb := ct.MakeMatrixWithElements(testElementsCb)
+	testMatrixCb := m.MakeMatrixWithElements(testElementsCb)
 
 	solutionElementsC := [][]float64{{1, 1, 1}, {1, 1, 1}}
-	solutionMatrixC := ct.MakeMatrixWithElements(solutionElementsC)
+	solutionMatrixC := m.MakeMatrixWithElements(solutionElementsC)
 
 	resultMatrixC, errC := MatrixAddition(testMatrixCa, testMatrixCb)
 
@@ -236,10 +236,10 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	testElementsDa := [][]float64{{1, 0}, {0, 1}, {1, 0}}
-	testMatrixDa := ct.MakeMatrixWithElements(testElementsDa)
+	testMatrixDa := m.MakeMatrixWithElements(testElementsDa)
 
 	testElementsDb := [][]float64{{0, 1, 1}, {1, 0, 1}}
-	testMatrixDb := ct.MakeMatrixWithElements(testElementsDb)
+	testMatrixDb := m.MakeMatrixWithElements(testElementsDb)
 
 	_, errD := MatrixAddition(testMatrixDa, testMatrixDb)
 
@@ -248,13 +248,13 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	testElementsEa := [][]complex128{{1, 0, 1}, {0, 1, 1}}
-	testMatrixEa := ct.MakeComplexMatrixWithElements(testElementsEa)
+	testMatrixEa := m.MakeComplexMatrixWithElements(testElementsEa)
 
 	testElementsEb := [][]complex128{{0, 1 + 1i, 2 + 2i}, {1, 0, 0}}
-	testMatrixEb := ct.MakeComplexMatrixWithElements(testElementsEb)
+	testMatrixEb := m.MakeComplexMatrixWithElements(testElementsEb)
 
 	solutionElementsE := [][]complex128{{1, 1 + 1i, 3 + 2i}, {1, 1, 1}}
-	solutionMatrixE := ct.MakeComplexMatrixWithElements(solutionElementsE)
+	solutionMatrixE := m.MakeComplexMatrixWithElements(solutionElementsE)
 
 	resultMatrixE, errE := MatrixComplexAddition(testMatrixEa, testMatrixEb)
 
@@ -267,13 +267,13 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	testElementsFa := [][]complex128{{2, 0}, {0, 2}}
-	testMatrixFa := ct.MakeComplexMatrixWithElements(testElementsFa)
+	testMatrixFa := m.MakeComplexMatrixWithElements(testElementsFa)
 
 	testElementsFb := [][]complex128{{0, 1}, {1, 0}}
-	testMatrixFb := ct.MakeComplexMatrixWithElements(testElementsFb)
+	testMatrixFb := m.MakeComplexMatrixWithElements(testElementsFb)
 
 	solutionElementsF := [][]complex128{{2, 1}, {1, 2}}
-	solutionMatrixF := ct.MakeComplexMatrixWithElements(solutionElementsF)
+	solutionMatrixF := m.MakeComplexMatrixWithElements(solutionElementsF)
 
 	resultMatrixF, errF := MatrixComplexAddition(testMatrixFa, testMatrixFb)
 
@@ -286,13 +286,13 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	testElementsGa := [][]complex128{{0, 1}, {1, 0}, {1 + 5i, 5 - 4i}}
-	testMatrixGa := ct.MakeComplexMatrixWithElements(testElementsGa)
+	testMatrixGa := m.MakeComplexMatrixWithElements(testElementsGa)
 
 	testElementsGb := [][]complex128{{1, 0}, {0, 1}, {0, 0}}
-	testMatrixGb := ct.MakeComplexMatrixWithElements(testElementsGb)
+	testMatrixGb := m.MakeComplexMatrixWithElements(testElementsGb)
 
 	solutionElementsG := [][]complex128{{1, 1}, {1, 1}, {1 + 5i, 5 - 4i}}
-	solutionMatrixG := ct.MakeComplexMatrixWithElements(solutionElementsG)
+	solutionMatrixG := m.MakeComplexMatrixWithElements(solutionElementsG)
 
 	resultMatrixG, errG := MatrixComplexAddition(testMatrixGa, testMatrixGb)
 
@@ -305,10 +305,10 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	testElementsHa := [][]complex128{{1, 0}, {0, 1}, {0, 1}}
-	testMatrixHa := ct.MakeComplexMatrixWithElements(testElementsHa)
+	testMatrixHa := m.MakeComplexMatrixWithElements(testElementsHa)
 
 	testElementsHb := [][]complex128{{0, 1}, {1, 0}}
-	testMatrixHb := ct.MakeComplexMatrixWithElements(testElementsHb)
+	testMatrixHb := m.MakeComplexMatrixWithElements(testElementsHb)
 
 	_, errH := MatrixComplexAddition(testMatrixHa, testMatrixHb)
 
@@ -319,13 +319,13 @@ func TestMatrixAddition(t *testing.T) {
 
 func TestMatrixSubtraction(t *testing.T) {
 	testElementsAa := [][]float64{{1, 0}, {0, 1}}
-	testMatrixAa := ct.MakeMatrixWithElements(testElementsAa)
+	testMatrixAa := m.MakeMatrixWithElements(testElementsAa)
 
 	testElementsAb := [][]float64{{0, 1}, {1, 0}}
-	testMatrixAb := ct.MakeMatrixWithElements(testElementsAb)
+	testMatrixAb := m.MakeMatrixWithElements(testElementsAb)
 
 	solutionElementsA := [][]float64{{1, -1}, {-1, 1}}
-	solutionMatrixA := ct.MakeMatrixWithElements(solutionElementsA)
+	solutionMatrixA := m.MakeMatrixWithElements(solutionElementsA)
 
 	resultMatrixA, errA := MatrixSubtraction(testMatrixAa, testMatrixAb)
 
@@ -338,13 +338,13 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	testElementsBa := [][]float64{{2, 0}, {0, 2}, {2, 0}}
-	testMatrixBa := ct.MakeMatrixWithElements(testElementsBa)
+	testMatrixBa := m.MakeMatrixWithElements(testElementsBa)
 
 	testElementsBb := [][]float64{{0, 1}, {1, 0}, {1, 0}}
-	testMatrixBb := ct.MakeMatrixWithElements(testElementsBb)
+	testMatrixBb := m.MakeMatrixWithElements(testElementsBb)
 
 	solutionElementsB := [][]float64{{2, -1}, {-1, 2}, {1, 0}}
-	solutionMatrixB := ct.MakeMatrixWithElements(solutionElementsB)
+	solutionMatrixB := m.MakeMatrixWithElements(solutionElementsB)
 
 	resultMatrixB, errB := MatrixSubtraction(testMatrixBa, testMatrixBb)
 
@@ -357,13 +357,13 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	testElementsCa := [][]float64{{0, 1, 0}, {1, 0, 1}}
-	testMatrixCa := ct.MakeMatrixWithElements(testElementsCa)
+	testMatrixCa := m.MakeMatrixWithElements(testElementsCa)
 
 	testElementsCb := [][]float64{{1, 0, 1}, {0, 1, 0}}
-	testMatrixCb := ct.MakeMatrixWithElements(testElementsCb)
+	testMatrixCb := m.MakeMatrixWithElements(testElementsCb)
 
 	solutionElementsC := [][]float64{{-1, 1, -1}, {1, -1, 1}}
-	solutionMatrixC := ct.MakeMatrixWithElements(solutionElementsC)
+	solutionMatrixC := m.MakeMatrixWithElements(solutionElementsC)
 
 	resultMatrixC, errC := MatrixSubtraction(testMatrixCa, testMatrixCb)
 
@@ -376,10 +376,10 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	testElementsDa := [][]float64{{1, 0}, {0, 1}, {1, 0}}
-	testMatrixDa := ct.MakeMatrixWithElements(testElementsDa)
+	testMatrixDa := m.MakeMatrixWithElements(testElementsDa)
 
 	testElementsDb := [][]float64{{0, 1, 1}, {1, 0, 1}}
-	testMatrixDb := ct.MakeMatrixWithElements(testElementsDb)
+	testMatrixDb := m.MakeMatrixWithElements(testElementsDb)
 
 	_, errD := MatrixSubtraction(testMatrixDa, testMatrixDb)
 
@@ -388,13 +388,13 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	testElementsEa := [][]complex128{{1, 0, 1}, {0, 1, 1}}
-	testMatrixEa := ct.MakeComplexMatrixWithElements(testElementsEa)
+	testMatrixEa := m.MakeComplexMatrixWithElements(testElementsEa)
 
 	testElementsEb := [][]complex128{{0, 1 + 1i, 2 + 2i}, {1, 0, 0}}
-	testMatrixEb := ct.MakeComplexMatrixWithElements(testElementsEb)
+	testMatrixEb := m.MakeComplexMatrixWithElements(testElementsEb)
 
 	solutionElementsE := [][]complex128{{1, -1 - 1i, -1 - 2i}, {-1, 1, 1}}
-	solutionMatrixE := ct.MakeComplexMatrixWithElements(solutionElementsE)
+	solutionMatrixE := m.MakeComplexMatrixWithElements(solutionElementsE)
 
 	resultMatrixE, errE := MatrixComplexSubtraction(testMatrixEa, testMatrixEb)
 
@@ -407,13 +407,13 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	testElementsFa := [][]complex128{{2, 0}, {0, 2}}
-	testMatrixFa := ct.MakeComplexMatrixWithElements(testElementsFa)
+	testMatrixFa := m.MakeComplexMatrixWithElements(testElementsFa)
 
 	testElementsFb := [][]complex128{{0, 1}, {1, 0}}
-	testMatrixFb := ct.MakeComplexMatrixWithElements(testElementsFb)
+	testMatrixFb := m.MakeComplexMatrixWithElements(testElementsFb)
 
 	solutionElementsF := [][]complex128{{2, -1}, {-1, 2}}
-	solutionMatrixF := ct.MakeComplexMatrixWithElements(solutionElementsF)
+	solutionMatrixF := m.MakeComplexMatrixWithElements(solutionElementsF)
 
 	resultMatrixF, errF := MatrixComplexSubtraction(testMatrixFa, testMatrixFb)
 
@@ -426,13 +426,13 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	testElementsGa := [][]complex128{{0, 1}, {1, 0}, {1 + 5i, 5 - 4i}}
-	testMatrixGa := ct.MakeComplexMatrixWithElements(testElementsGa)
+	testMatrixGa := m.MakeComplexMatrixWithElements(testElementsGa)
 
 	testElementsGb := [][]complex128{{1, 0}, {0, 1}, {0, 0}}
-	testMatrixGb := ct.MakeComplexMatrixWithElements(testElementsGb)
+	testMatrixGb := m.MakeComplexMatrixWithElements(testElementsGb)
 
 	solutionElementsG := [][]complex128{{-1, 1}, {1, -1}, {1 + 5i, 5 - 4i}}
-	solutionMatrixG := ct.MakeComplexMatrixWithElements(solutionElementsG)
+	solutionMatrixG := m.MakeComplexMatrixWithElements(solutionElementsG)
 
 	resultMatrixG, errG := MatrixComplexSubtraction(testMatrixGa, testMatrixGb)
 
@@ -445,10 +445,10 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	testElementsHa := [][]complex128{{1, 0}, {0, 1}, {0, 1}}
-	testMatrixHa := ct.MakeComplexMatrixWithElements(testElementsHa)
+	testMatrixHa := m.MakeComplexMatrixWithElements(testElementsHa)
 
 	testElementsHb := [][]complex128{{0, 1}, {1, 0}}
-	testMatrixHb := ct.MakeComplexMatrixWithElements(testElementsHb)
+	testMatrixHb := m.MakeComplexMatrixWithElements(testElementsHb)
 
 	_, errH := MatrixComplexSubtraction(testMatrixHa, testMatrixHb)
 

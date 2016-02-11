@@ -1,4 +1,4 @@
-package coreTypes
+package m
 
 import (
 	"reflect"

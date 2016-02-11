@@ -1,4 +1,4 @@
-package matrixOps
+package mops
 
 import "errors"
 
