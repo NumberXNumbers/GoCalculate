@@ -87,15 +87,15 @@ func RungeKutta2(a float64, b float64, N int, initialCondition float64, f func(x
 	var kappa float64
 	var kappa2 float64
 
-	for i := 1; i < N+1; i++ {
+	for i := 1; i < N; i++ {
 		kappa = stepSize * f(theta, omega)
 		kappa2 = stepSize * f(theta+stepSize/2.0, omega+kappa/2.0)
 
 		omega += kappa2
 		theta += stepSize
 
-		solutionSet[i][0] = theta
-		solutionSet[i][1] = omega
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
 	}
 
 	return solutionSet
@@ -119,15 +119,15 @@ func ModifiedEulerMethod(a float64, b float64, N int, initialCondition float64, 
 	var kappa float64
 	var kappa2 float64
 
-	for i := 1; i < N+1; i++ {
+	for i := 1; i < N; i++ {
 		kappa = stepSize * f(theta, omega)
 		kappa2 = stepSize * f(theta, omega+kappa)
 
 		omega += (kappa + kappa2) / 2.0
 		theta += stepSize
 
-		solutionSet[i][0] = theta
-		solutionSet[i][1] = omega
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
 	}
 
 	return solutionSet
@@ -152,7 +152,7 @@ func HeunMethod(a float64, b float64, N int, initialCondition float64, f func(x,
 	var kappa2 float64
 	var kappa3 float64
 
-	for i := 1; i < N+1; i++ {
+	for i := 1; i < N; i++ {
 		kappa = stepSize * f(theta, omega)
 		kappa2 = stepSize * f(theta+stepSize/3.0, omega+kappa/3.0)
 		kappa3 = stepSize * f(theta+2.0*stepSize/3.0, omega+2.0*kappa2/3.0)
@@ -160,8 +160,8 @@ func HeunMethod(a float64, b float64, N int, initialCondition float64, f func(x,
 		omega += (kappa + 3.0*kappa3) / 4.0
 		theta += stepSize
 
-		solutionSet[i][0] = theta
-		solutionSet[i][1] = omega
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
 	}
 
 	return solutionSet
@@ -187,7 +187,7 @@ func RungeKutta4(a float64, b float64, N int, initialCondition float64, f func(x
 	var kappa3 float64
 	var kappa4 float64
 
-	for i := 1; i < N+1; i++ {
+	for i := 1; i < N; i++ {
 		kappa = stepSize * f(theta, omega)
 		kappa2 = stepSize * f(theta+stepSize/2.0, omega+kappa/2.0)
 		kappa3 = stepSize * f(theta+stepSize/2.0, omega+kappa2/2.0)
@@ -196,8 +196,8 @@ func RungeKutta4(a float64, b float64, N int, initialCondition float64, f func(x
 		omega += (kappa + 2.0*kappa2 + 2.0*kappa3 + kappa4) / 6.0
 		theta += stepSize
 
-		solutionSet[i][0] = theta
-		solutionSet[i][1] = omega
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
 	}
 
 	return solutionSet
@@ -267,6 +267,200 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 		} else if stepSize < minStep {
 			done = true
 		}
+	}
+
+	return solutionSet
+}
+
+// AdamsBashforth2 returns a solution found using the 2nd order Adams-Bashforth method
+func AdamsBashforth2(a float64, b float64, N int, initialCondition1 float64,
+	initialCondition2 float64, f func(x, y float64) float64) [][]float64 {
+	stepSize := (b - a) / float64(N)
+	theta := a
+	omega1 := initialCondition1
+	omega2 := initialCondition2
+
+	solutionSet := make([][]float64, N+1)
+
+	for i := 0; i < N+1; i++ {
+		solutionSet[i] = make([]float64, 2)
+	}
+
+	for i := 0; i < 2; i++ {
+		solutionSet[i][0] = theta
+		theta += stepSize
+	}
+
+	solutionSet[0][1] = omega1
+	solutionSet[1][1] = omega2
+
+	omega := omega2
+	scalingConstantFactor := stepSize / 2.0
+
+	var kappa float64
+	var kappa2 float64
+
+	for i := 2; i < N; i++ {
+		kappa = scalingConstantFactor * 3.0 * f(solutionSet[i][0], solutionSet[i][1])
+		kappa2 = scalingConstantFactor * f(solutionSet[i-1][0], solutionSet[i-1][1])
+
+		omega += (kappa - kappa2)
+		theta += stepSize
+
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
+	}
+
+	return solutionSet
+}
+
+// AdamsBashforth3 returns a solution found using the 3rd order Adams-Bashforth method
+func AdamsBashforth3(a float64, b float64, N int, initialCondition1 float64,
+	initialCondition2 float64, initialCondition3 float64, f func(x, y float64) float64) [][]float64 {
+	stepSize := (b - a) / float64(N)
+	theta := a
+	omega1 := initialCondition1
+	omega2 := initialCondition2
+	omega3 := initialCondition3
+
+	solutionSet := make([][]float64, N+1)
+
+	for i := 0; i < N+1; i++ {
+		solutionSet[i] = make([]float64, 2)
+	}
+
+	for i := 0; i < 3; i++ {
+		solutionSet[i][0] = theta
+		theta += stepSize
+	}
+
+	solutionSet[0][1] = omega1
+	solutionSet[1][1] = omega2
+	solutionSet[2][1] = omega3
+
+	omega := omega3
+	scalingConstantFactor := stepSize / 12.0
+
+	var kappa float64
+	var kappa2 float64
+	var kappa3 float64
+
+	for i := 2; i < N; i++ {
+		kappa = scalingConstantFactor * 23.0 * f(solutionSet[i][0], solutionSet[i][1])
+		kappa2 = scalingConstantFactor * 16.0 * f(solutionSet[i-1][0], solutionSet[i-1][1])
+		kappa3 = scalingConstantFactor * 5.0 * f(solutionSet[i-2][0], solutionSet[i-2][1])
+
+		omega += (kappa - kappa2 + kappa3)
+		theta += stepSize
+
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
+	}
+
+	return solutionSet
+}
+
+// AdamsBashforth4 returns a solution found using the 4th order Adams-Bashforth method
+func AdamsBashforth4(a float64, b float64, N int, initialCondition1 float64,
+	initialCondition2 float64, initialCondition3 float64, initialCondition4 float64,
+	f func(x, y float64) float64) [][]float64 {
+	stepSize := (b - a) / float64(N)
+	theta := a
+	omega1 := initialCondition1
+	omega2 := initialCondition2
+	omega3 := initialCondition3
+	omega4 := initialCondition4
+
+	solutionSet := make([][]float64, N+1)
+
+	for i := 0; i < N+1; i++ {
+		solutionSet[i] = make([]float64, 2)
+	}
+
+	for i := 0; i < 4; i++ {
+		solutionSet[i][0] = theta
+		theta += stepSize
+	}
+
+	solutionSet[0][1] = omega1
+	solutionSet[1][1] = omega2
+	solutionSet[2][1] = omega3
+	solutionSet[3][1] = omega4
+
+	omega := omega4
+	scalingConstantFactor := stepSize / 24.0
+
+	var kappa float64
+	var kappa2 float64
+	var kappa3 float64
+	var kappa4 float64
+
+	for i := 3; i < N; i++ {
+		kappa = scalingConstantFactor * 55.0 * f(solutionSet[i][0], solutionSet[i][1])
+		kappa2 = scalingConstantFactor * 59.0 * f(solutionSet[i-1][0], solutionSet[i-1][1])
+		kappa3 = scalingConstantFactor * 37.0 * f(solutionSet[i-2][0], solutionSet[i-2][1])
+		kappa4 = scalingConstantFactor * 9.0 * f(solutionSet[i-3][0], solutionSet[i-3][1])
+
+		omega += (kappa - kappa2 + kappa3 - kappa4)
+		theta += stepSize
+
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
+	}
+
+	return solutionSet
+}
+
+// AdamsBashforth5 returns a solution found using the 5th order Adams-Bashforth method
+func AdamsBashforth5(a float64, b float64, N int, initialCondition1 float64,
+	initialCondition2 float64, initialCondition3 float64, initialCondition4 float64,
+	initialCondition5 float64, f func(x, y float64) float64) [][]float64 {
+	stepSize := (b - a) / float64(N)
+	theta := a
+	omega1 := initialCondition1
+	omega2 := initialCondition2
+	omega3 := initialCondition3
+	omega4 := initialCondition4
+	omega5 := initialCondition5
+
+	solutionSet := make([][]float64, N+1)
+
+	for i := 0; i < N+1; i++ {
+		solutionSet[i] = make([]float64, 2)
+	}
+
+	for i := 0; i < 5; i++ {
+		solutionSet[i][0] = theta
+		theta += stepSize
+	}
+
+	solutionSet[0][1] = omega1
+	solutionSet[1][1] = omega2
+	solutionSet[2][1] = omega3
+	solutionSet[3][1] = omega4
+	solutionSet[4][1] = omega5
+
+	omega := omega5
+	scalingConstantFactor := stepSize / 720.0
+
+	var kappa float64
+	var kappa2 float64
+	var kappa3 float64
+	var kappa4 float64
+	var kappa5 float64
+
+	for i := 3; i < N; i++ {
+		kappa = scalingConstantFactor * 1901.0 * f(solutionSet[i][0], solutionSet[i][1])
+		kappa2 = scalingConstantFactor * 2774.0 * f(solutionSet[i-1][0], solutionSet[i-1][1])
+		kappa3 = scalingConstantFactor * 2616.0 * f(solutionSet[i-2][0], solutionSet[i-2][1])
+		kappa4 = scalingConstantFactor * 1274.0 * f(solutionSet[i-3][0], solutionSet[i-3][1])
+		kappa5 = scalingConstantFactor * 251.0 * f(solutionSet[i-3][0], solutionSet[i-3][1])
+
+		omega += (kappa - kappa2 + kappa3 - kappa4 + kappa5)
+		theta += stepSize
+
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
 	}
 
 	return solutionSet

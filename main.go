@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/traviscox1990/GoCalculate/cmd"
+	"github.com/NumberXNumbers/GoCalculate/cmd"
 )
 
 func main() {
