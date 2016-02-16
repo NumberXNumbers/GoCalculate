@@ -465,3 +465,101 @@ func AdamsBashforth5(a float64, b float64, N int, initialCondition1 float64,
 
 	return solutionSet
 }
+
+// AdamsBashforthMoulton3 returns solutions for the third order Adams-Bashforth-Moulton predictor-corrector method
+func AdamsBashforthMoulton3(a float64, b float64, N int, initialCondition float64, f func(x, y float64) float64) [][]float64 {
+	stepSize := (b - a) / float64(N)
+	theta := a
+	omega := initialCondition
+
+	solutionSet := make([][]float64, N+1)
+
+	for i := 0; i < N+1; i++ {
+		solutionSet[i] = make([]float64, 2)
+	}
+
+	solutionSet[0][0] = theta
+	solutionSet[0][1] = omega
+
+	var kappa float64
+	var kappa2 float64
+	var kappa3 float64
+
+	for i := 0; i < 2; i++ {
+		kappa = stepSize * f(theta, omega)
+		kappa2 = stepSize * f(theta+stepSize/3.0, omega+kappa/3.0)
+		kappa3 = stepSize * f(theta+2.0*stepSize/3.0, omega+2.0*kappa2/3.0)
+
+		omega += (kappa + 3.0*kappa3) / 4.0
+		theta += stepSize
+
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
+	}
+
+	for i := 2; i < N; i++ {
+		theta += stepSize
+		omega = solutionSet[i][1] + stepSize*(23.0*f(solutionSet[i][0], solutionSet[i][1])-
+			16.0*f(solutionSet[i-1][0], solutionSet[i-1][1])+
+			5.0*f(solutionSet[i-2][0], solutionSet[i-2][1]))/12.0
+		omega = solutionSet[i][1] + stepSize*(5.0*f(theta, omega)+
+			8.0*f(solutionSet[i][0], solutionSet[i][1])-
+			f(solutionSet[i-1][0], solutionSet[i-1][1]))/12.0
+
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
+	}
+
+	return solutionSet
+}
+
+// AdamsBashforthMoulton4 returns solutions for the fourth order Adams-Bashforth-Moulton predictor-corrector method
+func AdamsBashforthMoulton4(a float64, b float64, N int, initialCondition float64, f func(x, y float64) float64) [][]float64 {
+	stepSize := (b - a) / float64(N)
+	theta := a
+	omega := initialCondition
+
+	solutionSet := make([][]float64, N+1)
+
+	for i := 0; i < N+1; i++ {
+		solutionSet[i] = make([]float64, 2)
+	}
+
+	solutionSet[0][0] = theta
+	solutionSet[0][1] = omega
+
+	var kappa float64
+	var kappa2 float64
+	var kappa3 float64
+	var kappa4 float64
+
+	for i := 0; i < 3; i++ {
+		kappa = stepSize * f(theta, omega)
+		kappa2 = stepSize * f(theta+stepSize/2.0, omega+kappa/2.0)
+		kappa3 = stepSize * f(theta+stepSize/2.0, omega+kappa2/2.0)
+		kappa4 = stepSize * f(theta+stepSize, omega+kappa3)
+
+		omega += (kappa + 2.0*kappa2 + 2.0*kappa3 + kappa4) / 6.0
+		theta += stepSize
+
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
+	}
+
+	for i := 3; i < N; i++ {
+		theta += stepSize
+		omega = solutionSet[i][1] + stepSize*(55.0*f(solutionSet[i][0], solutionSet[i][1])-
+			59.0*f(solutionSet[i-1][0], solutionSet[i-1][1])+
+			37.0*f(solutionSet[i-2][0], solutionSet[i-2][1])-
+			9.0*f(solutionSet[i-3][0], solutionSet[i-3][1]))/24.0
+		omega = solutionSet[i][1] + stepSize*(9.0*f(theta, omega)+
+			19.0*f(solutionSet[i][0], solutionSet[i][1])-
+			5.0*f(solutionSet[i-1][0], solutionSet[i-1][1])+
+			f(solutionSet[i-2][0], solutionSet[i-2][1]))/24.0
+
+		solutionSet[i+1][0] = theta
+		solutionSet[i+1][1] = omega
+	}
+
+	return solutionSet
+}
