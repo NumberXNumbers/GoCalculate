@@ -1,6 +1,9 @@
 package methods
 
-import "math"
+import (
+	"errors"
+	"math"
+)
 
 // Euler1D is for solving the numerical integration 1D euler method
 func Euler1D(a float64, b float64, N int, initValue float64, f func(float64, float64) float64) float64 {
@@ -214,7 +217,7 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 
 	var solutionSet [][]float64
 
-	solutionSet = append(solutionSet, []float64{theta, omega, stepSize})
+	solutionSet = append(solutionSet, []float64{theta, omega})
 
 	var kappa float64
 	var kappa2 float64
@@ -243,7 +246,7 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 			theta += stepSize
 			omega += 25.0*kappa/216.0 + 1408.0*kappa3/2565.0 + 2197.0*kappa4/4104.0 - kappa5/5.0
 
-			solutionSet = append(solutionSet, []float64{theta, omega, stepSize})
+			solutionSet = append(solutionSet, []float64{theta, omega})
 		}
 
 		delta = 0.84 * math.Pow(TOL/remainder, 1.0/4.0)
@@ -562,4 +565,135 @@ func AdamsBashforthMoulton4(a float64, b float64, N int, initialCondition float6
 	}
 
 	return solutionSet
+}
+
+// AdamsBashforthMoulton returns a solution from the variable step Adams-Bashforth-Moulton method
+func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
+	TOL float64, maxStep float64, minStep float64, f func(x, y float64) float64) ([][]float64, error) {
+	stepSize := maxStep
+	theta := a
+	omega := initialCondition
+	done := false
+	rk4Done := false
+	lastValueCalc := false
+
+	var thetas []float64
+	var omegas []float64
+
+	thetas = append(thetas, theta)
+	omegas = append(omegas, omega)
+
+	RK4 := func(h float64, tSet, oSet []float64, f func(x, y float64) float64) ([]float64, []float64) {
+		var kappa float64
+		var kappa2 float64
+		var kappa3 float64
+		var kappa4 float64
+		var t float64
+		var o float64
+
+		for i := 0; i < 3; i++ {
+			t = tSet[len(tSet)-1]
+			o = oSet[len(oSet)-1]
+
+			kappa = h * f(t, o)
+			kappa2 = h * f(t+h/2.0, o+kappa/2.0)
+			kappa3 = h * f(t+h/2.0, o+kappa2/2.0)
+			kappa4 = h * f(t+h, o+kappa3)
+
+			o += (kappa + 2.0*kappa2 + 2.0*kappa3 + kappa4) / 6.0
+			t = tSet[len(tSet)-1] + h
+
+			tSet = append(tSet, t)
+			oSet = append(oSet, o)
+		}
+
+		return tSet, oSet
+	}
+
+	thetas, omegas = RK4(stepSize, thetas, omegas, f)
+	rk4Done = true
+
+	theta = thetas[len(thetas)-1] + stepSize
+	var predictor float64
+	var corrector float64
+	var sigma float64
+	var zeta float64
+
+	for !done {
+		predictor = omegas[len(thetas)-1] + stepSize*(55.0*f(thetas[len(thetas)-1], omegas[len(omegas)-1])-
+			59.0*f(thetas[len(thetas)-2], omegas[len(omegas)-2])+
+			37.0*f(thetas[len(thetas)-3], omegas[len(omegas)-3])-
+			9.0*f(thetas[len(thetas)-4], omegas[len(omegas)-4]))/24.0
+		corrector = omegas[len(thetas)-1] + stepSize*(9.0*f(theta, predictor)+
+			19.0*f(thetas[len(thetas)-1], omegas[len(omegas)-1])-
+			5.0*f(thetas[len(thetas)-2], omegas[len(omegas)-2])+
+			f(thetas[len(thetas)-3], omegas[len(omegas)-3]))/24.0
+
+		sigma = 19.0 * math.Abs(corrector-predictor) / (270.0 * stepSize)
+		if sigma <= TOL {
+			omega = corrector
+
+			thetas = append(thetas, theta)
+			omegas = append(omegas, omega)
+
+			if lastValueCalc {
+				done = true
+			} else {
+				if sigma <= 0.1*TOL || thetas[len(thetas)-1]+stepSize > b {
+					zeta = math.Pow(TOL/(2.0*sigma), 1.0/4.0)
+					if zeta > 4 {
+						stepSize = 4.0 * stepSize
+					} else {
+						stepSize = zeta * stepSize
+					}
+
+					if stepSize > maxStep {
+						stepSize = maxStep
+					}
+
+					if thetas[len(thetas)-1]+4.0*stepSize > b {
+						stepSize = (b - thetas[len(thetas)-1]) / 4.0
+						lastValueCalc = true
+					}
+
+					thetas, omegas = RK4(stepSize, thetas, omegas, f)
+					rk4Done = true
+				}
+			}
+		} else {
+			zeta = math.Pow(TOL/(2.0*sigma), 1.0/4.0)
+
+			if zeta < 0.1 {
+				stepSize = 0.1 * stepSize
+			} else {
+				stepSize = zeta * stepSize
+			}
+
+			if stepSize < minStep {
+				done = true
+			} else {
+				if rk4Done {
+					thetas = thetas[:len(thetas)-4]
+					omegas = omegas[:len(omegas)-4]
+				}
+
+				thetas, omegas = RK4(stepSize, thetas, omegas, f)
+				rk4Done = true
+			}
+		}
+
+		theta = thetas[len(thetas)-1] + stepSize
+	}
+
+	var solutionSet [][]float64
+
+	if !lastValueCalc {
+		return solutionSet, errors.New("Minimum step size exceeded")
+	}
+
+	for i := 0; i < len(thetas)-1; i++ {
+		solutionSet = append(solutionSet, []float64{thetas[i], omegas[i]})
+	}
+
+	return solutionSet, nil
 }
