@@ -1,5 +1,7 @@
 # GoCalculate
 
+[![Build Status](https://travis-ci.org/NumberXNumbers/GoCalculate.svg?branch=master)](https://travis-ci.org/NumberXNumbers/GoCalculate)
+
 ## Overview
 
 **_GoCalculate_** is a library built with Google's [Go](https://golang.org/) programming language containing many Numerical Methods, Functions and Algorithms useful in math and science.
