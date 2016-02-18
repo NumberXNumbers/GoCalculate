@@ -1,16 +1,19 @@
 language: go
-
+sudo: false
 go:
   - 1.4
   - 1.5
   - tip
-
 matrix:
   allow-failures:
     - go: tip
-
+before_install:
+  - go get github.com/mattn/goveralls
+  - if ! go get github.com/golang/tools/cmd/cover; then go get golang.org/x/tools/cmd/cover; fi
 install:
   - go get -v -t ./...
-
 script:
   - go test ./...
+  - chmod ugo+x scripts/generate_coverage_report.sh
+  - ./scripts/generate_coverage_report.sh
+  - goveralls -coverprofile=cover.cov -service=travis-ci; \
