@@ -1,6 +1,7 @@
 # GoCalculate
 
 [![Build Status](https://travis-ci.org/NumberXNumbers/GoCalculate.svg?branch=master)](https://travis-ci.org/NumberXNumbers/GoCalculate)
+[![Coverage Status](https://coveralls.io/repos/github/NumberXNumbers/GoCalculate/badge.svg?branch=master)](https://coveralls.io/github/NumberXNumbers/GoCalculate?branch=master)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/NumberXNumbers/GoCalculate/blob/master/LICENSE)
 
 ## Overview
