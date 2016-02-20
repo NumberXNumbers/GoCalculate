@@ -19,7 +19,7 @@ func TestMatrixScalarMulti(t *testing.T) {
 	solutionMatrixA := m.MakeMatrixWithElements(solutionElementsA)
 
 	if !reflect.DeepEqual(solutionMatrixA, resultMatrixA) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsB := [][]complex128{{1, 0}, {0, 1}}
@@ -33,7 +33,7 @@ func TestMatrixScalarMulti(t *testing.T) {
 	solutionMatrixB := m.MakeComplexMatrixWithElements(solutionElementsB)
 
 	if !reflect.DeepEqual(solutionMatrixB, resultMatrixB) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixB, resultMatrixB))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixB, resultMatrixB))
 	}
 }
 
@@ -54,7 +54,7 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixA, resultMatrixA) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsBa := [][]float64{{2, 0}, {0, 2}}
@@ -73,7 +73,7 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixB, resultMatrixB) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsCa := [][]float64{{0, 1}, {1, 0}}
@@ -92,7 +92,7 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixC, resultMatrixC) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixC, resultMatrixC))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixC, resultMatrixC))
 	}
 
 	testElementsDa := [][]float64{{1, 0}, {0, 1}, {0, 1}}
@@ -123,7 +123,7 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixE, resultMatrixE) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixE, resultMatrixE))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixE, resultMatrixE))
 	}
 
 	testElementsFa := [][]complex128{{2, 0}, {0, 2}}
@@ -142,7 +142,7 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixF, resultMatrixF) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsGa := [][]complex128{{0, 1}, {1, 0}}
@@ -161,7 +161,7 @@ func TestMatrixMultiSimple(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixG, resultMatrixG) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixG, resultMatrixG))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixG, resultMatrixG))
 	}
 
 	testElementsHa := [][]complex128{{1, 0}, {0, 1}, {0, 1}}
@@ -194,7 +194,7 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixA, resultMatrixA) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsBa := [][]float64{{2, 0}, {0, 2}, {2, 0}}
@@ -213,7 +213,7 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixB, resultMatrixB) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsCa := [][]float64{{0, 1, 0}, {1, 0, 1}}
@@ -232,7 +232,7 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixC, resultMatrixC) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixC, resultMatrixC))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixC, resultMatrixC))
 	}
 
 	testElementsDa := [][]float64{{1, 0}, {0, 1}, {1, 0}}
@@ -263,7 +263,7 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixE, resultMatrixE) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixE, resultMatrixE))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixE, resultMatrixE))
 	}
 
 	testElementsFa := [][]complex128{{2, 0}, {0, 2}}
@@ -282,7 +282,7 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixF, resultMatrixF) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsGa := [][]complex128{{0, 1}, {1, 0}, {1 + 5i, 5 - 4i}}
@@ -301,7 +301,7 @@ func TestMatrixAddition(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixG, resultMatrixG) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixG, resultMatrixG))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixG, resultMatrixG))
 	}
 
 	testElementsHa := [][]complex128{{1, 0}, {0, 1}, {0, 1}}
@@ -334,7 +334,7 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixA, resultMatrixA) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsBa := [][]float64{{2, 0}, {0, 2}, {2, 0}}
@@ -353,7 +353,7 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixB, resultMatrixB) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsCa := [][]float64{{0, 1, 0}, {1, 0, 1}}
@@ -372,7 +372,7 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixC, resultMatrixC) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixC, resultMatrixC))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixC, resultMatrixC))
 	}
 
 	testElementsDa := [][]float64{{1, 0}, {0, 1}, {1, 0}}
@@ -403,7 +403,7 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixE, resultMatrixE) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixE, resultMatrixE))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixE, resultMatrixE))
 	}
 
 	testElementsFa := [][]complex128{{2, 0}, {0, 2}}
@@ -422,7 +422,7 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixF, resultMatrixF) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsGa := [][]complex128{{0, 1}, {1, 0}, {1 + 5i, 5 - 4i}}
@@ -441,7 +441,7 @@ func TestMatrixSubtraction(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixG, resultMatrixG) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixG, resultMatrixG))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixG, resultMatrixG))
 	}
 
 	testElementsHa := [][]complex128{{1, 0}, {0, 1}, {0, 1}}

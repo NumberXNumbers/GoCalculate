@@ -21,7 +21,7 @@ func TestVectorScalarMulti(t *testing.T) {
 	resultVectorA := VectorScalarMulti(testScalarA, testVectorA)
 
 	if !reflect.DeepEqual(resultVectorA, solutionVectorA) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(resultVectorA, solutionVectorA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorA, solutionVectorA))
 	}
 
 	testElementsB := []complex128{1, 2, 3}
@@ -35,7 +35,7 @@ func TestVectorScalarMulti(t *testing.T) {
 	resultVectorB := VectorComplexScalarMulti(testScalarB, testVectorB)
 
 	if !reflect.DeepEqual(resultVectorB, solutionVectorB) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(resultVectorB, solutionVectorB))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorB, solutionVectorB))
 	}
 }
 
@@ -56,7 +56,7 @@ func TestVectorAddition(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(resultVectorA, solutionVectorA) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(resultVectorA, solutionVectorA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorA, solutionVectorA))
 	}
 
 	testElementsBa := []complex128{1, 2, 3}
@@ -75,7 +75,7 @@ func TestVectorAddition(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(resultVectorB, solutionVectorB) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(resultVectorB, solutionVectorB))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorB, solutionVectorB))
 	}
 
 	testElementsCa := []float64{1, 2, 3}
@@ -144,7 +144,7 @@ func TestVectorSubtraction(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(resultVectorA, solutionVectorA) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(resultVectorA, solutionVectorA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorA, solutionVectorA))
 	}
 
 	testElementsBa := []complex128{1, 2, 3}
@@ -163,7 +163,7 @@ func TestVectorSubtraction(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(resultVectorB, solutionVectorB) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(resultVectorB, solutionVectorB))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorB, solutionVectorB))
 	}
 
 	testElementsCa := []float64{1, 2, 3}
@@ -231,7 +231,7 @@ func TestInnerProduct(t *testing.T) {
 	}
 
 	if resultA != solutionA {
-		t.Errorf("Expected %v, recieved %v", solutionA, resultA)
+		t.Errorf("Expected %v, received %v", solutionA, resultA)
 	}
 
 	testElementsBa := []complex128{1, 2, 3}
@@ -249,7 +249,7 @@ func TestInnerProduct(t *testing.T) {
 	}
 
 	if resultB != solutionB {
-		t.Errorf("Expected %v, recieved %v", solutionB, resultB)
+		t.Errorf("Expected %v, received %v", solutionB, resultB)
 	}
 
 	testElementsCa := []float64{1, 2, 3}
@@ -317,7 +317,7 @@ func TestAngleTheta(t *testing.T) {
 	}
 
 	if resultA != solutionA {
-		t.Errorf("Expected %v, recieved %v", solutionA, resultA)
+		t.Errorf("Expected %v, received %v", solutionA, resultA)
 	}
 
 	testElementsBa := []complex128{1, 0}
@@ -335,7 +335,7 @@ func TestAngleTheta(t *testing.T) {
 	}
 
 	if resultB != solutionB {
-		t.Errorf("Expected %v, recieved %v", solutionB, resultB)
+		t.Errorf("Expected %v, received %v", solutionB, resultB)
 	}
 
 	testElementsCa := []float64{0, 0}
@@ -404,7 +404,7 @@ func TestOuterProduct(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixA, resultMatrixA) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
 	testElementsBa := []complex128{1, 0}
@@ -423,7 +423,7 @@ func TestOuterProduct(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(solutionMatrixB, resultMatrixB) {
-		t.Errorf("Expected %v, recieved %v", true, reflect.DeepEqual(solutionMatrixB, resultMatrixB))
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixB, resultMatrixB))
 	}
 
 	testElementsCa := []float64{1, 2}

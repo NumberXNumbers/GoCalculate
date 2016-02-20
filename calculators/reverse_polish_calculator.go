@@ -1,66 +1,73 @@
 package calculators
 
 import (
-	"fmt"
-	"log"
+	"errors"
 	"math"
 	"strconv"
 )
 
-func calculate(firstValue, secondValue float64, s string) float64 {
+func calculate(firstValue, secondValue float64, s string) (result float64, err error) {
 	switch s {
 	case "+":
-		return firstValue + secondValue
-	case "x", "X":
-		return firstValue * secondValue
+		result = firstValue + secondValue
+	case "x", "X", "*":
+		result = firstValue * secondValue
 	case "/":
-		return firstValue / secondValue
+		result = firstValue / secondValue
 	case "-":
-		return firstValue - secondValue
+		result = firstValue - secondValue
 	case "exp":
-		return math.Pow(firstValue, secondValue)
+		result = math.Pow(firstValue, secondValue)
 	case "%":
-		return math.Mod(firstValue, secondValue)
+		result = math.Mod(firstValue, secondValue)
 	default:
-		log.Fatal("IllegalArgumentException")
+		err = errors.New("IllegalArgumentException")
 	}
-	return 0.0
+	return
 }
 
-func stackBuilder(stack []float64, s string) []float64 {
+func stackBuilder(stack []float64, s string) ([]float64, error) {
 	size := len(stack)
 
 	if f, err := strconv.ParseFloat(s, 64); err == nil {
 		stack = append(stack, f)
 	} else {
 		if size > 1 {
-			value := calculate(stack[size-1], stack[size-2], s)
+			value, err := calculate(stack[size-2], stack[size-1], s)
+			if err != nil {
+				return stack, err
+			}
 			stack = stack[:size-2]
 			stack = append(stack, value)
 		} else {
-			log.Fatal("IndexOutOfBoundsException")
+			return stack, errors.New("IndexOutOfBoundsException")
 		}
 	}
 
-	return stack
+	return stack, nil
 }
 
 // ReversePolishCalculator is a simple reverse polish calculator
-func ReversePolishCalculator(args []string) {
-	if len(args) == 0 {
-		log.Fatal("Zero Arguments passed in.")
-	}
-
-	fmt.Print("Arguments passed in: ")
-	fmt.Println(args)
-
+func ReversePolishCalculator(args []string) (value float64, err error) {
 	var stack []float64
-	for _, argument := range args {
-		stack = stackBuilder(stack, argument)
+
+	if len(args) <= 2 {
+		err = errors.New("Not Enough Arguments")
+		return
 	}
 
-	fmt.Print("Final Value(s): ")
-	for _, value := range stack {
-		fmt.Println(value)
+	for _, argument := range args {
+		stack, err = stackBuilder(stack, argument)
+		if err != nil {
+			return
+		}
 	}
+
+	if len(stack) != 1 {
+		err = errors.New("Multiple Final Values")
+		return
+	}
+
+	value = stack[0]
+	return
 }
