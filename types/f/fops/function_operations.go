@@ -244,8 +244,8 @@ func Min(f func(x ...float64) float64, g func(x ...float64) float64) (h func(x .
 	return
 }
 
-// Errortion returns the error function of a function.
-func Errortion(f func(x ...float64) float64) (h func(x ...float64) float64) {
+// ErrorFunction returns the error function of a function.
+func ErrorFunction(f func(x ...float64) float64) (h func(x ...float64) float64) {
 	h = func(x ...float64) float64 {
 		return math.Erf(f(x...))
 	}
