@@ -59,3 +59,61 @@ func TestReversePolishCalculator(t *testing.T) {
 		t.Error("Expect there to be no error")
 	}
 }
+
+func TestPolishCalculator(t *testing.T) {
+	testArgsA := []string{"+", "4", "3"}
+	testArgsB := []string{"/", "4", "-", "3", "2"}
+	testArgsC := []string{"%", "11", "exp", "3", "*", "2", "1"}
+	testArgsD := []string{"&", "2", "3"}
+	testArgsE := []string{"1"}
+	testArgsF := []string{"+", "3", "2", "1"}
+	testArgsG := []string{"+", "+", "1"}
+
+	testValueA, errA := PolishCalculator(testArgsA)
+	testValueB, errB := PolishCalculator(testArgsB)
+	testValueC, errC := PolishCalculator(testArgsC)
+	_, errD := PolishCalculator(testArgsD)
+	_, errE := PolishCalculator(testArgsE)
+	_, errF := PolishCalculator(testArgsF)
+	_, errG := PolishCalculator(testArgsG)
+
+	if errA != nil {
+		t.Errorf("Expect there to be no error, received %s", errA)
+	}
+
+	if testValueA != 7.0 {
+		t.Errorf("Expect %d, received %v", 7, testValueA)
+	}
+
+	if errB != nil {
+		t.Errorf("Expect there to be no error, received %s", errB)
+	}
+
+	if testValueB != 4.0 {
+		t.Errorf("Expect %d, received %v", 4, testValueB)
+	}
+
+	if errC != nil {
+		t.Errorf("Expect there to be no error, received %s", errC)
+	}
+
+	if testValueC != 2.0 {
+		t.Errorf("Expect %d, received %v", 2, testValueC)
+	}
+
+	if errD == nil {
+		t.Error("Expect there to be no error")
+	}
+
+	if errE == nil {
+		t.Error("Expect there to be no error")
+	}
+
+	if errF == nil {
+		t.Error("Expect there to be no error")
+	}
+
+	if errG == nil {
+		t.Error("Expect there to be no error")
+	}
+}
