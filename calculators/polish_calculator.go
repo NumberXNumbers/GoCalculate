@@ -5,8 +5,12 @@ import (
 	"strconv"
 )
 
-// ReversePolishCalculator is a simple reverse polish calculator
-func ReversePolishCalculator(args []string) (value float64, err error) {
+// PolishCalculator is a simple reverse polish calculator
+func PolishCalculator(args []string) (value float64, err error) {
+	for left, right := 0, len(args)-1; left < right; left, right = left+1, right-1 {
+		args[left], args[right] = args[right], args[left]
+	}
+
 	var stack []float64
 	var operand1 float64
 	var operand2 float64
@@ -27,7 +31,7 @@ func ReversePolishCalculator(args []string) (value float64, err error) {
 			operand1, stack = popFloat64(stack)
 			operand2, stack = popFloat64(stack)
 
-			result, err = calculate(operand2, operand1, argument)
+			result, err = calculate(operand1, operand2, argument)
 
 			if err != nil {
 				return
