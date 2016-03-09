@@ -20,7 +20,7 @@ func TestVariable(t *testing.T) {
 	}
 
 	if testVariableB(0, 1, 0) != 1.0 {
-		t.Errorf("Expected %d, received %d", 1, testFunctionB(0, 1, 0))
+		t.Errorf("Expected %v, received %v", 1, testFunctionB(0, 1, 0))
 	}
 
 	if testVariableC(1, 0, 0) != complex128(1) {
@@ -32,7 +32,7 @@ func TestVariable(t *testing.T) {
 	}
 
 	if testFunctionA(1, 2) != 3.0 {
-		t.Errorf("Expected %d, received %d", 3, testFunctionA(1, 2))
+		t.Errorf("Expected %v, received %v", 3, testFunctionA(1, 2))
 	}
 
 	if testFunctionB(1, 2) != complex128(3) {
@@ -54,7 +54,7 @@ func TestNegativeVariable(t *testing.T) {
 	}
 
 	if testVariableB(0, 1, 0) != -1.0 {
-		t.Errorf("Expected %d, received %d", -1, testFunctionB(0, 1, 0))
+		t.Errorf("Expected %v, received %v", -1, testFunctionB(0, 1, 0))
 	}
 
 	if testVariableC(1, 0, 0) != complex128(-1) {
@@ -66,7 +66,7 @@ func TestNegativeVariable(t *testing.T) {
 	}
 
 	if testFunctionA(1, 2) != -3.0 {
-		t.Errorf("Expected %d, received %d", -3, testFunctionA(1, 2))
+		t.Errorf("Expected %v, received %v", -3, testFunctionA(1, 2))
 	}
 
 	if testFunctionB(1, 2) != complex128(-3) {
@@ -88,7 +88,7 @@ func TestConstant(t *testing.T) {
 	}
 
 	if testVariableB(0, 0, 0) != 1.0 {
-		t.Errorf("Expected %d, received %d", 1, testFunctionB(0, 0, 0))
+		t.Errorf("Expected %v, received %v", 1, testFunctionB(0, 0, 0))
 	}
 
 	if testVariableC(1, 1, 1) != complex128(0) {
@@ -100,7 +100,7 @@ func TestConstant(t *testing.T) {
 	}
 
 	if testFunctionA(1, 2) != 1.0 {
-		t.Errorf("Expected %d, received %d", 1, testFunctionA(1, 2))
+		t.Errorf("Expected %v, received %v", 1, testFunctionA(1, 2))
 	}
 
 	if testFunctionB(1, 2) != complex128(1) {
@@ -141,7 +141,7 @@ func TestAddSubtractMultiplyDivideParens(t *testing.T) {
 	testFunctionJ := ParensComplex(i)
 
 	if testFunctionA(1, 2) != 3.0 {
-		t.Errorf("Expected %d, received %d", 3, testFunctionA(1, 2))
+		t.Errorf("Expected %v, received %v", 3, testFunctionA(1, 2))
 	}
 
 	if testFunctionB(1, 2) != complex128(3) {
@@ -149,7 +149,7 @@ func TestAddSubtractMultiplyDivideParens(t *testing.T) {
 	}
 
 	if testFunctionC(2, 1) != 1.0 {
-		t.Errorf("Expected %d, received %d", 1, testFunctionC(2, 1))
+		t.Errorf("Expected %v, received %v", 1, testFunctionC(2, 1))
 	}
 
 	if testFunctionD(2, 1) != complex128(1) {
@@ -157,7 +157,7 @@ func TestAddSubtractMultiplyDivideParens(t *testing.T) {
 	}
 
 	if testFunctionE(1, 2) != 2.0 {
-		t.Errorf("Expected %d, received %d", 2, testFunctionE(1, 2))
+		t.Errorf("Expected %v, received %v", 2, testFunctionE(1, 2))
 	}
 
 	if testFunctionF(1, 2) != complex128(2) {
@@ -165,7 +165,7 @@ func TestAddSubtractMultiplyDivideParens(t *testing.T) {
 	}
 
 	if testFunctionG(2, 1) != 2.0 {
-		t.Errorf("Expected %d, received %d", 2, testFunctionG(2, 1))
+		t.Errorf("Expected %v, received %v", 2, testFunctionG(2, 1))
 	}
 
 	if testFunctionH(2, 1) != complex128(2) {
@@ -173,7 +173,7 @@ func TestAddSubtractMultiplyDivideParens(t *testing.T) {
 	}
 
 	if testFunctionI(2) != 2.0 {
-		t.Errorf("Expected %d, received %d", 2, testFunctionG(2, 1))
+		t.Errorf("Expected %v, received %v", 2, testFunctionG(2, 1))
 	}
 
 	if testFunctionJ(2) != complex128(2) {
