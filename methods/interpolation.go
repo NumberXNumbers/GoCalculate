@@ -1,28 +1,82 @@
 package methods
 
-import "errors"
+import (
+	"errors"
+	"math"
+)
 
 // NewtonForwardDividedDifference is for calculating the coefficients for newton's forward divided-difference interpolating polynomial
 func NewtonForwardDividedDifference(xValues []float64, functionValues []float64) ([]float64, error) {
-	size := len(xValues)
+	tableValues, err := NewtonDividedDifference(xValues, functionValues)
 
-	if size != len(functionValues) {
-		return nil, errors.New("Length of x values array and function values array does not match")
+	if err != nil {
+		return nil, err
 	}
 
-	previousValue := float64(0)
-	tempValue := float64(0)
+	solutionSet := make([]float64, len(tableValues))
 
-	for i := 1; i < size; i++ {
-		previousValue = functionValues[i-1]
-		for j := i; j < size; j++ {
-			tempValue = functionValues[j]
-			functionValues[j] = (functionValues[j] - previousValue) / (xValues[j] - xValues[j-i])
-			previousValue = tempValue
+	for i := 0; i < len(tableValues); i++ {
+		solutionSet[i] = tableValues[i][i]
+	}
+
+	return solutionSet, nil
+}
+
+// NewtonBackwardsDividedDifference is for calculating the coefficients for newton's backwards divided-difference interpolating polynomial
+func NewtonBackwardsDividedDifference(xValues []float64, functionValues []float64) ([]float64, error) {
+	tableValues, err := NewtonDividedDifference(xValues, functionValues)
+
+	if err != nil {
+		return nil, err
+	}
+
+	solutionSet := make([]float64, len(tableValues))
+
+	for i := 0; i < len(tableValues); i++ {
+		solutionSet[i] = tableValues[len(tableValues)-1][i]
+	}
+
+	return solutionSet, nil
+}
+
+// StirlingCenterDividedDifference is for calculating the coefficients for stirling's center divided-difference interpolating polynomial
+// if xValues or functionValues has an even number of elements, the last elements will be removed.
+func StirlingCenterDividedDifference(xValues []float64, functionValues []float64) ([][]float64, error) {
+	if len(xValues)%2 == 0 || len(functionValues)%2 == 0 {
+		xValues = xValues[:len(xValues)-1]
+		functionValues = functionValues[:len(functionValues)-1]
+	}
+
+	tableValues, err := NewtonDividedDifference(xValues, functionValues)
+
+	if err != nil {
+		return nil, err
+	}
+
+	solutionSet := make([][]float64, len(tableValues))
+
+	for i := 0; i < len(tableValues); i++ {
+		if i%2 == 0 {
+			solutionSet[i] = make([]float64, 1)
+		} else {
+			solutionSet[i] = make([]float64, 2)
+		}
+
+	}
+
+	middle := int(math.Floor(float64(len(tableValues)) / 2))
+
+	for i := 0; i < len(tableValues); i++ {
+		if i%2 == 1 {
+			solutionSet[i][0] = tableValues[middle][i]
+			middle++
+			solutionSet[i][1] = tableValues[middle][i]
+		} else {
+			solutionSet[i][0] = tableValues[middle][i]
 		}
 	}
 
-	return functionValues, nil
+	return solutionSet, nil
 }
 
 // NewtonDividedDifference is for calculating the coefficients for newton's divided-difference interpolating polynomial
