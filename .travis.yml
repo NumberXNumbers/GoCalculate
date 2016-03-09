@@ -8,12 +8,17 @@ matrix:
   allow-failures:
     - go: tip
 before_install:
-  - go get github.com/mattn/goveralls
-  - if ! go get github.com/golang/tools/cmd/cover; then go get golang.org/x/tools/cmd/cover; fi
-install:
-  - go get -v -t ./...
+  - go get golang.org/x/tools/cmd/vet
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/NumberXNumbers/GoCalculate...
 script:
-  - go test ./...
+  # Vet examines Go source code and reports suspicious construct
+  - go vet -x github.com/NumberXNumbers/GoCalculate...
+  # Run the unit tests suite
+  - go test -v ./...
+  # Collect coverage reports
   - chmod ugo+x scripts/generate_coverage_report.sh
   - ./scripts/generate_coverage_report.sh
-  - goveralls -coverprofile=cover.cov -service=travis-ci; \
+after_success:
+  # Send coverage reports to Codecov
+  - bash <(curl -s https://codecov.io/bash) -f coverage.txt
