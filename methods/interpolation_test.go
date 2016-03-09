@@ -18,7 +18,7 @@ func TestNewtonDividedDifference(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionTable, testTableA)
 	}
 
-	_, errB := StirlingCenterDividedDifference([]float64{1, 1.3, 1.6, 1.9}, []float64{0.9153827, 0.4873198, 0.8960778, 0.2769871, 0.7866039})
+	_, errB := NewtonDividedDifference([]float64{1, 1.3, 1.6, 1.9}, []float64{0.9153827, 0.4873198, 0.8960778, 0.2769871, 0.7866039})
 
 	if errB == nil {
 		t.Error("Expected Error")
@@ -38,7 +38,7 @@ func TestNewtonForwardDividedDifference(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionSet, testSetA)
 	}
 
-	_, errB := StirlingCenterDividedDifference([]float64{1, 1.3, 1.6, 1.9}, []float64{0.9153827, 0.4873198, 0.8960778, 0.2769871, 0.7866039})
+	_, errB := NewtonForwardDividedDifference([]float64{1, 1.3, 1.6, 1.9}, []float64{0.9153827, 0.4873198, 0.8960778, 0.2769871, 0.7866039})
 
 	if errB == nil {
 		t.Error("Expected Error")
@@ -58,7 +58,7 @@ func TestNewtonBackwardsDividedDifference(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionSet, testSetA)
 	}
 
-	_, errB := StirlingCenterDividedDifference([]float64{1, 1.3, 1.6, 1.9}, []float64{0.9153827, 0.4873198, 0.8960778, 0.2769871, 0.7866039})
+	_, errB := NewtonBackwardsDividedDifference([]float64{1, 1.3, 1.6, 1.9}, []float64{0.9153827, 0.4873198, 0.8960778, 0.2769871, 0.7866039})
 
 	if errB == nil {
 		t.Error("Expected Error")
