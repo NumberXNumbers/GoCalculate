@@ -314,6 +314,10 @@ func ClampedCubicSpline(xValues []float64, functionValues []float64, df0 float64
 func BezierCurve(endpoints [][2]float64, leftGuidepoints [][2]float64, rightGuidepoints [][2]float64) ([][][4]float64, error) {
 	size := len(endpoints)
 
+	if len(leftGuidepoints) != len(rightGuidepoints) {
+		return nil, errors.New("Left and Right Guide Points sets do not have the same size")
+	}
+
 	if size-1 != len(leftGuidepoints) && size-1 != len(rightGuidepoints) {
 		return nil, errors.New("Endpoints lengths are not correct")
 	}
