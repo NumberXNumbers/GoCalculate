@@ -3,85 +3,61 @@ package v
 import (
 	"reflect"
 	"testing"
+
+	"github.com/NumberXNumbers/GoCalculate/types/gcv"
 )
 
 func TestGetAndSetMethodsVector(t *testing.T) {
 	testVectorA := MakeVector(3, ColVector)
-	testVectorB := MakeComplexVector(3, ColVector)
-	testVectorC := MakeVector(4, RowVector)
-	testVectorD := MakeComplexVector(4, RowVector)
+	testVectorB := MakeVector(4, RowVector)
 
-	if testVectorA.Get(0) != float64(0) {
-		t.Errorf("Expected %f, received %f", float64(0), testVectorA.Get(0))
+	if !reflect.DeepEqual(testVectorA.Get(0), gcv.NewValue(0)) {
+		t.Errorf("Expected %f, received %f", gcv.NewValue(0), testVectorA.Get(0))
 	}
 
-	if testVectorB.Get(0) != complex128(0) {
-		t.Errorf("Expected %f, received %f", complex128(0), testVectorB.Get(0))
-	}
+	testVectorB.Set(0, gcv.NewValue(2+2i))
 
-	testVectorC.Set(0, 2.0)
-	testVectorD.Set(0, 2+2i)
-
-	if testVectorC.Get(0) != 2.0 {
-		t.Errorf("Expected %f, received %f", 2.0, testVectorC.Get(0))
-	}
-
-	if testVectorD.Get(0) != 2+2i {
-		t.Errorf("Expected %f, received %f", 2+2i, testVectorD.Get(0))
+	if !reflect.DeepEqual(testVectorB.Get(0), gcv.NewValue(2+2i)) {
+		t.Errorf("Expected %f, received %f", gcv.NewValue(2+2i), testVectorB.Get(0))
 	}
 }
 
 func TestTypeMethodVector(t *testing.T) {
 	testVectorA := MakeVector(3, ColVector)
-	testVectorB := MakeComplexVector(3, ColVector)
-	testVectorC := MakeVector(4, RowVector)
-	testVectorD := MakeComplexVector(4, RowVector)
+	testVectorB := MakeVector(4, RowVector)
 
 	if testVectorA.Type() != ColVector {
 		t.Errorf("Expected %s, received %s", ColVector, testVectorA.Type())
 	}
 
-	if testVectorB.Type() != ColVector {
-		t.Errorf("Expected %s, received %s", ColVector, testVectorB.Type())
-	}
-
-	if testVectorC.Type() != RowVector {
-		t.Errorf("Expected %s, received %s", RowVector, testVectorC.Type())
-	}
-
-	if testVectorD.Type() != RowVector {
-		t.Errorf("Expected %s, received %s", RowVector, testVectorD.Type())
+	if testVectorB.Type() != RowVector {
+		t.Errorf("Expected %s, received %s", RowVector, testVectorB.Type())
 	}
 }
 
 func TestCopyMethodVector(t *testing.T) {
 	testVectorA := MakeVector(3, ColVector)
-	testVectorB := MakeComplexVector(4, RowVector)
 
 	if !reflect.DeepEqual(testVectorA.Copy(), testVectorA) {
 		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(testVectorA.Copy(), testVectorA))
 	}
-
-	if !reflect.DeepEqual(testVectorB.Copy(), testVectorB) {
-		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(testVectorB.Copy(), testVectorB))
-	}
 }
 
-func TestDimMethodVector(t *testing.T) {
+func TestLenMethodVector(t *testing.T) {
 	testVectorA := MakeVector(3, ColVector)
-	testVectorB := MakeComplexVector(4, RowVector)
+	testVectorB := MakeVector(4, RowVector)
 
-	if testVectorA.Dim() != 3 {
-		t.Errorf("Expected %d, received %d", 3, testVectorA.Dim())
+	if testVectorA.Len() != 3 {
+		t.Errorf("Expected %d, received %d", 3, testVectorA.Len())
 	}
 
-	if testVectorB.Dim() != 4 {
-		t.Errorf("Expected %d, received %d", 4, testVectorB.Dim())
+	if testVectorB.Len() != 4 {
+		t.Errorf("Expected %d, received %d", 4, testVectorB.Len())
 	}
 }
 
 func TestTransMethodVector(t *testing.T) {
-	testElementsA := []float64{1, 2, 3}
+	testElementsA := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2), gcv.NewValue(3))
 	testVectorA := MakeVectorWithElements(testElementsA, ColVector)
 	testTransVectorA := MakeVectorWithElements(testElementsA, RowVector)
 
@@ -91,73 +67,47 @@ func TestTransMethodVector(t *testing.T) {
 		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(testVectorA, testTransVectorA))
 	}
 
-	testElementsB := []complex128{1 + 1i, 2, 3 - 3i}
-	testTransElementsB := []complex128{1 - 1i, 2, 3 + 3i}
-	testVectorB := MakeComplexVectorWithElements(testElementsB, ColVector)
-	testTransVectorB := MakeComplexVectorWithElements(testTransElementsB, RowVector)
+	testElementsB := gcv.NewValues(gcv.NewValue(1 + 1i), gcv.NewValue(2), gcv.NewValue(3 - 3i))
+	testTransElementsB := gcv.NewValues(gcv.NewValue(1 - 1i), gcv.NewValue(2), gcv.NewValue(3 + 3i))
+	testVectorB := MakeVectorWithElements(testElementsB, ColVector)
+	testTransVectorB := MakeVectorWithElements(testTransElementsB, RowVector)
 
 	testVectorB.Trans()
 
-	if !reflect.DeepEqual(testVectorB, testTransVectorB) {
-		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(testVectorB, testTransVectorB))
+	if !reflect.DeepEqual(testVectorB.Get(0), testTransVectorB.Get(0)) &&
+	   !reflect.DeepEqual(testVectorB.Get(1), testTransVectorB.Get(1)) &&
+	   !reflect.DeepEqual(testVectorB.Get(2), testTransVectorB.Get(2)) {
+		t.Errorf("Expected %v, received %v", testTransVectorB, testVectorB)
 	}
 
-	testElementsC := []float64{1, 2, 3}
-	testVectorC := MakeVectorWithElements(testElementsC, RowVector)
-	testTransVectorC := MakeVectorWithElements(testElementsC, ColVector)
+	testVectorC := MakeVectorWithElements(testElementsA, RowVector)
+	testTransVectorC := MakeVectorWithElements(testElementsA, ColVector)
 
 	testVectorC.Trans()
 
 	if !reflect.DeepEqual(testVectorC, testTransVectorC) {
 		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(testVectorC, testTransVectorC))
 	}
-
-	testElementsD := []complex128{1 + 1i, 2, 3 - 3i}
-	testTransElementsD := []complex128{1 - 1i, 2, 3 + 3i}
-	testVectorD := MakeComplexVectorWithElements(testElementsD, RowVector)
-	testTransVectorD := MakeComplexVectorWithElements(testTransElementsD, ColVector)
-
-	testVectorD.Trans()
-
-	if !reflect.DeepEqual(testVectorD, testTransVectorD) {
-		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(testVectorD, testTransVectorD))
-	}
-}
-
-func TestGetElementsMethodVector(t *testing.T) {
-	testElementsA := []float64{3, 4}
-	testVectorA := MakeVectorWithElements(testElementsA, ColVector)
-
-	if !reflect.DeepEqual(testVectorA.GetElements(), testElementsA) {
-		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(testVectorA.GetElements(), testElementsA))
-	}
-
-	testElementsB := []complex128{2 + 2i, 1}
-	testVectorB := MakeComplexVectorWithElements(testElementsB, ColVector)
-
-	if !reflect.DeepEqual(testVectorB.GetElements(), testElementsB) {
-		t.Errorf("Expected %v, received %v", true, !reflect.DeepEqual(testVectorB.GetElements(), testElementsB))
-	}
 }
 
 func TestNormMethodVector(t *testing.T) {
-	testElementsA := []float64{3, 4}
+	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4))
 	testVectorA := MakeVectorWithElements(testElementsA, ColVector)
 
-	if testVectorA.Norm() != float64(5) {
-		t.Errorf("Expected %f, received %f", float64(5), testVectorA.Norm())
+	if !reflect.DeepEqual(testVectorA.Norm(), gcv.NewValue(5.0)) {
+		t.Errorf("Expected %v, received %v", gcv.NewValue(5), testVectorA.Norm())
 	}
 
-	testElementsB := []complex128{2 + 2i, 1}
-	testVectorB := MakeComplexVectorWithElements(testElementsB, ColVector)
+	testElementsB := gcv.NewValues(gcv.NewValue(2 + 2i), gcv.NewValue(1))
+	testVectorB := MakeVectorWithElements(testElementsB, ColVector)
 
-	if testVectorB.Norm() != complex128(3) {
-		t.Errorf("Expected %f, received %f", complex128(3), testVectorB.Norm())
+	if !reflect.DeepEqual(testVectorB.Norm(), gcv.NewValue(3+0i)) {
+		t.Errorf("Expected %v, received %v", gcv.NewValue(3), testVectorB.Norm())
 	}
 }
 
 func TestMakeNewConjVector(t *testing.T) {
-	testVectorA := MakeComplexVector(4, RowVector)
+	testVectorA := MakeVector(4, RowVector)
 	testTransVectorA := MakeNewConjVector(testVectorA)
 
 	testVectorA.Trans()

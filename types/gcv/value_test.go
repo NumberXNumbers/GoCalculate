@@ -19,21 +19,21 @@ func TestNewValueSetRawValueGetValueTypePrint(t *testing.T) {
     var intTestValue int
     valueTestB := NewValue(intTestValue)
 
-    if valueTestB.GetValueType() != "int" {
+    if valueTestB.GetValueType() != Int {
         t.Fail()
     }
 
     var complexTestValue complex128
     valueTestC := NewValue(complexTestValue)
 
-    if valueTestC.GetValueType() != "complex128" {
+    if valueTestC.GetValueType() != Complex {
         t.Fail()
     }
 
     var stringTestValue string
     valueTestD := NewValue(stringTestValue)
 
-    if valueTestD.GetValueType() != "Unknown" {
+    if valueTestD.GetValueType() != Int {
         t.Fail()
     }
 }
