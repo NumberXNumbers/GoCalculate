@@ -100,7 +100,7 @@ func (v *vector) Norm() gcv.Value {
 }
 
 // implementation of IndexOf method
-func (v *vector) IndexOf(val gvc.Value) int { return v.Elements().IndexOf(val) }
+func (v *vector) IndexOf(val gcv.Value) int { return v.Elements().IndexOf(val) }
 
 // MakeVector returns zero vector of size length
 func MakeVector(length int, vectorType string) Vector {
