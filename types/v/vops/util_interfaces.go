@@ -1,6 +1,7 @@
 package vops
 
 import (
+	"github.com/NumberXNumbers/GoCalculate/types/gcv"
 	"github.com/NumberXNumbers/GoCalculate/types/m"
 	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
@@ -10,21 +11,23 @@ const (
 	RowVector = v.RowVector
 	// ColVector for operations
 	ColVector = v.ColVector
+	// Complex for operations
+	Complex = gcv.Complex
 )
+
+// Value is an interface over type Value
+type Value interface {
+	gcv.Value
+}
+
+func newValue(val interface{}) (value Value) {
+	value = gcv.NewValue(val)
+	return
+}
 
 // Vector is an interface over coreTypes Vector for operations
 type Vector interface {
 	v.Vector
-}
-
-// VectorComplex is an interface over coreTypes VectorComplex for operations
-type VectorComplex interface {
-	v.VectorComplex
-}
-
-func makeComplexVector(length int, vectorType string) (vector VectorComplex) {
-	vector = v.MakeComplexVector(length, vectorType)
-	return
 }
 
 func makeVector(length int, vectorType string) (vector Vector) {

@@ -5,83 +5,61 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/NumberXNumbers/GoCalculate/types/gcv"
 	"github.com/NumberXNumbers/GoCalculate/types/m"
 	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
 
 func TestVectorScalarMulti(t *testing.T) {
-	testElementsA := []float64{1, 2, 3}
-	testVectorA := v.MakeVectorWithElements(testElementsA, v.RowVector)
+	testElements := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
+	testVector := v.MakeVectorWithElements(testElements, ColVector)
 
-	testScalarA := 2.0
+	testScalar := gcv.NewValue(2.0 + 1i)
 
-	solutionElementsA := []float64{2, 4, 6}
-	solutionVectorA := v.MakeVectorWithElements(solutionElementsA, v.RowVector)
+	resultVector := VectorScalarMulti(testScalar, testVector)
 
-	resultVectorA := VectorScalarMulti(testScalarA, testVectorA)
-
-	if !reflect.DeepEqual(resultVectorA, solutionVectorA) {
-		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorA, solutionVectorA))
-	}
-
-	testElementsB := []complex128{1, 2, 3}
-	testVectorB := v.MakeComplexVectorWithElements(testElementsB, v.RowVector)
-
-	testScalarB := 2.0 + 1i
-
-	solutionElementsB := []complex128{2 + 1i, 4 + 2i, 6 + 3i}
-	solutionVectorB := v.MakeComplexVectorWithElements(solutionElementsB, v.RowVector)
-
-	resultVectorB := VectorComplexScalarMulti(testScalarB, testVectorB)
-
-	if !reflect.DeepEqual(resultVectorB, solutionVectorB) {
-		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorB, solutionVectorB))
+	if !reflect.DeepEqual(resultVector.Get(0), gcv.NewValue(2+1i)) ||
+		!reflect.DeepEqual(resultVector.Get(1), gcv.NewValue(4+2i)) ||
+		resultVector.Type() != ColVector {
+		t.Fail()
 	}
 }
 
 func TestVectorAddition(t *testing.T) {
-	testElementsAa := []float64{1, 2, 3}
-	testVectorAa := v.MakeVectorWithElements(testElementsAa, v.RowVector)
+	testElementsA := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
+	testVectorA := v.MakeVectorWithElements(testElementsA, ColVector)
 
-	testElementsAb := []float64{1, 2, 3}
-	testVectorAb := v.MakeVectorWithElements(testElementsAb, v.RowVector)
-
-	solutionElementsA := []float64{2, 4, 6}
-	solutionVectorA := v.MakeVectorWithElements(solutionElementsA, v.RowVector)
-
-	resultVectorA, errA := VectorAddition(testVectorAa, testVectorAb)
+	resultVectorA, errA := VectorAddition(testVectorA, testVectorA)
 
 	if errA != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(resultVectorA, solutionVectorA) {
-		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorA, solutionVectorA))
+	if !reflect.DeepEqual(resultVectorA.Get(0), gcv.NewValue(2.0)) ||
+		!reflect.DeepEqual(resultVectorA.Get(1), gcv.NewValue(4.0)) ||
+		resultVectorA.Type() != ColVector {
+		t.Fail()
 	}
 
-	testElementsBa := []complex128{1, 2, 3}
-	testVectorBa := v.MakeComplexVectorWithElements(testElementsBa, v.RowVector)
+	testElementsB := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2+1i))
+	testVectorB := v.MakeVectorWithElements(testElementsB, RowVector)
 
-	testElementsBb := []complex128{1 + 1i, 2 + 2i, 3 + 3i}
-	testVectorBb := v.MakeComplexVectorWithElements(testElementsBb, v.RowVector)
-
-	solutionElementsB := []complex128{2 + 1i, 4 + 2i, 6 + 3i}
-	solutionVectorB := v.MakeComplexVectorWithElements(solutionElementsB, v.RowVector)
-
-	resultVectorB, errB := VectorComplexAddition(testVectorBa, testVectorBb)
+	resultVectorB, errB := VectorAddition(testVectorB, testVectorB)
 
 	if errB != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(resultVectorB, solutionVectorB) {
-		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorB, solutionVectorB))
+	if !reflect.DeepEqual(resultVectorB.Get(0), gcv.NewValue(2+0i)) ||
+		!reflect.DeepEqual(resultVectorB.Get(1), gcv.NewValue(4+2i)) ||
+		resultVectorB.Type() != RowVector {
+		t.Fail()
 	}
 
-	testElementsCa := []float64{1, 2, 3}
+	testElementsCa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
 	testVectorCa := v.MakeVectorWithElements(testElementsCa, v.RowVector)
 
-	testElementsCb := []float64{2, 4, 6}
+	testElementsCb := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2+1i))
 	testVectorCb := v.MakeVectorWithElements(testElementsCb, v.ColVector)
 
 	_, errC := VectorAddition(testVectorCa, testVectorCb)
@@ -90,86 +68,56 @@ func TestVectorAddition(t *testing.T) {
 		t.Error("Expected error")
 	}
 
-	testElementsDa := []complex128{1, 2, 3}
-	testVectorDa := v.MakeComplexVectorWithElements(testElementsDa, v.ColVector)
+	testElementsDa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2), gcv.NewValue(3))
+	testVectorDa := v.MakeVectorWithElements(testElementsDa, v.RowVector)
 
-	testElementsDb := []complex128{2 + 1i, 4 + 2i, 6 + 3i}
-	testVectorDb := v.MakeComplexVectorWithElements(testElementsDb, v.RowVector)
+	testElementsDb := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2+1i))
+	testVectorDb := v.MakeVectorWithElements(testElementsDb, v.RowVector)
 
-	_, errD := VectorComplexAddition(testVectorDa, testVectorDb)
+	_, errD := VectorAddition(testVectorDa, testVectorDb)
 
 	if errD == nil {
-		t.Error("Expected error")
-	}
-
-	testElementsEa := []float64{1, 2}
-	testVectorEa := v.MakeVectorWithElements(testElementsEa, v.RowVector)
-
-	testElementsEb := []float64{2, 4, 6}
-	testVectorEb := v.MakeVectorWithElements(testElementsEb, v.RowVector)
-
-	_, errE := VectorAddition(testVectorEa, testVectorEb)
-
-	if errE == nil {
-		t.Error("Expected error")
-	}
-
-	testElementsFa := []complex128{1, 2, 3}
-	testVectorFa := v.MakeComplexVectorWithElements(testElementsFa, v.ColVector)
-
-	testElementsFb := []complex128{2 + 1i, 6 + 3i}
-	testVectorFb := v.MakeComplexVectorWithElements(testElementsFb, v.ColVector)
-
-	_, errF := VectorComplexAddition(testVectorFa, testVectorFb)
-
-	if errF == nil {
 		t.Error("Expected error")
 	}
 }
 
 func TestVectorSubtraction(t *testing.T) {
-	testElementsAa := []float64{1, 2, 3}
-	testVectorAa := v.MakeVectorWithElements(testElementsAa, v.RowVector)
+	testElementsA := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
+	testVectorA := v.MakeVectorWithElements(testElementsA, ColVector)
 
-	testElementsAb := []float64{1, 2, 3}
-	testVectorAb := v.MakeVectorWithElements(testElementsAb, v.RowVector)
-
-	solutionElementsA := []float64{0, 0, 0}
-	solutionVectorA := v.MakeVectorWithElements(solutionElementsA, v.RowVector)
-
-	resultVectorA, errA := VectorSubtraction(testVectorAa, testVectorAb)
+	resultVectorA, errA := VectorSubtraction(testVectorA, testVectorA)
 
 	if errA != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(resultVectorA, solutionVectorA) {
-		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorA, solutionVectorA))
+	if !reflect.DeepEqual(resultVectorA.Get(0), gcv.NewValue(0.0)) ||
+		!reflect.DeepEqual(resultVectorA.Get(1), gcv.NewValue(0.0)) ||
+		resultVectorA.Type() != ColVector {
+		t.Errorf("Expected %v, %v and %v, received %v, %v and %v", gcv.NewValue(0.0), gcv.NewValue(0.0),
+			ColVector, resultVectorA.Get(0), resultVectorA.Get(1), resultVectorA.Type())
 	}
 
-	testElementsBa := []complex128{1, 2, 3}
-	testVectorBa := v.MakeComplexVectorWithElements(testElementsBa, v.RowVector)
+	testElementsB := gcv.NewValues(gcv.NewValue(1+1i), gcv.NewValue(2+1i))
+	testVectorB := v.MakeVectorWithElements(testElementsB, RowVector)
 
-	testElementsBb := []complex128{1 + 1i, 2 + 2i, 3 + 3i}
-	testVectorBb := v.MakeComplexVectorWithElements(testElementsBb, v.RowVector)
-
-	solutionElementsB := []complex128{-1i, -2i, -3i}
-	solutionVectorB := v.MakeComplexVectorWithElements(solutionElementsB, v.RowVector)
-
-	resultVectorB, errB := VectorComplexSubtraction(testVectorBa, testVectorBb)
+	resultVectorB, errB := VectorSubtraction(testVectorB, testVectorB)
 
 	if errB != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(resultVectorB, solutionVectorB) {
-		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(resultVectorB, solutionVectorB))
+	if !reflect.DeepEqual(resultVectorB.Get(0), gcv.NewValue(0+0i)) ||
+		!reflect.DeepEqual(resultVectorB.Get(1), gcv.NewValue(0+0i)) ||
+		resultVectorB.Type() != RowVector {
+		t.Errorf("Expected %v, %v and %v, received %v, %v and %v", gcv.NewValue(0+0i), gcv.NewValue(0+0i),
+			RowVector, resultVectorB.Get(0), resultVectorB.Get(1), resultVectorB.Type())
 	}
 
-	testElementsCa := []float64{1, 2, 3}
+	testElementsCa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
 	testVectorCa := v.MakeVectorWithElements(testElementsCa, v.RowVector)
 
-	testElementsCb := []float64{2, 4, 6}
+	testElementsCb := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2+1i))
 	testVectorCb := v.MakeVectorWithElements(testElementsCb, v.ColVector)
 
 	_, errC := VectorSubtraction(testVectorCa, testVectorCb)
@@ -178,51 +126,25 @@ func TestVectorSubtraction(t *testing.T) {
 		t.Error("Expected error")
 	}
 
-	testElementsDa := []complex128{1, 2, 3}
-	testVectorDa := v.MakeComplexVectorWithElements(testElementsDa, v.ColVector)
+	testElementsDa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2), gcv.NewValue(3))
+	testVectorDa := v.MakeVectorWithElements(testElementsDa, v.RowVector)
 
-	testElementsDb := []complex128{2 + 1i, 4 + 2i, 6 + 3i}
-	testVectorDb := v.MakeComplexVectorWithElements(testElementsDb, v.RowVector)
+	testElementsDb := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2+1i))
+	testVectorDb := v.MakeVectorWithElements(testElementsDb, v.RowVector)
 
-	_, errD := VectorComplexSubtraction(testVectorDa, testVectorDb)
+	_, errD := VectorSubtraction(testVectorDa, testVectorDb)
 
 	if errD == nil {
-		t.Error("Expected error")
-	}
-
-	testElementsEa := []float64{1, 2}
-	testVectorEa := v.MakeVectorWithElements(testElementsEa, v.RowVector)
-
-	testElementsEb := []float64{2, 4, 6}
-	testVectorEb := v.MakeVectorWithElements(testElementsEb, v.RowVector)
-
-	_, errE := VectorSubtraction(testVectorEa, testVectorEb)
-
-	if errE == nil {
-		t.Error("Expected error")
-	}
-
-	testElementsFa := []complex128{1, 2, 3}
-	testVectorFa := v.MakeComplexVectorWithElements(testElementsFa, v.ColVector)
-
-	testElementsFb := []complex128{2 + 1i, 6 + 3i}
-	testVectorFb := v.MakeComplexVectorWithElements(testElementsFb, v.ColVector)
-
-	_, errF := VectorComplexSubtraction(testVectorFa, testVectorFb)
-
-	if errF == nil {
 		t.Error("Expected error")
 	}
 }
 
 func TestInnerProduct(t *testing.T) {
-	testElementsAa := []float64{1, 2, 3}
-	testVectorAa := v.MakeVectorWithElements(testElementsAa, v.RowVector)
+	testElementsA := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
+	testVectorAa := v.MakeVectorWithElements(testElementsA, RowVector)
+	testVectorAb := v.MakeVectorWithElements(testElementsA, ColVector)
 
-	testElementsAb := []float64{1, 2, 3}
-	testVectorAb := v.MakeVectorWithElements(testElementsAb, v.ColVector)
-
-	solutionA := float64(14)
+	solutionA := gcv.NewValue(5.0)
 
 	resultA, errA := InnerProduct(testVectorAa, testVectorAb)
 
@@ -230,33 +152,29 @@ func TestInnerProduct(t *testing.T) {
 		t.Fail()
 	}
 
-	if resultA != solutionA {
+	if !reflect.DeepEqual(resultA, solutionA) {
 		t.Errorf("Expected %v, received %v", solutionA, resultA)
 	}
 
-	testElementsBa := []complex128{1, 2, 3}
-	testVectorBa := v.MakeComplexVectorWithElements(testElementsBa, v.RowVector)
+	testElementsBa := gcv.NewValues(gcv.NewValue(1+1i), gcv.NewValue(2+1i))
+	testElementsBb := gcv.NewValues(gcv.NewValue(1-1i), gcv.NewValue(2-1i))
+	testVectorBa := v.MakeVectorWithElements(testElementsBa, RowVector)
+	testVectorBb := v.MakeVectorWithElements(testElementsBb, ColVector)
 
-	testElementsBb := []complex128{1 + 1i, 2 + 2i, 3 + 3i}
-	testVectorBb := v.MakeComplexVectorWithElements(testElementsBb, v.ColVector)
+	solutionB := gcv.NewValue(7 + 0i)
 
-	solutionB := complex128(14 + 14i)
-
-	resultB, errB := InnerProductComplex(testVectorBa, testVectorBb)
+	resultB, errB := InnerProduct(testVectorBa, testVectorBb)
 
 	if errB != nil {
 		t.Fail()
 	}
 
-	if resultB != solutionB {
+	if !reflect.DeepEqual(resultB, solutionB) {
 		t.Errorf("Expected %v, received %v", solutionB, resultB)
 	}
 
-	testElementsCa := []float64{1, 2, 3}
-	testVectorCa := v.MakeVectorWithElements(testElementsCa, v.ColVector)
-
-	testElementsCb := []float64{2, 4, 6}
-	testVectorCb := v.MakeVectorWithElements(testElementsCb, v.RowVector)
+	testVectorCa := v.MakeVectorWithElements(testElementsA, ColVector)
+	testVectorCb := v.MakeVectorWithElements(testElementsA, RowVector)
 
 	_, errC := InnerProduct(testVectorCa, testVectorCb)
 
@@ -264,51 +182,25 @@ func TestInnerProduct(t *testing.T) {
 		t.Error("Expected error")
 	}
 
-	testElementsDa := []complex128{1, 2, 3}
-	testVectorDa := v.MakeComplexVectorWithElements(testElementsDa, v.ColVector)
+	testElementsDa := gcv.NewValues(gcv.NewValue(1+1i), gcv.NewValue(2+1i))
+	testElementsDb := gcv.NewValues(gcv.NewValue(1-1i), gcv.NewValue(2-1i), gcv.NewValue(3-1i))
+	testVectorDa := v.MakeVectorWithElements(testElementsDa, RowVector)
+	testVectorDb := v.MakeVectorWithElements(testElementsDb, ColVector)
 
-	testElementsDb := []complex128{2 + 1i, 4 + 2i, 6 + 3i}
-	testVectorDb := v.MakeComplexVectorWithElements(testElementsDb, v.RowVector)
-
-	_, errD := InnerProductComplex(testVectorDa, testVectorDb)
+	_, errD := InnerProduct(testVectorDa, testVectorDb)
 
 	if errD == nil {
-		t.Error("Expected error")
-	}
-
-	testElementsEa := []float64{1, 2}
-	testVectorEa := v.MakeVectorWithElements(testElementsEa, v.RowVector)
-
-	testElementsEb := []float64{2, 4, 6}
-	testVectorEb := v.MakeVectorWithElements(testElementsEb, v.RowVector)
-
-	_, errE := InnerProduct(testVectorEa, testVectorEb)
-
-	if errE == nil {
-		t.Error("Expected error")
-	}
-
-	testElementsFa := []complex128{1, 2, 3}
-	testVectorFa := v.MakeComplexVectorWithElements(testElementsFa, v.ColVector)
-
-	testElementsFb := []complex128{2 + 1i, 6 + 3i}
-	testVectorFb := v.MakeComplexVectorWithElements(testElementsFb, v.ColVector)
-
-	_, errF := InnerProductComplex(testVectorFa, testVectorFb)
-
-	if errF == nil {
 		t.Error("Expected error")
 	}
 }
 
 func TestAngleTheta(t *testing.T) {
-	testElementsAa := []float64{1, 0}
-	testVectorAa := v.MakeVectorWithElements(testElementsAa, v.RowVector)
+	testElementsAa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(0))
+	testElementsAb := gcv.NewValues(gcv.NewValue(0), gcv.NewValue(1))
+	testVectorAa := v.MakeVectorWithElements(testElementsAa, RowVector)
+	testVectorAb := v.MakeVectorWithElements(testElementsAb, ColVector)
 
-	testElementsAb := []float64{0, 1}
-	testVectorAb := v.MakeVectorWithElements(testElementsAb, v.ColVector)
-
-	solutionA := float64(math.Pi / float64(2))
+	solutionA := gcv.NewValue(float64(math.Pi / float64(2)))
 
 	resultA, errA := AngleTheta(testVectorAa, testVectorAb)
 
@@ -316,33 +208,29 @@ func TestAngleTheta(t *testing.T) {
 		t.Fail()
 	}
 
-	if resultA != solutionA {
+	if !reflect.DeepEqual(resultA, solutionA) {
 		t.Errorf("Expected %v, received %v", solutionA, resultA)
 	}
 
-	testElementsBa := []complex128{1, 0}
-	testVectorBa := v.MakeComplexVectorWithElements(testElementsBa, v.RowVector)
+	testElementsBa := gcv.NewValues(gcv.NewValue(1+0i), gcv.NewValue(0+0i))
+	testElementsBb := gcv.NewValues(gcv.NewValue(0-0i), gcv.NewValue(1-0i))
+	testVectorBa := v.MakeVectorWithElements(testElementsBa, RowVector)
+	testVectorBb := v.MakeVectorWithElements(testElementsBb, ColVector)
 
-	testElementsBb := []complex128{0, 1}
-	testVectorBb := v.MakeComplexVectorWithElements(testElementsBb, v.ColVector)
+	solutionB := gcv.NewValue(complex128(math.Pi / complex128(2)))
 
-	solutionB := complex128(math.Pi / complex128(2))
-
-	resultB, errB := AngleThetaComplex(testVectorBa, testVectorBb)
+	resultB, errB := AngleTheta(testVectorBa, testVectorBb)
 
 	if errB != nil {
 		t.Fail()
 	}
 
-	if resultB != solutionB {
+	if !reflect.DeepEqual(resultB, solutionB) {
 		t.Errorf("Expected %v, received %v", solutionB, resultB)
 	}
 
-	testElementsCa := []float64{0, 0}
-	testVectorCa := v.MakeVectorWithElements(testElementsCa, v.ColVector)
-
-	testElementsCb := []float64{0, 0}
-	testVectorCb := v.MakeVectorWithElements(testElementsCb, v.RowVector)
+	testVectorCa := v.MakeVectorWithElements(testElementsAa, ColVector)
+	testVectorCb := v.MakeVectorWithElements(testElementsAb, RowVector)
 
 	_, errC := AngleTheta(testVectorCa, testVectorCb)
 
@@ -350,49 +238,23 @@ func TestAngleTheta(t *testing.T) {
 		t.Error("Expected error")
 	}
 
-	testElementsDa := []complex128{0, 0}
-	testVectorDa := v.MakeComplexVectorWithElements(testElementsDa, v.ColVector)
+	testElementsDa := gcv.NewValues(gcv.NewValue(1+1i), gcv.NewValue(2+1i))
+	testElementsDb := gcv.NewValues(gcv.NewValue(1-1i), gcv.NewValue(2-1i), gcv.NewValue(3-1i))
+	testVectorDa := v.MakeVectorWithElements(testElementsDa, RowVector)
+	testVectorDb := v.MakeVectorWithElements(testElementsDb, ColVector)
 
-	testElementsDb := []complex128{0, 0}
-	testVectorDb := v.MakeComplexVectorWithElements(testElementsDb, v.RowVector)
-
-	_, errD := AngleThetaComplex(testVectorDa, testVectorDb)
+	_, errD := AngleTheta(testVectorDa, testVectorDb)
 
 	if errD == nil {
-		t.Error("Expected error")
-	}
-
-	testElementsEa := []float64{1, 2}
-	testVectorEa := v.MakeVectorWithElements(testElementsEa, v.RowVector)
-
-	testElementsEb := []float64{2, 4, 6}
-	testVectorEb := v.MakeVectorWithElements(testElementsEb, v.RowVector)
-
-	_, errE := AngleTheta(testVectorEa, testVectorEb)
-
-	if errE == nil {
-		t.Error("Expected error")
-	}
-
-	testElementsFa := []complex128{1, 2, 3}
-	testVectorFa := v.MakeComplexVectorWithElements(testElementsFa, v.ColVector)
-
-	testElementsFb := []complex128{2 + 1i, 6 + 3i}
-	testVectorFb := v.MakeComplexVectorWithElements(testElementsFb, v.ColVector)
-
-	_, errF := AngleThetaComplex(testVectorFa, testVectorFb)
-
-	if errF == nil {
 		t.Error("Expected error")
 	}
 }
 
 func TestOuterProduct(t *testing.T) {
-	testElementsAa := []float64{1, 0}
-	testVectorAa := v.MakeVectorWithElements(testElementsAa, v.ColVector)
-
-	testElementsAb := []float64{0, 1}
-	testVectorAb := v.MakeVectorWithElements(testElementsAb, v.RowVector)
+	testElementsAa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(0))
+	testElementsAb := gcv.NewValues(gcv.NewValue(0), gcv.NewValue(1))
+	testVectorAa := v.MakeVectorWithElements(testElementsAa, ColVector)
+	testVectorAb := v.MakeVectorWithElements(testElementsAb, RowVector)
 
 	solutionElementsA := [][]float64{{0, 1}, {0, 0}}
 	solutionMatrixA := m.MakeMatrixWithElements(solutionElementsA)
@@ -407,11 +269,10 @@ func TestOuterProduct(t *testing.T) {
 		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixA, resultMatrixA))
 	}
 
-	testElementsBa := []complex128{1, 0}
-	testVectorBa := v.MakeComplexVectorWithElements(testElementsBa, v.ColVector)
-
-	testElementsBb := []complex128{0, 1}
-	testVectorBb := v.MakeComplexVectorWithElements(testElementsBb, v.RowVector)
+	testElementsBa := gcv.NewValues(gcv.NewValue(1+0i), gcv.NewValue(0+0i))
+	testElementsBb := gcv.NewValues(gcv.NewValue(0-0i), gcv.NewValue(1-0i))
+	testVectorBa := v.MakeVectorWithElements(testElementsBa, ColVector)
+	testVectorBb := v.MakeVectorWithElements(testElementsBb, RowVector)
 
 	solutionElementsB := [][]complex128{{0, 1}, {0, 0}}
 	solutionMatrixB := m.MakeComplexMatrixWithElements(solutionElementsB)
@@ -426,11 +287,8 @@ func TestOuterProduct(t *testing.T) {
 		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(solutionMatrixB, resultMatrixB))
 	}
 
-	testElementsCa := []float64{1, 2}
-	testVectorCa := v.MakeVectorWithElements(testElementsCa, v.RowVector)
-
-	testElementsCb := []float64{2, 4, 6}
-	testVectorCb := v.MakeVectorWithElements(testElementsCb, v.RowVector)
+	testVectorCa := v.MakeVectorWithElements(testElementsAa, RowVector)
+	testVectorCb := v.MakeVectorWithElements(testElementsAb, RowVector)
 
 	_, errC := OuterProduct(testVectorCa, testVectorCb)
 
@@ -438,11 +296,8 @@ func TestOuterProduct(t *testing.T) {
 		t.Error("Expected error")
 	}
 
-	testElementsDa := []complex128{1, 2, 3}
-	testVectorDa := v.MakeComplexVectorWithElements(testElementsDa, v.ColVector)
-
-	testElementsDb := []complex128{2 + 1i, 6 + 3i}
-	testVectorDb := v.MakeComplexVectorWithElements(testElementsDb, v.ColVector)
+	testVectorDa := v.MakeVectorWithElements(testElementsBa, ColVector)
+	testVectorDb := v.MakeVectorWithElements(testElementsBb, ColVector)
 
 	_, errD := OuterProductComplex(testVectorDa, testVectorDb)
 
