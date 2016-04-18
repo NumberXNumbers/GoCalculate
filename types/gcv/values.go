@@ -27,7 +27,7 @@ type Values interface {
 	Len() int
 
 	// Returns the Core Type of the Values. i.e the highest ranking Type
-	CoreType() string
+	Type() string
 }
 
 type values struct {
@@ -36,20 +36,18 @@ type values struct {
 	coreType string
 }
 
-func (v *values) CoreType() string { return v.coreType }
+func (v *values) Type() string { return v.coreType }
 
 func (v *values) setValues(vals []Value) {
 	v.vals = vals
 	v.length = len(vals)
 	v.coreType = Int
 	for _, val := range vals {
-		if val.GetValueType() == Complex {
-			v.coreType = Complex
-			break
-		}
-
-		if val.GetValueType() == Float && v.CoreType() != Float {
-			v.coreType = Float
+		if len(v.Type()) < len(val.GetValueType()) {
+			v.coreType = val.GetValueType()
+			if v.Type() == Complex {
+				break
+			}
 		}
 	}
 }

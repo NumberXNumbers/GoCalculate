@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	// ColVector is a vectorType Column Vector
-	ColVector = "column"
-	// RowVector is a vectorType Row Vector
-	RowVector = "row"
+	// ColSpace is a space Column Vector
+	ColSpace = "column"
+	// RowSpace is a space Row Vector
+	RowSpace = "row"
 )
 
 // Vector is the main vector interface for real vectors
@@ -31,7 +31,10 @@ type Vector interface {
 	// Returns a new Copy of vector
 	Copy() Vector
 
-	// Returns Type of vector. Either Column or Row vector
+	// Returns Space of vector. Either Column or Row vector
+	Space() string
+
+	// Returns the core value type of the vector
 	Type() string
 
 	// Returns the len of the values
@@ -40,13 +43,17 @@ type Vector interface {
 	// Transpose of vector. i.e changes a row into a column vector and vice versa
 	Trans()
 
+	// Append a value to vector
+	Append(val gcv.Value)
+
 	// Returns the elements in the vector
 	Elements() gcv.Values
 }
 
 type vector struct {
-	vectorType string
-	elements   gcv.Values
+	space    string
+	coreType string
+	elements gcv.Values
 }
 
 // implementation of Len method
@@ -55,37 +62,49 @@ func (v *vector) Len() int { return v.elements.Len() }
 // implementation of Len method
 func (v *vector) Get(index int) gcv.Value { return v.elements.Get(index) }
 
-func (v *vector) Set(index int, val gcv.Value) { v.elements.Set(index, val) }
+// implementation of Set method
+func (v *vector) Set(index int, val gcv.Value) {
+	if len(v.coreType) < len(val.GetValueType()) {
+		v.coreType = val.GetValueType()
+	}
+	v.elements.Set(index, val)
+}
+
+// implementation of Space method
+func (v *vector) Space() string { return v.space }
 
 // implementation of Type method
-func (v *vector) Type() string { return v.vectorType }
+func (v *vector) Type() string { return v.elements.Type() }
 
 // implementation of Copy method
-func (v *vector) Copy() Vector { return MakeVectorWithElements(v.elements, v.Type()) }
+func (v *vector) Copy() Vector { return MakeVector(v.Space(), v.elements) }
 
 // implementation of Elements method
 func (v *vector) Elements() gcv.Values { return v.elements }
 
+// implementation of Append method
+func (v *vector) Append(val gcv.Value) { v.Elements().Append(val) }
+
 // implementation of Trans method
 func (v *vector) Trans() {
-	if v.elements.CoreType() == gcv.Complex {
+	if v.Type() == gcv.Complex {
 		for i := 0; i < v.Len(); i++ {
 			v.Set(i, gcv.NewValue(cmplx.Conj(v.Get(i).Complex128())))
 		}
 	}
 
-	if v.Type() == ColVector {
-		v.vectorType = RowVector
+	if v.Space() == ColSpace {
+		v.space = RowSpace
 	} else {
-		v.vectorType = ColVector
+		v.space = ColSpace
 	}
 }
 
 // implementation of Norm method
 func (v *vector) Norm() gcv.Value {
-	if v.elements.CoreType() == gcv.Complex {
+	if v.Type() == gcv.Complex {
 		var dotProduct complex128
-		conjVector := MakeNewConjVector(v)
+		conjVector := MakeConjVector(v)
 		for i := 0; i < v.Len(); i++ {
 			dotProduct += v.Get(i).Complex128() * conjVector.Get(i).Complex128()
 		}
@@ -102,29 +121,37 @@ func (v *vector) Norm() gcv.Value {
 // implementation of IndexOf method
 func (v *vector) IndexOf(val gcv.Value) int { return v.Elements().IndexOf(val) }
 
-// MakeVector returns zero vector of size length
-func MakeVector(length int, vectorType string) Vector {
+// NewVector returns zero vector of size length
+func NewVector(space string, length int) Vector {
 	vector := new(vector)
-	vector.vectorType = vectorType
-	emptyElements := make([]gcv.Value, length)
-	for index := range emptyElements {
-		val := gcv.NewValue(0)
-		emptyElements[index] = val
+	if space != RowSpace && space != ColSpace {
+		space = RowSpace
 	}
-	vector.elements = gcv.NewValues(emptyElements...)
+	vector.space = space
+	vector.coreType = gcv.Int
+	elements := make([]gcv.Value, length)
+	for index := range elements {
+		val := gcv.NewValue(0)
+		elements[index] = val
+	}
+	vector.elements = gcv.NewValues(elements...)
 	return vector
 }
 
-// MakeVectorWithElements returns zero vector of size length
-func MakeVectorWithElements(elements gcv.Values, vectorType string) Vector {
+// MakeVector returns zero vector of size length
+func MakeVector(space string, elements gcv.Values) Vector {
 	vector := new(vector)
-	vector.vectorType = vectorType
+	if space != RowSpace && space != ColSpace {
+		space = RowSpace
+	}
+	vector.space = space
+	vector.coreType = elements.Type()
 	vector.elements = elements.Copy()
 	return vector
 }
 
-// MakeNewConjVector returns a new conjugate vector of vector
-func MakeNewConjVector(v Vector) Vector {
+// MakeConjVector returns a new conjugate vector of vector
+func MakeConjVector(v Vector) Vector {
 	conjVector := v.Copy()
 	conjVector.Trans()
 	return conjVector
