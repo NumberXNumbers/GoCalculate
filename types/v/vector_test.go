@@ -25,7 +25,7 @@ func TestGetAndSetMethodsVector(t *testing.T) {
 func TestSetValuesVectors(t *testing.T) {
 	testVector := NewVector(ColSpace, 3)
 	testVectors := MakeVectors(ColSpace, testVector, testVector, testVector)
-	testValue := gcv.NewValue(3.0)
+	testValue := gcv.NewValue(3.0 + 1i)
 
 	testVectors.SetValue(0, 1, testValue)
 
@@ -223,12 +223,12 @@ func TestVectorsIndexOf(t *testing.T) {
 }
 
 func TestSetAndSpaceVectors(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
+	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5))
 	testVectorA := MakeVector(ColSpace, testElementsA)
 
 	testVectorsA := MakeVectors(ColSpace, testVectorA)
 
-	testElementsB := gcv.NewValues(gcv.NewValue(6), gcv.NewValue(7))
+	testElementsB := gcv.NewValues(gcv.NewValue(6), gcv.NewValue(7+1i))
 	testVectorB := MakeVector(RowSpace, testElementsB)
 
 	testVectorsA.Set(0, testVectorB)

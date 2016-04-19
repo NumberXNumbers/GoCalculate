@@ -85,6 +85,9 @@ func (v *vectors) Get(index int) Vector { return v.vects[index] }
 func (v *vectors) Vectors() []Vector { return v.vects }
 
 func (v *vectors) Set(index int, vect Vector) {
+	if len(v.Type()) < len(vect.Type()) {
+		v.coreType = vect.Type()
+	}
 	if vect.Space() != v.Space() {
 		vect.Trans()
 	}
