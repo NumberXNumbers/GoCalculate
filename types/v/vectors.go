@@ -92,6 +92,9 @@ func (v *vectors) Set(index int, vect Vector) {
 }
 
 func (v *vectors) SetValue(i int, j int, value gcv.Value) {
+	if len(v.Type()) < len(value.GetValueType()) {
+		v.coreType = value.GetValueType()
+	}
 	vector := v.vects[i]
 	values := vector.Elements()
 	values.Values()[j] = value
