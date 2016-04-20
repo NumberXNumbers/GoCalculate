@@ -8,9 +8,6 @@ go:
 matrix:
   allow-failures:
     - go: tip
-before_install:
-  - go get golang.org/x/tools/cmd/vet
-  - go get golang.org/x/tools/cmd/cover
 script:
   # Vet GoCaluate changes and report
   - go vet -x ./...
