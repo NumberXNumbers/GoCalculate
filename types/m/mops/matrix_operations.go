@@ -1,157 +1,99 @@
 package mops
 
-import "errors"
+import (
+	"errors"
 
-// MatrixScalarMulti is an operation for multiplying a Matrix by a scalar float64 value
-func MatrixScalarMulti(scalar float64, matrix Matrix) Matrix {
+	"github.com/NumberXNumbers/GoCalculate/types/gcv"
+	"github.com/NumberXNumbers/GoCalculate/types/m"
+)
+
+// ScalarMultiplication is an operation for multiplying a Matrix by a scalar float64 value
+func ScalarMultiplication(scalar gcv.Value, matrix m.Matrix) m.Matrix {
 	newMatrix := matrix.Copy()
 	for i := 0; i < matrix.GetNumRows(); i++ {
 		for j := 0; j < matrix.GetNumCols(); j++ {
-			newMatrix.Set(i, j, scalar*matrix.Get(i, j))
+			if matrix.Type() == gcv.Complex || scalar.GetValueType() == gcv.Complex {
+				newMatrix.Set(i, j, gcv.NewValue(scalar.Complex128()*matrix.Get(i, j).Complex128()))
+				continue
+			}
+			newMatrix.Set(i, j, gcv.NewValue(scalar.Float64()*matrix.Get(i, j).Float64()))
 		}
 	}
 
 	return newMatrix
 }
 
-// MatrixComplexScalarMulti is an operation for multiplying a Matrix by a scalar float64 value
-func MatrixComplexScalarMulti(scalar complex128, matrix MatrixComplex) MatrixComplex {
-	newMatrix := matrix.Copy()
-	for i := 0; i < matrix.GetNumRows(); i++ {
-		for j := 0; j < matrix.GetNumCols(); j++ {
-			newMatrix.Set(i, j, scalar*matrix.Get(i, j))
-		}
-	}
-
-	return newMatrix
-}
-
-// MatrixMultiSimple is an operation that will multiple two matrices of any size together
-func MatrixMultiSimple(matrixA Matrix, matrixB Matrix) (Matrix, error) {
+// MultiplicationSimple is an operation that will multiple two matrices of any size together
+func MultiplicationSimple(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) {
 	if matrixA.GetNumCols() != matrixB.GetNumRows() {
 		return nil, errors.New("Length of columns of matrix A not equal to length of rows of matrix B")
 	}
 
-	if matrixA.IsIdentity() {
-		return matrixB, nil
+	if matrixA.IsIdentity() || matrixB.IsIdentity() {
+		_, degree := matrixA.Dim()
+		matrixAB := m.NewIdentityMatrix(degree)
+		return matrixAB, nil
 	}
 
-	if matrixB.IsIdentity() {
-		return matrixA, nil
-	}
-
-	var sum float64
-
-	matrixAB := makeMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
-
+	matrixAB := m.NewMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
+	var sum gcv.Value
 	for i := 0; i < matrixA.GetNumRows(); i++ {
 		for j := 0; j < matrixB.GetNumCols(); j++ {
-			sum = 0.0
-			for k := 0; k < matrixA.GetNumCols(); k++ {
-				sum += matrixA.Get(i, k) * matrixB.Get(k, j)
+			if matrixA.Type() == gcv.Complex || matrixB.Type() == gcv.Complex {
+				var sumComplex complex128
+				for k := 0; k < matrixA.GetNumCols(); k++ {
+					sumComplex += matrixA.Get(i, k).Complex128() * matrixB.Get(k, j).Complex128()
+				}
+				sum = gcv.NewValue(sumComplex)
+			} else {
+				var sumFloat float64
+				for k := 0; k < matrixA.GetNumCols(); k++ {
+					sumFloat += matrixA.Get(i, k).Float64() * matrixB.Get(k, j).Float64()
+				}
+				sum = gcv.NewValue(sumFloat)
 			}
 			matrixAB.Set(i, j, sum)
 		}
 	}
-
 	return matrixAB, nil
 }
 
-// MatrixComplexMultiSimple is an operation that will multiple two complex matrices of any size together
-func MatrixComplexMultiSimple(matrixA MatrixComplex, matrixB MatrixComplex) (MatrixComplex, error) {
-	if matrixA.GetNumCols() != matrixB.GetNumRows() {
-		return nil, errors.New("Length of columns of matrix A not equal to length of rows of matrix B")
+// Addition is an operation that will add two matrices together
+func Addition(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) {
+	if matrixA.GetNumCols() != matrixB.GetNumCols() || matrixA.GetNumRows() != matrixB.GetNumRows() {
+		return nil, errors.New("Matrices do not have equivalent dimensions")
 	}
 
-	if matrixA.IsIdentity() {
-		return matrixB, nil
-	}
-
-	if matrixB.IsIdentity() {
-		return matrixA, nil
-	}
-
-	var sum complex128
-
-	matrixAB := makeComplexMatrix(matrixA.GetNumRows(), matrixB.GetNumRows())
+	matrixAB := m.NewMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
 
 	for i := 0; i < matrixA.GetNumRows(); i++ {
-		for j := 0; j < matrixB.GetNumCols(); j++ {
-			sum = 0.0
-			for k := 0; k < matrixA.GetNumCols(); k++ {
-				sum += matrixA.Get(i, k) * matrixB.Get(k, j)
+		for j := 0; j < matrixA.GetNumCols(); j++ {
+			if matrixA.Type() == gcv.Complex || matrixB.Type() == gcv.Complex {
+				matrixAB.Set(i, j, gcv.NewValue(matrixA.Get(i, j).Complex128()+matrixB.Get(i, j).Complex128()))
+				continue
 			}
-			matrixAB.Set(i, j, sum)
+			matrixAB.Set(i, j, gcv.NewValue(matrixA.Get(i, j).Float64()+matrixB.Get(i, j).Float64()))
 		}
 	}
-
 	return matrixAB, nil
 }
 
-// MatrixAddition is an operation that will add two matrices together
-func MatrixAddition(matrixA Matrix, matrixB Matrix) (Matrix, error) {
+// Subtraction is an operation that will subtract two matrices from one another
+func Subtraction(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) {
 	if matrixA.GetNumCols() != matrixB.GetNumCols() || matrixA.GetNumRows() != matrixB.GetNumRows() {
 		return nil, errors.New("Matrices do not have equivalent dimensions")
 	}
 
-	matrixAB := makeMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
+	matrixAB := m.NewMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
 
 	for i := 0; i < matrixA.GetNumRows(); i++ {
 		for j := 0; j < matrixA.GetNumCols(); j++ {
-			matrixAB.Set(i, j, matrixA.Get(i, j)+matrixB.Get(i, j))
+			if matrixA.Type() == gcv.Complex || matrixB.Type() == gcv.Complex {
+				matrixAB.Set(i, j, gcv.NewValue(matrixA.Get(i, j).Complex128()-matrixB.Get(i, j).Complex128()))
+				continue
+			}
+			matrixAB.Set(i, j, gcv.NewValue(matrixA.Get(i, j).Float64()-matrixB.Get(i, j).Float64()))
 		}
 	}
-
-	return matrixAB, nil
-}
-
-// MatrixComplexAddition is an operation that will add two complex matrices together
-func MatrixComplexAddition(matrixA MatrixComplex, matrixB MatrixComplex) (MatrixComplex, error) {
-	if matrixA.GetNumCols() != matrixB.GetNumCols() || matrixA.GetNumRows() != matrixB.GetNumRows() {
-		return nil, errors.New("Matrices do not have equivalent dimensions")
-	}
-
-	matrixAB := makeComplexMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
-
-	for i := 0; i < matrixA.GetNumRows(); i++ {
-		for j := 0; j < matrixA.GetNumCols(); j++ {
-			matrixAB.Set(i, j, matrixA.Get(i, j)+matrixB.Get(i, j))
-		}
-	}
-
-	return matrixAB, nil
-}
-
-// MatrixSubtraction is an operation that will subtract two matrices from one another
-func MatrixSubtraction(matrixA Matrix, matrixB Matrix) (Matrix, error) {
-	if matrixA.GetNumCols() != matrixB.GetNumCols() || matrixA.GetNumRows() != matrixB.GetNumRows() {
-		return nil, errors.New("Matrices do not have equivalent dimensions")
-	}
-
-	matrixAB := makeMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
-
-	for i := 0; i < matrixA.GetNumRows(); i++ {
-		for j := 0; j < matrixA.GetNumCols(); j++ {
-			matrixAB.Set(i, j, matrixA.Get(i, j)-matrixB.Get(i, j))
-		}
-	}
-
-	return matrixAB, nil
-}
-
-// MatrixComplexSubtraction is an operation that will subtract two complex matrices from one another
-func MatrixComplexSubtraction(matrixA MatrixComplex, matrixB MatrixComplex) (MatrixComplex, error) {
-	if matrixA.GetNumCols() != matrixB.GetNumCols() || matrixA.GetNumRows() != matrixB.GetNumRows() {
-		return nil, errors.New("Matrices do not have equivalent dimensions")
-	}
-
-	matrixAB := makeComplexMatrix(matrixA.GetNumRows(), matrixB.GetNumCols())
-
-	for i := 0; i < matrixA.GetNumRows(); i++ {
-		for j := 0; j < matrixA.GetNumCols(); j++ {
-			matrixAB.Set(i, j, matrixA.Get(i, j)-matrixB.Get(i, j))
-		}
-	}
-
 	return matrixAB, nil
 }
