@@ -39,15 +39,13 @@ type values struct {
 func (v *values) Type() string { return v.coreType }
 
 func (v *values) setValues(vals []Value) {
-	v.vals = vals
+	v.vals = make([]Value, len(vals))
 	v.length = len(vals)
 	v.coreType = Int
-	for _, val := range vals {
-		if len(v.Type()) < len(val.GetValueType()) {
+	for index, val := range vals {
+		v.vals[index] = val.Copy()
+		if v.Type() != Complex && len(v.Type()) < len(val.GetValueType()) {
 			v.coreType = val.GetValueType()
-			if v.Type() == Complex {
-				break
-			}
 		}
 	}
 }
@@ -67,8 +65,12 @@ func (v *values) Append(val Value) {
 func (v *values) Copy() Values {
 	vals := new(values)
 	vElements := make([]Value, len(v.vals))
-	copy(vElements, v.vals)
-	vals.setValues(vElements)
+	for index, val := range v.Values() {
+		vElements[index] = val.Copy()
+	}
+	vals.length = v.Len()
+	vals.coreType = v.Type()
+	vals.vals = vElements
 	return vals
 }
 

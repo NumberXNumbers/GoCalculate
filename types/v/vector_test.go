@@ -70,8 +70,8 @@ func TestLenMethodVector(t *testing.T) {
 
 func TestTransMethodVector(t *testing.T) {
 	testElementsA := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2), gcv.NewValue(3))
-	testVectorA := MakeVector(ColSpace, testElementsA)
-	testTransVectorA := MakeVector("blank", testElementsA)
+	testVectorA := MakeVectorAlt(ColSpace, testElementsA)
+	testTransVectorA := MakeVectorAlt("blank", testElementsA)
 
 	testVectorA.Trans()
 
@@ -79,10 +79,8 @@ func TestTransMethodVector(t *testing.T) {
 		t.Errorf("Expected %v, received %v", testVectorA, testTransVectorA)
 	}
 
-	testElementsB := gcv.NewValues(gcv.NewValue(1+1i), gcv.NewValue(2), gcv.NewValue(3-3i))
-	testTransElementsB := gcv.NewValues(gcv.NewValue(1-1i), gcv.NewValue(2), gcv.NewValue(3+3i))
-	testVectorB := MakeVector(ColSpace, testElementsB)
-	testTransVectorB := MakeVector(RowSpace, testTransElementsB)
+	testVectorB := MakeVector(ColSpace, gcv.NewValue(1+1i), gcv.NewValue(2), gcv.NewValue(3-3i))
+	testTransVectorB := MakeVector(RowSpace, gcv.NewValue(1-1i), gcv.NewValue(2), gcv.NewValue(3+3i))
 
 	testVectorB.Trans()
 
@@ -92,8 +90,8 @@ func TestTransMethodVector(t *testing.T) {
 		t.Errorf("Expected %v, received %v", testTransVectorB, testVectorB)
 	}
 
-	testVectorC := MakeVector(RowSpace, testElementsA)
-	testTransVectorC := MakeVector(ColSpace, testElementsA)
+	testVectorC := MakeVectorAlt(RowSpace, testElementsA)
+	testTransVectorC := MakeVectorAlt(ColSpace, testElementsA)
 
 	testVectorC.Trans()
 
@@ -103,15 +101,13 @@ func TestTransMethodVector(t *testing.T) {
 }
 
 func TestNormMethodVector(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4))
-	testVectorA := MakeVector(ColSpace, testElementsA)
+	testVectorA := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(4))
 
 	if !reflect.DeepEqual(testVectorA.Norm(), gcv.NewValue(5.0)) {
 		t.Errorf("Expected %v, received %v", gcv.NewValue(5), testVectorA.Norm())
 	}
 
-	testElementsB := gcv.NewValues(gcv.NewValue(2+2i), gcv.NewValue(1))
-	testVectorB := MakeVector(ColSpace, testElementsB)
+	testVectorB := MakeVector(ColSpace, gcv.NewValue(2+2i), gcv.NewValue(1))
 
 	if !reflect.DeepEqual(testVectorB.Norm(), gcv.NewValue(3+0i)) {
 		t.Errorf("Expected %v, received %v", gcv.NewValue(3), testVectorB.Norm())
@@ -130,11 +126,9 @@ func TestMakeNewConjVector(t *testing.T) {
 }
 
 func TestNewVectorsGet(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4))
-	testVectorA := MakeVector(ColSpace, testElementsA)
+	testVectorA := MakeVector(RowSpace, gcv.NewValue(3), gcv.NewValue(4))
 
-	testElementsB := gcv.NewValues(gcv.NewValue(6), gcv.NewValue(7))
-	testVectorB := MakeVector(ColSpace, testElementsB)
+	testVectorB := MakeVector(ColSpace, gcv.NewValue(6), gcv.NewValue(7))
 
 	testVectorsA := MakeVectors("blank", testVectorA, testVectorB)
 
@@ -142,20 +136,18 @@ func TestNewVectorsGet(t *testing.T) {
 		t.Errorf("Expected %v, received %v", testVectorA, testVectorsA.Get(0))
 	}
 
-	if !reflect.DeepEqual(testVectorB, testVectorsA.Get(1)) {
+	if reflect.DeepEqual(testVectorB, testVectorsA.Get(1)) {
 		t.Errorf("Expected %v, received %v", testVectorB, testVectorsA.Get(1))
 	}
 
-	testElementsC := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4))
-	testVectorC := MakeVector(RowSpace, testElementsC)
+	testVectorC := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(4))
 
-	testElementsD := gcv.NewValues(gcv.NewValue(6+3i), gcv.NewValue(7-4i))
-	testVectorD := MakeVector(ColSpace, testElementsD)
+	testVectorD := MakeVector(RowSpace, gcv.NewValue(6+3i), gcv.NewValue(7-4i))
 
 	testVectorsB := MakeVectors(RowSpace, testVectorC, testVectorD)
 
-	if !reflect.DeepEqual(testVectorC, testVectorsB.Get(0)) {
-		t.Errorf("Expected %v, received %v", testVectorA, testVectorsA)
+	if reflect.DeepEqual(testVectorC, testVectorsB.Get(0)) {
+		t.Errorf("Expected %v, received %v", testVectorC, testVectorsB.Get(0))
 	}
 
 	if !reflect.DeepEqual(testVectorD, testVectorsB.Get(1)) {
@@ -164,8 +156,7 @@ func TestNewVectorsGet(t *testing.T) {
 }
 
 func TestVectorIndexOf(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4.0))
-	testVectorA := MakeVector(ColSpace, testElementsA)
+	testVectorA := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(4.0))
 
 	testIndexA := testVectorA.IndexOf(gcv.NewValue(3))
 	if testIndexA != 0 {
@@ -179,11 +170,9 @@ func TestVectorIndexOf(t *testing.T) {
 }
 
 func TestVectorsIndexOf(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
-	testVectorA := MakeVector(ColSpace, testElementsA)
+	testVectorA := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
 
-	testElementsB := gcv.NewValues(gcv.NewValue(6), gcv.NewValue(7))
-	testVectorB := MakeVector(ColSpace, testElementsB)
+	testVectorB := MakeVector(ColSpace, gcv.NewValue(6), gcv.NewValue(7))
 
 	testVectorsA := MakeVectors(ColSpace, testVectorA)
 
@@ -197,24 +186,21 @@ func TestVectorsIndexOf(t *testing.T) {
 		t.Errorf("Expected %v, received %v", -1, indexOfTestVectorB)
 	}
 
-	testElementsC := gcv.NewValues(gcv.NewValue(4), gcv.NewValue(5.0), gcv.NewValue(8+1i))
-	testVectorC := MakeVector(ColSpace, testElementsC)
+	testVectorC := MakeVector(ColSpace, gcv.NewValue(4), gcv.NewValue(5.0), gcv.NewValue(8+1i))
 
 	indexOfTestVectorC := testVectorsA.IndexOf(testVectorC)
 	if indexOfTestVectorC != -1 {
 		t.Errorf("Expected %v, received %v", -1, indexOfTestVectorC)
 	}
 
-	testElementsD := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(5.0), gcv.NewValue(8+1i))
-	testVectorD := MakeVector(ColSpace, testElementsD)
+	testVectorD := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(5.0), gcv.NewValue(8+1i))
 
 	indexOfTestVectorD := testVectorsA.IndexOf(testVectorD)
 	if indexOfTestVectorD != -1 {
 		t.Errorf("Expected %v, received %v", -1, indexOfTestVectorC)
 	}
 
-	testElementsE := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(8+1i))
-	testVectorE := MakeVector(ColSpace, testElementsE)
+	testVectorE := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(8+1i))
 
 	indexOfTestVectorE := testVectorsA.IndexOf(testVectorE)
 	if indexOfTestVectorE != -1 {
@@ -223,13 +209,11 @@ func TestVectorsIndexOf(t *testing.T) {
 }
 
 func TestSetAndSpaceVectors(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5))
-	testVectorA := MakeVector(ColSpace, testElementsA)
+	testVectorA := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5))
 
 	testVectorsA := MakeVectors(ColSpace, testVectorA)
 
-	testElementsB := gcv.NewValues(gcv.NewValue(6), gcv.NewValue(7+1i))
-	testVectorB := MakeVector(RowSpace, testElementsB)
+	testVectorB := MakeVector(RowSpace, gcv.NewValue(6), gcv.NewValue(7+1i))
 
 	testVectorsA.Set(0, testVectorB)
 
@@ -243,8 +227,7 @@ func TestSetAndSpaceVectors(t *testing.T) {
 }
 
 func TestCopyVectors(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
-	testVectorA := MakeVector(ColSpace, testElementsA)
+	testVectorA := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
 
 	testVectorsA := MakeVectors(ColSpace, testVectorA)
 
@@ -256,13 +239,11 @@ func TestCopyVectors(t *testing.T) {
 }
 
 func TestAppendVectors(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
-	testVectorA := MakeVector(ColSpace, testElementsA)
+	testVectorA := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
 
 	testVectorsA := MakeVectors(ColSpace, testVectorA)
 
-	testElementsB := gcv.NewValues(gcv.NewValue(6), gcv.NewValue(7))
-	testVectorB := MakeVector(ColSpace, testElementsB)
+	testVectorB := MakeVector(ColSpace, gcv.NewValue(6), gcv.NewValue(7))
 
 	testVectorB.Append(gcv.NewValue(8))
 
@@ -278,14 +259,11 @@ func TestAppendVectors(t *testing.T) {
 }
 
 func TestSubsetAndLenVectors(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
-	testVectorA := MakeVector(ColSpace, testElementsA)
+	testVectorA := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
 
-	testElementsB := gcv.NewValues(gcv.NewValue(6), gcv.NewValue(7))
-	testVectorB := MakeVector(ColSpace, testElementsB)
+	testVectorB := MakeVector(ColSpace, gcv.NewValue(6), gcv.NewValue(7))
 
-	testElementsC := gcv.NewValues(gcv.NewValue(42))
-	testVectorC := MakeVector(ColSpace, testElementsC)
+	testVectorC := MakeVector(ColSpace, gcv.NewValue(42))
 
 	testVectorsA := MakeVectors(ColSpace, testVectorA, testVectorB, testVectorC)
 
@@ -305,11 +283,9 @@ func TestSubsetAndLenVectors(t *testing.T) {
 }
 
 func TestVectors(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
-	testVectorA := MakeVector(ColSpace, testElementsA)
+	testVectorA := MakeVector(ColSpace, gcv.NewValue(3), gcv.NewValue(4.0), gcv.NewValue(5+1i))
 
-	testElementsB := gcv.NewValues(gcv.NewValue(6), gcv.NewValue(7))
-	testVectorB := MakeVector(ColSpace, testElementsB)
+	testVectorB := MakeVector(ColSpace, gcv.NewValue(6), gcv.NewValue(7))
 
 	testVectorsA := MakeVectors(ColSpace, testVectorA, testVectorB)
 

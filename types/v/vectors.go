@@ -57,19 +57,20 @@ func (v *vectors) setVectors(vects []Vector, space string) {
 	}
 	v.space = space
 	v.coreType = gcv.Int
+	v.vects = make([]Vector, v.Len())
 	for index, vect := range vects {
-		if len(v.Type()) < len(vect.Type()) {
+		copyVect := vect.Copy()
+		if len(v.Type()) < len(copyVect.Type()) {
 			v.coreType = vect.Type()
 		}
-		if v.InnerLen() < vect.Len() {
+		if v.InnerLen() < copyVect.Len() {
 			v.innerLength = vect.Len()
 		}
-		if vect.Space() != space {
-			vect.Trans()
-			vects[index] = vect
+		if copyVect.Space() != space {
+			copyVect.Trans()
 		}
+		v.vects[index] = copyVect
 	}
-	v.vects = vects
 }
 
 func (v *vectors) Len() int { return v.length }
@@ -110,8 +111,14 @@ func (v *vectors) Append(vect Vector) {
 func (v *vectors) Copy() Vectors {
 	vects := new(vectors)
 	vElements := make([]Vector, len(v.vects))
-	copy(vElements, v.vects)
-	vects.setVectors(vElements, v.Space())
+	for index, vect := range v.Vectors() {
+		vElements[index] = vect.Copy()
+	}
+	vects.length = v.Len()
+	vects.innerLength = v.InnerLen()
+	vects.coreType = v.Type()
+	vects.space = v.Space()
+	vects.vects = vElements
 	return vects
 }
 
