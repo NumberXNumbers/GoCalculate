@@ -103,7 +103,7 @@ func (m *matrix) IsIdentity() bool {
 
 //implementation of Copy method
 func (m matrix) Copy() Matrix {
-	return MakeMatrix(m.Elements())
+	return MakeMatrixAlt(m.Elements())
 }
 
 // implementation of Tr method
@@ -162,8 +162,8 @@ func NewMatrix(rows int, cols int) Matrix {
 	return matrix
 }
 
-// MakeMatrix returns a new matrix of type Matrix with predefined elements
-func MakeMatrix(elements v.Vectors) Matrix {
+// MakeMatrixAlt returns a new matrix of type Matrix with predefined elements. takes type Vectors as arg
+func MakeMatrixAlt(elements v.Vectors) Matrix {
 	matrix := new(matrix)
 	rows := elements.Len()
 	cols := elements.InnerLen()
@@ -173,17 +173,24 @@ func MakeMatrix(elements v.Vectors) Matrix {
 	matrixElements := v.NewVectors(v.RowSpace, matrix.numRows, matrix.numCols)
 
 	for i := 0; i < matrix.numRows; i++ {
-		vector := elements.Get(i)
+		vector := elements.Get(i).Copy()
 		lenVector := vector.Len()
 		for j := 0; j < matrix.numCols; j++ {
 			if lenVector <= j {
 				break
 			}
-			matrixElements.SetValue(i, j, vector.Get(j))
+			matrixElements.SetValue(i, j, vector.Get(j).Copy())
 		}
 	}
 
 	matrix.elements = matrixElements
+	return matrix
+}
+
+// MakeMatrix returns a new matrix. takes individual vectors as args
+func MakeMatrix(elements ...v.Vector) Matrix {
+	vectors := v.MakeVectors(v.RowSpace, elements...)
+	matrix := MakeMatrixAlt(vectors)
 	return matrix
 }
 

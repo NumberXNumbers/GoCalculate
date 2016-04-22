@@ -77,7 +77,7 @@ func (v *vector) Space() string { return v.space }
 func (v *vector) Type() string { return v.elements.Type() }
 
 // implementation of Copy method
-func (v *vector) Copy() Vector { return MakeVector(v.Space(), v.elements) }
+func (v *vector) Copy() Vector { return MakeVectorAlt(v.Space(), v.Elements()) }
 
 // implementation of Elements method
 func (v *vector) Elements() gcv.Values { return v.elements }
@@ -89,7 +89,10 @@ func (v *vector) Append(val gcv.Value) { v.Elements().Append(val) }
 func (v *vector) Trans() {
 	if v.Type() == gcv.Complex {
 		for i := 0; i < v.Len(); i++ {
-			v.Set(i, gcv.NewValue(cmplx.Conj(v.Get(i).Complex128())))
+			value := v.Get(i)
+			complexConj := cmplx.Conj(value.Complex128())
+			value.SetRawValue(complexConj)
+			v.Set(i, value)
 		}
 	}
 
@@ -138,8 +141,8 @@ func NewVector(space string, length int) Vector {
 	return vector
 }
 
-// MakeVector returns zero vector of size length
-func MakeVector(space string, elements gcv.Values) Vector {
+// MakeVectorAlt returns Vector, but requires a gcv.Values
+func MakeVectorAlt(space string, elements gcv.Values) Vector {
 	vector := new(vector)
 	if space != RowSpace && space != ColSpace {
 		space = RowSpace
@@ -147,6 +150,13 @@ func MakeVector(space string, elements gcv.Values) Vector {
 	vector.space = space
 	vector.coreType = elements.Type()
 	vector.elements = elements.Copy()
+	return vector
+}
+
+// MakeVector returns Vector
+func MakeVector(space string, elements ...gcv.Value) Vector {
+	values := gcv.NewValues(elements...)
+	vector := MakeVectorAlt(space, values)
 	return vector
 }
 

@@ -28,6 +28,8 @@ type Value interface {
 	// returns the type of raw value
 	GetValueType() string
 
+	Copy() Value
+
 	// prints the type of the value value
 	PrintType()
 
@@ -94,6 +96,13 @@ func (v *value) SetRawValue(val interface{}) {
 		val = 0
 	}
 	v.rawValue = val
+}
+
+func (v *value) Copy() Value {
+	value := new(value)
+	value.SetRawValue(v.rawValue)
+	value.valueType = v.GetValueType()
+	return value
 }
 
 func (v *value) PrintType() { fmt.Println(v.valueType) }

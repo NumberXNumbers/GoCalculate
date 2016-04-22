@@ -11,8 +11,7 @@ import (
 )
 
 func TestVectorScalarMulti(t *testing.T) {
-	testElements := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
-	testVector := v.MakeVector(v.ColSpace, testElements)
+	testVector := v.MakeVector(v.ColSpace, gcv.NewValue(1), gcv.NewValue(2))
 
 	testScalar := gcv.NewValue(2.0 + 1i)
 
@@ -26,8 +25,7 @@ func TestVectorScalarMulti(t *testing.T) {
 }
 
 func TestVectorAddition(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
-	testVectorA := v.MakeVector(v.ColSpace, testElementsA)
+	testVectorA := v.MakeVector(v.ColSpace, gcv.NewValue(1), gcv.NewValue(2))
 
 	resultVectorA, errA := Addition(testVectorA, testVectorA)
 
@@ -41,8 +39,7 @@ func TestVectorAddition(t *testing.T) {
 		t.Fail()
 	}
 
-	testElementsB := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2+1i))
-	testVectorB := v.MakeVector(v.RowSpace, testElementsB)
+	testVectorB := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2+1i))
 
 	resultVectorB, errB := Addition(testVectorB, testVectorB)
 
@@ -56,11 +53,9 @@ func TestVectorAddition(t *testing.T) {
 		t.Fail()
 	}
 
-	testElementsCa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
-	testVectorCa := v.MakeVector(v.RowSpace, testElementsCa)
+	testVectorCa := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2))
 
-	testElementsCb := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2+1i))
-	testVectorCb := v.MakeVector(v.ColSpace, testElementsCb)
+	testVectorCb := v.MakeVector(v.ColSpace, gcv.NewValue(1), gcv.NewValue(2+1i))
 
 	_, errC := Addition(testVectorCa, testVectorCb)
 
@@ -68,11 +63,8 @@ func TestVectorAddition(t *testing.T) {
 		t.Error("Expected error")
 	}
 
-	testElementsDa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2), gcv.NewValue(3))
-	testVectorDa := v.MakeVector(v.RowSpace, testElementsDa)
-
-	testElementsDb := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2+1i))
-	testVectorDb := v.MakeVector(v.RowSpace, testElementsDb)
+	testVectorDa := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2), gcv.NewValue(3))
+	testVectorDb := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2+1i))
 
 	_, errD := Addition(testVectorDa, testVectorDb)
 
@@ -82,8 +74,7 @@ func TestVectorAddition(t *testing.T) {
 }
 
 func TestVectorSubtraction(t *testing.T) {
-	testElementsA := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
-	testVectorA := v.MakeVector(v.ColSpace, testElementsA)
+	testVectorA := v.MakeVector(v.ColSpace, gcv.NewValue(1), gcv.NewValue(2))
 
 	resultVectorA, errA := Subtraction(testVectorA, testVectorA)
 
@@ -98,8 +89,7 @@ func TestVectorSubtraction(t *testing.T) {
 			v.ColSpace, resultVectorA.Get(0), resultVectorA.Get(1), resultVectorA.Type())
 	}
 
-	testElementsB := gcv.NewValues(gcv.NewValue(1+1i), gcv.NewValue(2+1i))
-	testVectorB := v.MakeVector(v.RowSpace, testElementsB)
+	testVectorB := v.MakeVector(v.RowSpace, gcv.NewValue(1+1i), gcv.NewValue(2+1i))
 
 	resultVectorB, errB := Subtraction(testVectorB, testVectorB)
 
@@ -114,11 +104,8 @@ func TestVectorSubtraction(t *testing.T) {
 			v.RowSpace, resultVectorB.Get(0), resultVectorB.Get(1), resultVectorB.Type())
 	}
 
-	testElementsCa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
-	testVectorCa := v.MakeVector(v.RowSpace, testElementsCa)
-
-	testElementsCb := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2+1i))
-	testVectorCb := v.MakeVector(v.ColSpace, testElementsCb)
+	testVectorCa := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2))
+	testVectorCb := v.MakeVector(v.ColSpace, gcv.NewValue(1), gcv.NewValue(2+1i))
 
 	_, errC := Subtraction(testVectorCa, testVectorCb)
 
@@ -126,11 +113,8 @@ func TestVectorSubtraction(t *testing.T) {
 		t.Error("Expected error")
 	}
 
-	testElementsDa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2), gcv.NewValue(3))
-	testVectorDa := v.MakeVector(v.RowSpace, testElementsDa)
-
-	testElementsDb := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2+1i))
-	testVectorDb := v.MakeVector(v.RowSpace, testElementsDb)
+	testVectorDa := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2), gcv.NewValue(3))
+	testVectorDb := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2+1i))
 
 	_, errD := Subtraction(testVectorDa, testVectorDb)
 
@@ -141,8 +125,8 @@ func TestVectorSubtraction(t *testing.T) {
 
 func TestInnerProduct(t *testing.T) {
 	testElementsA := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
-	testVectorAa := v.MakeVector(v.RowSpace, testElementsA)
-	testVectorAb := v.MakeVector(v.ColSpace, testElementsA)
+	testVectorAa := v.MakeVectorAlt(v.RowSpace, testElementsA)
+	testVectorAb := v.MakeVectorAlt(v.ColSpace, testElementsA)
 
 	solutionA := gcv.NewValue(5.0)
 
@@ -156,10 +140,8 @@ func TestInnerProduct(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionA, resultA)
 	}
 
-	testElementsBa := gcv.NewValues(gcv.NewValue(1+1i), gcv.NewValue(2+1i))
-	testElementsBb := gcv.NewValues(gcv.NewValue(1-1i), gcv.NewValue(2-1i))
-	testVectorBa := v.MakeVector(v.RowSpace, testElementsBa)
-	testVectorBb := v.MakeVector(v.ColSpace, testElementsBb)
+	testVectorBa := v.MakeVector(v.RowSpace, gcv.NewValue(1+1i), gcv.NewValue(2+1i))
+	testVectorBb := v.MakeVector(v.ColSpace, gcv.NewValue(1-1i), gcv.NewValue(2-1i))
 
 	solutionB := gcv.NewValue(7 + 0i)
 
@@ -173,8 +155,8 @@ func TestInnerProduct(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionB, resultB)
 	}
 
-	testVectorCa := v.MakeVector(v.ColSpace, testElementsA)
-	testVectorCb := v.MakeVector(v.RowSpace, testElementsA)
+	testVectorCa := v.MakeVectorAlt(v.ColSpace, testElementsA)
+	testVectorCb := v.MakeVectorAlt(v.RowSpace, testElementsA)
 
 	_, errC := InnerProduct(testVectorCa, testVectorCb)
 
@@ -182,10 +164,8 @@ func TestInnerProduct(t *testing.T) {
 		t.Error("Expected error")
 	}
 
-	testElementsDa := gcv.NewValues(gcv.NewValue(1+1i), gcv.NewValue(2+1i))
-	testElementsDb := gcv.NewValues(gcv.NewValue(1-1i), gcv.NewValue(2-1i), gcv.NewValue(3-1i))
-	testVectorDa := v.MakeVector(v.RowSpace, testElementsDa)
-	testVectorDb := v.MakeVector(v.ColSpace, testElementsDb)
+	testVectorDa := v.MakeVector(v.RowSpace, gcv.NewValue(1+1i), gcv.NewValue(2+1i))
+	testVectorDb := v.MakeVector(v.ColSpace, gcv.NewValue(1-1i), gcv.NewValue(2-1i), gcv.NewValue(3-1i))
 
 	_, errD := InnerProduct(testVectorDa, testVectorDb)
 
@@ -197,8 +177,8 @@ func TestInnerProduct(t *testing.T) {
 func TestAngleTheta(t *testing.T) {
 	testElementsAa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(0))
 	testElementsAb := gcv.NewValues(gcv.NewValue(0), gcv.NewValue(1))
-	testVectorAa := v.MakeVector(v.RowSpace, testElementsAa)
-	testVectorAb := v.MakeVector(v.ColSpace, testElementsAb)
+	testVectorAa := v.MakeVectorAlt(v.RowSpace, testElementsAa)
+	testVectorAb := v.MakeVectorAlt(v.ColSpace, testElementsAb)
 
 	solutionA := gcv.NewValue(float64(math.Pi / float64(2)))
 
@@ -212,10 +192,8 @@ func TestAngleTheta(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionA, resultA)
 	}
 
-	testElementsBa := gcv.NewValues(gcv.NewValue(1+0i), gcv.NewValue(0+0i))
-	testElementsBb := gcv.NewValues(gcv.NewValue(0-0i), gcv.NewValue(1-0i))
-	testVectorBa := v.MakeVector(v.RowSpace, testElementsBa)
-	testVectorBb := v.MakeVector(v.ColSpace, testElementsBb)
+	testVectorBa := v.MakeVector(v.RowSpace, gcv.NewValue(1+0i), gcv.NewValue(0+0i))
+	testVectorBb := v.MakeVector(v.ColSpace, gcv.NewValue(0-0i), gcv.NewValue(1-0i))
 
 	solutionB := gcv.NewValue(complex128(math.Pi / complex128(2)))
 
@@ -229,8 +207,8 @@ func TestAngleTheta(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionB, resultB)
 	}
 
-	testVectorCa := v.MakeVector(v.ColSpace, testElementsAa)
-	testVectorCb := v.MakeVector(v.RowSpace, testElementsAb)
+	testVectorCa := v.MakeVectorAlt(v.ColSpace, testElementsAa)
+	testVectorCb := v.MakeVectorAlt(v.RowSpace, testElementsAb)
 
 	_, errC := AngleTheta(testVectorCa, testVectorCb)
 
@@ -238,10 +216,8 @@ func TestAngleTheta(t *testing.T) {
 		t.Error("Expected error")
 	}
 
-	testElementsDa := gcv.NewValues(gcv.NewValue(1+1i), gcv.NewValue(2+1i))
-	testElementsDb := gcv.NewValues(gcv.NewValue(1-1i), gcv.NewValue(2-1i), gcv.NewValue(3-1i))
-	testVectorDa := v.MakeVector(v.RowSpace, testElementsDa)
-	testVectorDb := v.MakeVector(v.ColSpace, testElementsDb)
+	testVectorDa := v.MakeVector(v.RowSpace, gcv.NewValue(1+1i), gcv.NewValue(2+1i))
+	testVectorDb := v.MakeVector(v.ColSpace, gcv.NewValue(1-1i), gcv.NewValue(2-1i), gcv.NewValue(3-1i))
 
 	_, errD := AngleTheta(testVectorDa, testVectorDb)
 
@@ -261,15 +237,12 @@ func TestAngleTheta(t *testing.T) {
 func TestOuterProduct(t *testing.T) {
 	testElementsAa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(0))
 	testElementsAb := gcv.NewValues(gcv.NewValue(0), gcv.NewValue(1))
-	testVectorAa := v.MakeVector(v.ColSpace, testElementsAa)
-	testVectorAb := v.MakeVector(v.RowSpace, testElementsAb)
+	testVectorAa := v.MakeVectorAlt(v.ColSpace, testElementsAa)
+	testVectorAb := v.MakeVectorAlt(v.RowSpace, testElementsAb)
 
-	solutionElementsAa := gcv.NewValues(gcv.NewValue(0), gcv.NewValue(1))
-	solutionElementsAb := gcv.NewValues(gcv.NewValue(0), gcv.NewValue(0))
-	solutionVectorAa := v.MakeVector(v.RowSpace, solutionElementsAa)
-	solutionVectorAb := v.MakeVector(v.RowSpace, solutionElementsAb)
-	solutionVectorsA := v.MakeVectors(v.RowSpace, solutionVectorAa, solutionVectorAb)
-	solutionMatrixA := m.MakeMatrix(solutionVectorsA)
+	solutionVectorAa := v.MakeVector(v.RowSpace, gcv.NewValue(0), gcv.NewValue(1))
+	solutionVectorAb := v.MakeVector(v.RowSpace, gcv.NewValue(0), gcv.NewValue(0))
+	solutionMatrixA := m.MakeMatrix(solutionVectorAa, solutionVectorAb)
 
 	resultMatrixA, errA := OuterProduct(testVectorAa, testVectorAb)
 
@@ -286,10 +259,8 @@ func TestOuterProduct(t *testing.T) {
 		t.Fail()
 	}
 
-	testElementsBa := gcv.NewValues(gcv.NewValue(1+0i), gcv.NewValue(0+0i))
-	testElementsBb := gcv.NewValues(gcv.NewValue(0+0i), gcv.NewValue(1+0i))
-	testVectorBa := v.MakeVector(v.ColSpace, testElementsBa)
-	testVectorBb := v.MakeVector(v.RowSpace, testElementsBb)
+	testVectorBa := v.MakeVector(v.ColSpace, gcv.NewValue(1+0i), gcv.NewValue(0+0i))
+	testVectorBb := v.MakeVector(v.RowSpace, gcv.NewValue(0+0i), gcv.NewValue(1+0i))
 
 	resultMatrixB, errB := OuterProduct(testVectorBa, testVectorBb)
 
@@ -304,8 +275,8 @@ func TestOuterProduct(t *testing.T) {
 		t.Fail()
 	}
 
-	testVectorCa := v.MakeVector(v.RowSpace, testElementsAa)
-	testVectorCb := v.MakeVector(v.RowSpace, testElementsAb)
+	testVectorCa := v.MakeVectorAlt(v.RowSpace, testElementsAa)
+	testVectorCb := v.MakeVectorAlt(v.RowSpace, testElementsAb)
 
 	_, errC := OuterProduct(testVectorCa, testVectorCb)
 

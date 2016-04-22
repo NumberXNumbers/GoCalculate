@@ -160,12 +160,45 @@ func TestGetandSetValues(t *testing.T) {
 
 func TestCopyValues(t *testing.T) {
 	testValueA := NewValue(0.5)
+	copyA := testValueA.Copy()
+
+	if copyA.GetValueType() != Float {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual(copyA, testValueA) {
+		t.Fail()
+	}
+
 	testValueB := NewValue(0.6)
 	values := NewValues(testValueA, testValueB)
 
 	testValues := values.Copy()
 
+	testValueB.SetRawValue(4)
+
 	if !reflect.DeepEqual(testValues, values) {
+		t.Fail()
+	}
+
+	testValueC := NewValue(1 + 5i)
+	copyC := testValueC.Copy()
+
+	if copyC.GetValueType() != Complex {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual(copyC, testValueC) {
+		t.Fail()
+	}
+
+	copyC.SetRawValue(2)
+
+	if copyC.GetValueType() != Int {
+		t.Fail()
+	}
+
+	if reflect.DeepEqual(copyC, testValueC) {
 		t.Fail()
 	}
 }
