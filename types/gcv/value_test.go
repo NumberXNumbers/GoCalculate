@@ -6,27 +6,55 @@ import (
 )
 
 func TestNewValueSetRawValueGetValueTypePrint(t *testing.T) {
-	var floatTestValue float64
-	valueTestA := NewValue(floatTestValue)
+	var floatTestValueA float64
+	valueTestAa := NewValue(floatTestValueA)
 
-	if valueTestA.GetValueType() != "float64" {
+	if valueTestAa.GetValueType() != "float64" {
 		t.Fail()
 	}
 
-	valueTestA.PrintType()
-	valueTestA.PrintRaw()
+	var floatTestValueB float32
+	valueTestAb := NewValue(floatTestValueB)
 
-	var intTestValue int
-	valueTestB := NewValue(intTestValue)
-
-	if valueTestB.GetValueType() != Int {
+	if valueTestAb.GetValueType() != "float64" {
 		t.Fail()
 	}
 
-	var complexTestValue complex128
-	valueTestC := NewValue(complexTestValue)
+	valueTestAa.PrintType()
+	valueTestAb.PrintRaw()
 
-	if valueTestC.GetValueType() != Complex {
+	var intTestValueA int
+	valueTestBa := NewValue(intTestValueA)
+
+	if valueTestBa.GetValueType() != Int {
+		t.Fail()
+	}
+
+	var intTestValueB int32
+	valueTestBb := NewValue(intTestValueB)
+
+	if valueTestBb.GetValueType() != Int {
+		t.Fail()
+	}
+
+	var intTestValueC int64
+	valueTestBc := NewValue(intTestValueC)
+
+	if valueTestBc.GetValueType() != Int {
+		t.Fail()
+	}
+
+	var complexTestValueA complex128
+	valueTestCa := NewValue(complexTestValueA)
+
+	if valueTestCa.GetValueType() != Complex {
+		t.Fail()
+	}
+
+	var complexTestValueB complex64
+	valueTestB := NewValue(complexTestValueB)
+
+	if valueTestB.GetValueType() != Complex {
 		t.Fail()
 	}
 
