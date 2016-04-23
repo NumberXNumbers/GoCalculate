@@ -85,12 +85,31 @@ func (v *value) GetValueType() string { return v.valueType }
 
 func (v *value) SetRawValue(val interface{}) {
 	switch val.(type) {
-	case int, int32, int64:
+	case int:
 		v.valueType = Int
-	case float64, float32:
+		break
+	case int32:
+		v.valueType = Int
+		val = int(val.(int32))
+		break
+	case int64:
+		v.valueType = Int
+		val = int(val.(int64))
+		break
+	case float64:
 		v.valueType = Float
-	case complex128, complex64:
+		break
+	case float32:
+		v.valueType = Float
+		val = float64(val.(float32))
+		break
+	case complex128:
 		v.valueType = Complex
+		break
+	case complex64:
+		v.valueType = Complex
+		val = complex128(val.(complex64))
+		break
 	default:
 		v.valueType = Int
 		val = 0

@@ -2,15 +2,19 @@ package calculators
 
 import (
 	"errors"
-	"strconv"
+
+	"github.com/NumberXNumbers/GoCalculate/types/gcv"
+	"github.com/NumberXNumbers/GoCalculate/utils"
 )
 
 // ReversePolishCalculator is a simple reverse polish calculator
-func ReversePolishCalculator(args []string) (value float64, err error) {
-	var stack []float64
-	var operand1 float64
-	var operand2 float64
-	var result float64
+func ReversePolishCalculator(args []string) (value gcv.Value, err error) {
+	var stack gcv.Values
+	var operand1 gcv.Value
+	var operand2 gcv.Value
+	var result gcv.Value
+
+	var count uint
 
 	if len(args) <= 2 {
 		err = errors.New("Not Enough Arguments")
@@ -18,14 +22,19 @@ func ReversePolishCalculator(args []string) (value float64, err error) {
 	}
 
 	for _, argument := range args {
-		if f, err := strconv.ParseFloat(argument, 64); err == nil {
-			stack = append(stack, f)
+		if v, e := utils.StringToValueParser(argument); e == nil {
+			if count == 0 {
+				stack = gcv.NewValues(v)
+				count++
+			} else {
+				stack.Append(v)
+			}
 			continue
 		}
 
-		if len(stack) > 1 {
-			operand1, stack = popFloat64(stack)
-			operand2, stack = popFloat64(stack)
+		if stack.Len() > 1 {
+			operand1, stack = pop(stack)
+			operand2, stack = pop(stack)
 
 			result, err = calculate(operand2, operand1, argument)
 
@@ -33,18 +42,18 @@ func ReversePolishCalculator(args []string) (value float64, err error) {
 				return
 			}
 
-			stack = append(stack, result)
+			stack.Append(result)
 		} else {
 			err = errors.New("IndexOutOfBoundsException")
 			return
 		}
 	}
 
-	if len(stack) != 1 {
+	if stack.Len() != 1 {
 		err = errors.New("Multiple Final Values")
 		return
 	}
 
-	value = stack[0]
+	value = stack.Get(0)
 	return
 }
