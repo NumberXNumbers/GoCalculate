@@ -13,12 +13,10 @@ func PolishCalculator(args []string) (value gcv.Value, err error) {
 		args[left], args[right] = args[right], args[left]
 	}
 
-	var stack gcv.Values
+	stack := gcv.NewValues()
 	var operand1 gcv.Value
 	var operand2 gcv.Value
 	var result gcv.Value
-
-	var count uint
 
 	if len(args) <= 2 {
 		err = errors.New("Not Enough Arguments")
@@ -27,12 +25,7 @@ func PolishCalculator(args []string) (value gcv.Value, err error) {
 
 	for _, argument := range args {
 		if v, e := utils.StringToValueParser(argument); e == nil {
-			if count == 0 {
-				stack = gcv.NewValues(v)
-				count++
-			} else {
-				stack.Append(v)
-			}
+			stack.Append(v)
 			continue
 		}
 

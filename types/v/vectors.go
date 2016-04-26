@@ -183,6 +183,9 @@ func NewVectors(space string, numVectors, lenVectors int) Vectors {
 // If inputed vector is not in that vector space, Trans() will be called on it
 func MakeVectors(space string, vects ...Vector) Vectors {
 	vectors := new(vectors)
+	if vects == nil {
+		vects = make([]Vector, 0)
+	}
 	vectors.setVectors(vects, space)
 	return vectors
 }

@@ -169,3 +169,49 @@ func TestPolishCalculator(t *testing.T) {
 		t.Error("Expect there to be no error")
 	}
 }
+
+func TestInfixCalculator(t *testing.T) {
+	testArgsA := []string{"4", "+", "3"}
+	testArgsB := []string{"5", "*", "(", "2", "-", "1", ")"}
+	testArgsC := []string{"5", "+", "-"}
+	testArgsD := []string{"5", "*", "(", "2", "-", "(", "1", ")", ")"}
+	testArgsE := []string{"5", "*", "(", "2", "&", "1", ")"}
+
+	testValueA, errA := InfixCalculator(testArgsA)
+	testValueB, errB := InfixCalculator(testArgsB)
+	_, errC := InfixCalculator(testArgsC)
+	testValueD, errD := InfixCalculator(testArgsD)
+	_, errE := InfixCalculator(testArgsE)
+
+	if errA != nil {
+		t.Errorf("Expect there to be no error, received %s", errA)
+	}
+
+	if testValueA.Float64() != 7.0 {
+		t.Errorf("Expect %d, received %v", 7, testValueA)
+	}
+
+	if errB != nil {
+		t.Errorf("Expect there to be no error, received %s", errB)
+	}
+
+	if testValueB.Float64() != 5.0 {
+		t.Errorf("Expect %d, received %v", 4, testValueB)
+	}
+
+	if errC == nil {
+		t.Fail()
+	}
+
+	if errD != nil {
+		t.Errorf("Expect there to be no error, received %s", errB)
+	}
+
+	if testValueD.Float64() != 5.0 {
+		t.Errorf("Expect %d, received %v", 4, testValueB)
+	}
+
+	if errE == nil {
+		t.Fail()
+	}
+}
