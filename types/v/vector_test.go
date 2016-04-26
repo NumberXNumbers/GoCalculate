@@ -256,6 +256,14 @@ func TestAppendVectors(t *testing.T) {
 	if !reflect.DeepEqual(testVectorsA.Get(1), testVectorB) {
 		t.Fail()
 	}
+
+	testVectorsB := MakeVectors(ColSpace)
+
+	testVectorsB.Append(testVectorB)
+
+	if !reflect.DeepEqual(testVectorsB.Get(0), testVectorB) {
+		t.Fail()
+	}
 }
 
 func TestSubsetAndLenVectors(t *testing.T) {

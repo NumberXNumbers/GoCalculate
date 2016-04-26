@@ -100,6 +100,9 @@ func (v *values) IndexOf(val Value) int {
 // NewValues returns a Values type
 func NewValues(vals ...Value) Values {
 	newValues := new(values)
+	if vals == nil {
+		vals = make([]Value, 0)
+	}
 	newValues.setValues(vals)
 	return newValues
 }

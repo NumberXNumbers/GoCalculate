@@ -234,13 +234,20 @@ func TestCopyValues(t *testing.T) {
 func TestAppendValue(t *testing.T) {
 	testValueA := NewValue(0.5)
 	testValueB := NewValue(0.6)
-	testValues := NewValues(testValueA, testValueB)
+	testValuesA := NewValues(testValueA, testValueB)
 
 	testValueC := NewValue(0.7)
-	testValues.Append(testValueC)
+	testValuesA.Append(testValueC)
 
-	if !reflect.DeepEqual(testValues.Values()[2], testValueC) {
+	if !reflect.DeepEqual(testValuesA.Values()[2], testValueC) {
 		t.Fail()
+	}
+
+	testValuesB := NewValues()
+	testValuesB.Append(testValueC)
+
+	if !reflect.DeepEqual(testValuesB.Values()[0], testValueC) {
+		t.Errorf("Expected %v, received %v", testValueC, testValuesB.Values()[0])
 	}
 }
 
