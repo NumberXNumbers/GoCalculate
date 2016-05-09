@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNewValueSetRawValueGetValueTypePrint(t *testing.T) {
+func TestNewValueSetValueGetValueTypePrint(t *testing.T) {
 	var floatTestValueA float64
 	valueTestAa := NewValue(floatTestValueA)
 
@@ -203,7 +203,7 @@ func TestCopyValues(t *testing.T) {
 
 	testValues := values.Copy()
 
-	testValueB.SetRawValue(4)
+	testValueB.SetValue(4)
 
 	if !reflect.DeepEqual(testValues, values) {
 		t.Fail()
@@ -220,7 +220,7 @@ func TestCopyValues(t *testing.T) {
 		t.Fail()
 	}
 
-	copyC.SetRawValue(2)
+	copyC.SetValue(2)
 
 	if copyC.GetValueType() != Int {
 		t.Fail()

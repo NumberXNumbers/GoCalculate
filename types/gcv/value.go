@@ -23,7 +23,7 @@ type Value interface {
 	Complex128() complex128
 
 	// allows you to reset the raw value
-	SetRawValue(val interface{})
+	SetValue(val interface{})
 
 	// returns the type of raw value
 	GetValueType() string
@@ -38,88 +38,85 @@ type Value interface {
 }
 
 type value struct {
-	rawValue  interface{}
-	valueType string
+	rawValue     interface{}
+	intValue     int
+	floatValue   float64
+	complexValue complex128
+	valueType    string
 }
 
-func (v *value) Int() int {
-	var intValue int
-	switch v.valueType {
-	case Float:
-		intValue = int(v.rawValue.(float64))
-	case Complex:
-		intValue = int(real(v.rawValue.(complex128)))
-	default:
-		intValue = v.rawValue.(int)
-	}
-	return intValue
-}
+func (v *value) Int() int { return v.intValue }
 
-func (v *value) Float64() float64 {
-	var floatValue float64
-	switch v.valueType {
-	case Int:
-		floatValue = float64(v.rawValue.(int))
-	case Complex:
-		floatValue = float64(real(v.rawValue.(complex128)))
-	default:
-		floatValue = v.rawValue.(float64)
-	}
-	return floatValue
-}
+func (v *value) Float64() float64 { return v.floatValue }
 
-func (v *value) Complex128() complex128 {
-	var complexValue complex128
-	switch v.valueType {
-	case Int:
-		complexValue = complex128(complex(float64(v.rawValue.(int)), 0.0))
-	case Float:
-		complexValue = complex128(complex(v.rawValue.(float64), 0.0))
-	default:
-		complexValue = v.rawValue.(complex128)
-	}
-	return complexValue
-}
+func (v *value) Complex128() complex128 { return v.complexValue }
 
 func (v *value) GetValueType() string { return v.valueType }
 
-func (v *value) SetRawValue(val interface{}) {
+func (v *value) SetValue(val interface{}) {
 	switch val.(type) {
 	case int:
 		v.valueType = Int
+		intVal := val.(int)
+		v.intValue = intVal
+		v.floatValue = float64(intVal)
+		v.complexValue = complex128(complex(float64(intVal), 0))
 		break
 	case int32:
 		v.valueType = Int
-		val = int(val.(int32))
+		intVal := int(val.(int32))
+		v.intValue = intVal
+		v.floatValue = float64(intVal)
+		v.complexValue = complex128(complex(float64(intVal), 0))
 		break
 	case int64:
 		v.valueType = Int
-		val = int(val.(int64))
+		intVal := int(val.(int64))
+		v.intValue = intVal
+		v.floatValue = float64(intVal)
+		v.complexValue = complex128(complex(float64(intVal), 0))
 		break
 	case float64:
 		v.valueType = Float
+		floatVal := val.(float64)
+		v.intValue = int(floatVal)
+		v.floatValue = floatVal
+		v.complexValue = complex128(complex(floatVal, 0))
 		break
 	case float32:
 		v.valueType = Float
-		val = float64(val.(float32))
+		floatVal := float64(val.(float32))
+		v.intValue = int(floatVal)
+		v.floatValue = floatVal
+		v.complexValue = complex128(complex(floatVal, 0))
 		break
 	case complex128:
 		v.valueType = Complex
+		complexVal := val.(complex128)
+		v.intValue = int(real(complexVal))
+		v.floatValue = real(complexVal)
+		v.complexValue = complexVal
 		break
 	case complex64:
 		v.valueType = Complex
-		val = complex128(val.(complex64))
+		complexVal := complex128(val.(complex64))
+		v.intValue = int(real(complexVal))
+		v.floatValue = real(complexVal)
+		v.complexValue = complexVal
 		break
 	default:
 		v.valueType = Int
 		val = 0
+		v.intValue = 0
+		v.floatValue = 0.0
+		v.complexValue = 0 + 0i
 	}
 	v.rawValue = val
 }
 
 func (v *value) Copy() Value {
 	value := new(value)
-	value.SetRawValue(v.rawValue)
+	value.SetValue(v.rawValue)
 	value.valueType = v.GetValueType()
 	return value
 }
@@ -131,6 +128,6 @@ func (v *value) PrintRaw() { fmt.Println(v.rawValue) }
 // NewValue returns a new Value
 func NewValue(val interface{}) Value {
 	value := new(value)
-	value.SetRawValue(val)
+	value.SetValue(val)
 	return value
 }

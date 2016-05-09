@@ -91,7 +91,7 @@ func (v *vector) Trans() {
 		for i := 0; i < v.Len(); i++ {
 			value := v.Get(i)
 			complexConj := cmplx.Conj(value.Complex128())
-			value.SetRawValue(complexConj)
+			value.SetValue(complexConj)
 			v.Set(i, value)
 		}
 	}
