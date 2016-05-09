@@ -1,14 +1,15 @@
 package gcv
 
-import "fmt"
+// Type is the value type of Value
+type Type int
 
 const (
-	// Complex is the complex128 value
-	Complex = "complex128"
-	// Float is the float64 value
-	Float = "float64"
 	// Int is the int value
-	Int = "int"
+	Int Type = iota
+	// Float is the float64 value
+	Float
+	// Complex is the complex128 value
+	Complex
 )
 
 // Value is the main return type for the GoCalulate Framework
@@ -26,23 +27,16 @@ type Value interface {
 	SetValue(val interface{})
 
 	// returns the type of raw value
-	GetValueType() string
+	GetValueType() Type
 
 	Copy() Value
-
-	// prints the type of the value value
-	PrintType()
-
-	// prints the raw value
-	PrintRaw()
 }
 
 type value struct {
-	rawValue     interface{}
 	intValue     int
 	floatValue   float64
 	complexValue complex128
-	valueType    string
+	valueType    Type
 }
 
 func (v *value) Int() int { return v.intValue }
@@ -51,7 +45,7 @@ func (v *value) Float64() float64 { return v.floatValue }
 
 func (v *value) Complex128() complex128 { return v.complexValue }
 
-func (v *value) GetValueType() string { return v.valueType }
+func (v *value) GetValueType() Type { return v.valueType }
 
 func (v *value) SetValue(val interface{}) {
 	switch val.(type) {
@@ -65,6 +59,7 @@ func (v *value) SetValue(val interface{}) {
 	case int32:
 		v.valueType = Int
 		intVal := int(val.(int32))
+		val = intVal
 		v.intValue = intVal
 		v.floatValue = float64(intVal)
 		v.complexValue = complex128(complex(float64(intVal), 0))
@@ -72,6 +67,7 @@ func (v *value) SetValue(val interface{}) {
 	case int64:
 		v.valueType = Int
 		intVal := int(val.(int64))
+		val = intVal
 		v.intValue = intVal
 		v.floatValue = float64(intVal)
 		v.complexValue = complex128(complex(float64(intVal), 0))
@@ -86,6 +82,7 @@ func (v *value) SetValue(val interface{}) {
 	case float32:
 		v.valueType = Float
 		floatVal := float64(val.(float32))
+		val = floatVal
 		v.intValue = int(floatVal)
 		v.floatValue = floatVal
 		v.complexValue = complex128(complex(floatVal, 0))
@@ -100,6 +97,7 @@ func (v *value) SetValue(val interface{}) {
 	case complex64:
 		v.valueType = Complex
 		complexVal := complex128(val.(complex64))
+		val = complexVal
 		v.intValue = int(real(complexVal))
 		v.floatValue = real(complexVal)
 		v.complexValue = complexVal
@@ -111,22 +109,26 @@ func (v *value) SetValue(val interface{}) {
 		v.floatValue = 0.0
 		v.complexValue = 0 + 0i
 	}
-	v.rawValue = val
 }
 
 func (v *value) Copy() Value {
 	value := new(value)
-	value.SetValue(v.rawValue)
 	value.valueType = v.GetValueType()
+	value.intValue = v.Int()
+	value.floatValue = v.Float64()
+	value.complexValue = v.Complex128()
 	return value
 }
 
-func (v *value) PrintType() { fmt.Println(v.valueType) }
+// NewValue returns the 0 int value
+func NewValue() Value {
+	value := new(value)
+	value.SetValue(0)
+	return value
+}
 
-func (v *value) PrintRaw() { fmt.Println(v.rawValue) }
-
-// NewValue returns a new Value
-func NewValue(val interface{}) Value {
+// MakeValue returns a Value with value val
+func MakeValue(val interface{}) Value {
 	value := new(value)
 	value.SetValue(val)
 	return value

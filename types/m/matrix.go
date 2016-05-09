@@ -30,7 +30,7 @@ type Matrix interface {
 	GetNumCols() int
 
 	// Type of Matrix
-	Type() string
+	Type() gcv.Type
 
 	// Transpose of a Matrix
 	Trans()
@@ -60,7 +60,7 @@ type Matrix interface {
 type matrix struct {
 	numRows  int
 	numCols  int
-	coreType string
+	coreType gcv.Type
 	elements v.Vectors
 }
 
@@ -71,7 +71,7 @@ func (m *matrix) Dim() (rows, cols int) { return m.numRows, m.numCols }
 func (m *matrix) TotalElements() int { return m.numCols * m.numRows }
 
 // implementation of Type method
-func (m *matrix) Type() string { return m.coreType }
+func (m *matrix) Type() gcv.Type { return m.coreType }
 
 // implementation of GetRows method
 func (m *matrix) GetNumRows() int { return m.numRows }
@@ -90,7 +90,7 @@ func (m *matrix) Get(row int, col int) gcv.Value { return m.elements.Get(row).Ge
 
 // implementation of Set method
 func (m *matrix) Set(row int, col int, val gcv.Value) {
-	if len(m.Type()) < len(val.GetValueType()) {
+	if m.Type() < val.GetValueType() {
 		m.coreType = val.GetValueType()
 	}
 	m.elements.SetValue(row, col, val)
@@ -119,13 +119,13 @@ func (m *matrix) Tr() (gcv.Value, error) {
 		for i := 0; i < m.elements.Len(); i++ {
 			complexTrace += m.Get(i, i).Complex128()
 		}
-		trace = gcv.NewValue(complexTrace)
+		trace = gcv.MakeValue(complexTrace)
 	} else {
 		var floatTrace float64
 		for i := 0; i < m.elements.Len(); i++ {
 			floatTrace += m.Get(i, i).Float64()
 		}
-		trace = gcv.NewValue(floatTrace)
+		trace = gcv.MakeValue(floatTrace)
 	}
 
 	return trace, nil
@@ -140,7 +140,7 @@ func (m *matrix) Trans() {
 	for i := 0; i < transMatrixNumRows; i++ {
 		for j := 0; j < transMatrixNumCols; j++ {
 			if m.Type() == gcv.Complex {
-				transMatrixElements.SetValue(i, j, gcv.NewValue(cmplx.Conj(m.Get(j, i).Complex128())))
+				transMatrixElements.SetValue(i, j, gcv.MakeValue(cmplx.Conj(m.Get(j, i).Complex128())))
 				continue
 			}
 			transMatrixElements.SetValue(i, j, m.Get(j, i))
@@ -199,7 +199,7 @@ func NewIdentityMatrix(degree int) Matrix {
 	matrix := NewMatrix(degree, degree)
 
 	for i := 0; i < degree; i++ {
-		matrix.Set(i, i, gcv.NewValue(1))
+		matrix.Set(i, i, gcv.MakeValue(1))
 	}
 
 	return matrix

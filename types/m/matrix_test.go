@@ -39,8 +39,8 @@ func TestIsIdenityMethodMatrix(t *testing.T) {
 }
 
 func TestCopyMethodMatrix(t *testing.T) {
-	testVectorAa := v.MakeVector(v.RowSpace, gcv.NewValue(0), gcv.NewValue(1), gcv.NewValue(2))
-	testVectorAb := v.MakeVector(v.RowSpace, gcv.NewValue(0), gcv.NewValue(0))
+	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(1), gcv.MakeValue(2))
+	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(0))
 	testMatrixA := MakeMatrix(testVectorAa, testVectorAb)
 
 	if !reflect.DeepEqual(testMatrixA, testMatrixA.Copy()) {
@@ -49,12 +49,12 @@ func TestCopyMethodMatrix(t *testing.T) {
 }
 
 func TestTransMethodMatrix(t *testing.T) {
-	testVectorAa := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2))
-	testVectorAb := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2))
+	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
+	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testMatrixA := MakeMatrix(testVectorAa, testVectorAb)
 
-	testVectorAc := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(1))
-	testVectorAd := v.MakeVector(v.RowSpace, gcv.NewValue(2), gcv.NewValue(2))
+	testVectorAc := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(1))
+	testVectorAd := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(2))
 	testMatrixTransA := MakeMatrix(testVectorAc, testVectorAd)
 
 	testMatrixA.Trans()
@@ -62,12 +62,12 @@ func TestTransMethodMatrix(t *testing.T) {
 		t.Errorf("Expected %v, received %v", testMatrixTransA, testMatrixA)
 	}
 
-	testVectorBa := v.MakeVector(v.RowSpace, gcv.NewValue(1+1i), gcv.NewValue(2))
-	testVectorBb := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2+1i))
+	testVectorBa := v.MakeVector(v.RowSpace, gcv.MakeValue(1+1i), gcv.MakeValue(2))
+	testVectorBb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2+1i))
 	testMatrixB := MakeMatrix(testVectorBa, testVectorBb)
 
-	testVectorBc := v.MakeVector(v.RowSpace, gcv.NewValue(1-1i), gcv.NewValue(1))
-	testVectorBd := v.MakeVector(v.RowSpace, gcv.NewValue(2), gcv.NewValue(2-1i))
+	testVectorBc := v.MakeVector(v.RowSpace, gcv.MakeValue(1-1i), gcv.MakeValue(1))
+	testVectorBd := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(2-1i))
 	testMatrixTransB := MakeMatrix(testVectorBc, testVectorBd)
 
 	testMatrixB.Trans()
@@ -87,8 +87,8 @@ func TestTrMethodMatrix(t *testing.T) {
 		t.Errorf("Expected %d, received %f", 2, trA.Float64())
 	}
 
-	testVectorBa := v.MakeVector(v.RowSpace, gcv.NewValue(1-1i), gcv.NewValue(2))
-	testVectorBb := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(1+1i))
+	testVectorBa := v.MakeVector(v.RowSpace, gcv.MakeValue(1-1i), gcv.MakeValue(2))
+	testVectorBb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(1+1i))
 	testMatrixB := MakeMatrix(testVectorBa, testVectorBb)
 
 	if trB, _ := testMatrixB.Tr(); trB.Complex128() != complex128(2) {
@@ -105,13 +105,13 @@ func TestTrMethodMatrix(t *testing.T) {
 func TestSetAndGetMethodsMatrix(t *testing.T) {
 	testMatrixA := NewMatrix(2, 2)
 
-	testMatrixA.Set(0, 0, gcv.NewValue(1))
+	testMatrixA.Set(0, 0, gcv.MakeValue(1))
 
 	if testMatrixA.Get(0, 0).Float64() != 1 {
 		t.Errorf("Expected %d, received %f", 1, testMatrixA.Get(0, 0).Float64())
 	}
 
-	testMatrixA.Set(0, 1, gcv.NewValue(1+1i))
+	testMatrixA.Set(0, 1, gcv.MakeValue(1+1i))
 
 	if testMatrixA.Get(0, 1).Complex128() != 1+1i {
 		t.Errorf("Expected %d, received %f", 1, testMatrixA.Get(0, 0).Complex128())
@@ -119,12 +119,12 @@ func TestSetAndGetMethodsMatrix(t *testing.T) {
 }
 
 func TestTypeMethodMatrix(t *testing.T) {
-	testVectorBa := v.MakeVector(v.RowSpace, gcv.NewValue(1-1i), gcv.NewValue(2))
-	testVectorBb := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(1+1i))
+	testVectorBa := v.MakeVector(v.RowSpace, gcv.MakeValue(1-1i), gcv.MakeValue(2))
+	testVectorBb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(1+1i))
 	testMatrixB := MakeMatrix(testVectorBa, testVectorBb)
 
 	if testMatrixB.Type() != gcv.Complex {
-		t.Errorf("Expected %s, received %s", gcv.Complex, testMatrixB.Type())
+		t.Errorf("Expected %v, received %v", gcv.Complex, testMatrixB.Type())
 	}
 }
 
@@ -168,8 +168,8 @@ func TestNumElementsMethodMatrix(t *testing.T) {
 }
 
 func TestGetElementsMethodMatrix(t *testing.T) {
-	testElementsAa := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
-	testElementsAb := gcv.NewValues(gcv.NewValue(1), gcv.NewValue(2))
+	testElementsAa := gcv.MakeValues(gcv.MakeValue(1), gcv.MakeValue(2))
+	testElementsAb := gcv.MakeValues(gcv.MakeValue(1), gcv.MakeValue(2))
 	testVectorAa := v.MakeVectorAlt(v.RowSpace, testElementsAa)
 	testVectorAb := v.MakeVectorAlt(v.RowSpace, testElementsAb)
 	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb)
@@ -181,8 +181,8 @@ func TestGetElementsMethodMatrix(t *testing.T) {
 }
 
 func TestMakeConjMatrix(t *testing.T) {
-	testVectorAa := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2))
-	testVectorAb := v.MakeVector(v.RowSpace, gcv.NewValue(1), gcv.NewValue(2))
+	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
+	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb)
 	testMatrixA := MakeMatrixAlt(testVectorsA)
 	solutionMatrix := MakeConjMatrix(testMatrixA)

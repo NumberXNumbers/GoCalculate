@@ -37,15 +37,15 @@ func calculate(firstValue, secondValue gcv.Value, s string) (result gcv.Value, e
 func calculateComplex(firstValue, secondValue complex128, s string) (result gcv.Value, err error) {
 	switch s {
 	case add:
-		result = gcv.NewValue(firstValue + secondValue)
+		result = gcv.MakeValue(firstValue + secondValue)
 	case times1, times2, times3:
-		result = gcv.NewValue(firstValue * secondValue)
+		result = gcv.MakeValue(firstValue * secondValue)
 	case div:
-		result = gcv.NewValue(firstValue / secondValue)
+		result = gcv.MakeValue(firstValue / secondValue)
 	case sub:
-		result = gcv.NewValue(firstValue - secondValue)
+		result = gcv.MakeValue(firstValue - secondValue)
 	case pow:
-		result = gcv.NewValue(cmplx.Pow(firstValue, secondValue))
+		result = gcv.MakeValue(cmplx.Pow(firstValue, secondValue))
 	default:
 		err = errors.New("IllegalArgumentException")
 	}
@@ -55,17 +55,17 @@ func calculateComplex(firstValue, secondValue complex128, s string) (result gcv.
 func calculateFloat(firstValue, secondValue float64, s string) (result gcv.Value, err error) {
 	switch s {
 	case add:
-		result = gcv.NewValue(firstValue + secondValue)
+		result = gcv.MakeValue(firstValue + secondValue)
 	case times1, times2, times3:
-		result = gcv.NewValue(firstValue * secondValue)
+		result = gcv.MakeValue(firstValue * secondValue)
 	case div:
-		result = gcv.NewValue(firstValue / secondValue)
+		result = gcv.MakeValue(firstValue / secondValue)
 	case sub:
-		result = gcv.NewValue(firstValue - secondValue)
+		result = gcv.MakeValue(firstValue - secondValue)
 	case pow:
-		result = gcv.NewValue(math.Pow(firstValue, secondValue))
+		result = gcv.MakeValue(math.Pow(firstValue, secondValue))
 	case mod:
-		result = gcv.NewValue(math.Mod(firstValue, secondValue))
+		result = gcv.MakeValue(math.Mod(firstValue, secondValue))
 	default:
 		err = errors.New("IllegalArgumentException")
 	}
@@ -75,17 +75,17 @@ func calculateFloat(firstValue, secondValue float64, s string) (result gcv.Value
 func calculateInt(firstValue, secondValue int, s string) (result gcv.Value, err error) {
 	switch s {
 	case add:
-		result = gcv.NewValue(firstValue + secondValue)
+		result = gcv.MakeValue(firstValue + secondValue)
 	case times1, times2, times3:
-		result = gcv.NewValue(firstValue * secondValue)
+		result = gcv.MakeValue(firstValue * secondValue)
 	case div:
-		result = gcv.NewValue(firstValue / secondValue)
+		result = gcv.MakeValue(firstValue / secondValue)
 	case sub:
-		result = gcv.NewValue(firstValue - secondValue)
+		result = gcv.MakeValue(firstValue - secondValue)
 	case pow:
-		result = gcv.NewValue(int(math.Pow(float64(firstValue), float64(secondValue))))
+		result = gcv.MakeValue(int(math.Pow(float64(firstValue), float64(secondValue))))
 	case mod:
-		result = gcv.NewValue(int(math.Mod(float64(firstValue), float64(secondValue))))
+		result = gcv.MakeValue(int(math.Mod(float64(firstValue), float64(secondValue))))
 	default:
 		err = errors.New("IllegalArgumentException")
 	}
