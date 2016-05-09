@@ -9,7 +9,7 @@ import (
 
 // InfixCalculator will calculate an infix calculation
 func InfixCalculator(args []string) (value gcv.Value, err error) {
-	stack := gcv.NewValues()
+	stack := gcv.MakeValues()
 	var operatorStack []string
 	var operand1 gcv.Value
 	var operand2 gcv.Value

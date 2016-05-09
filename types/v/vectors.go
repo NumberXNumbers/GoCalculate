@@ -36,31 +36,28 @@ type Vectors interface {
 	InnerLen() int
 
 	// Returns the space that Vectors is in
-	Space() string
+	Space() Space
 
 	// Returns the highest ranking vector type
-	Type() string
+	Type() gcv.Type
 }
 
 type vectors struct {
 	vects       []Vector
 	length      int
 	innerLength int
-	space       string
-	coreType    string
+	space       Space
+	coreType    gcv.Type
 }
 
-func (v *vectors) setVectors(vects []Vector, space string) {
+func (v *vectors) setVectors(vects []Vector, space Space) {
 	v.length = len(vects)
-	if space != RowSpace && space != ColSpace {
-		space = RowSpace
-	}
 	v.space = space
 	v.coreType = gcv.Int
 	v.vects = make([]Vector, v.Len())
 	for index, vect := range vects {
 		copyVect := vect.Copy()
-		if len(v.Type()) < len(copyVect.Type()) {
+		if v.Type() < copyVect.Type() {
 			v.coreType = vect.Type()
 		}
 		if v.InnerLen() < copyVect.Len() {
@@ -77,16 +74,16 @@ func (v *vectors) Len() int { return v.length }
 
 func (v *vectors) InnerLen() int { return v.innerLength }
 
-func (v *vectors) Space() string { return v.space }
+func (v *vectors) Space() Space { return v.space }
 
-func (v *vectors) Type() string { return v.coreType }
+func (v *vectors) Type() gcv.Type { return v.coreType }
 
 func (v *vectors) Get(index int) Vector { return v.vects[index] }
 
 func (v *vectors) Vectors() []Vector { return v.vects }
 
 func (v *vectors) Set(index int, vect Vector) {
-	if len(v.Type()) < len(vect.Type()) {
+	if v.Type() < vect.Type() {
 		v.coreType = vect.Type()
 	}
 	if vect.Space() != v.Space() {
@@ -96,7 +93,7 @@ func (v *vectors) Set(index int, vect Vector) {
 }
 
 func (v *vectors) SetValue(i int, j int, value gcv.Value) {
-	if len(v.Type()) < len(value.GetValueType()) {
+	if v.Type() < value.GetValueType() {
 		v.coreType = value.GetValueType()
 	}
 	vector := v.vects[i]
@@ -161,15 +158,12 @@ func (v *vectors) IndexOf(vect Vector) int {
 }
 
 // NewVectors will return the Zero Vectors. or numVectors of zero vectors of length lenVectors
-func NewVectors(space string, numVectors, lenVectors int) Vectors {
+func NewVectors(space Space, numVectors, lenVectors int) Vectors {
 	vectors := new(vectors)
 	vects := make([]Vector, numVectors)
 	vectors.length = numVectors
 	vectors.innerLength = lenVectors
 	vectors.vects = vects
-	if space != RowSpace && space != ColSpace {
-		space = RowSpace
-	}
 	vectors.space = space
 	vectors.coreType = gcv.Int
 	for i := 0; i < vectors.Len(); i++ {
@@ -179,13 +173,19 @@ func NewVectors(space string, numVectors, lenVectors int) Vectors {
 	return vectors
 }
 
-// MakeVectors will return a Vectors type. All vectors will be in vector space, space.
-// If inputed vector is not in that vector space, Trans() will be called on it
-func MakeVectors(space string, vects ...Vector) Vectors {
+// MakeVectorsAlt returns a Vectors type, but requires a framework []Vector slice
+func MakeVectorsAlt(space Space, vects []Vector) Vectors {
 	vectors := new(vectors)
 	if vects == nil {
 		vects = make([]Vector, 0)
 	}
 	vectors.setVectors(vects, space)
+	return vectors
+}
+
+// MakeVectors will return a Vectors type. All vectors will be in vector space, space.
+// If inputed vector is not in that vector space, Trans() will be called on it
+func MakeVectors(space Space, vects ...Vector) Vectors {
+	vectors := MakeVectorsAlt(space, vects)
 	return vectors
 }

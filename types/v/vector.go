@@ -7,11 +7,14 @@ import (
 	"github.com/NumberXNumbers/GoCalculate/types/gcv"
 )
 
+// Space is the space in which a vector lives. Either Column or Row space.
+type Space int
+
 const (
-	// ColSpace is a space Column Vector
-	ColSpace = "column"
 	// RowSpace is a space Row Vector
-	RowSpace = "row"
+	RowSpace Space = iota
+	// ColSpace is a space Column Vector
+	ColSpace
 )
 
 // Vector is the main vector interface for real vectors
@@ -32,10 +35,10 @@ type Vector interface {
 	Copy() Vector
 
 	// Returns Space of vector. Either Column or Row vector
-	Space() string
+	Space() Space
 
 	// Returns the core value type of the vector
-	Type() string
+	Type() gcv.Type
 
 	// Returns the len of the values
 	Len() int
@@ -51,8 +54,8 @@ type Vector interface {
 }
 
 type vector struct {
-	space    string
-	coreType string
+	space    Space
+	coreType gcv.Type
 	elements gcv.Values
 }
 
@@ -64,17 +67,17 @@ func (v *vector) Get(index int) gcv.Value { return v.elements.Get(index) }
 
 // implementation of Set method
 func (v *vector) Set(index int, val gcv.Value) {
-	if len(v.coreType) < len(val.GetValueType()) {
+	if v.coreType < val.GetValueType() {
 		v.coreType = val.GetValueType()
 	}
 	v.elements.Set(index, val)
 }
 
 // implementation of Space method
-func (v *vector) Space() string { return v.space }
+func (v *vector) Space() Space { return v.space }
 
 // implementation of Type method
-func (v *vector) Type() string { return v.elements.Type() }
+func (v *vector) Type() gcv.Type { return v.elements.Type() }
 
 // implementation of Copy method
 func (v *vector) Copy() Vector { return MakeVectorAlt(v.Space(), v.Elements()) }
@@ -111,51 +114,52 @@ func (v *vector) Norm() gcv.Value {
 		for i := 0; i < v.Len(); i++ {
 			dotProduct += v.Get(i).Complex128() * conjVector.Get(i).Complex128()
 		}
-		return gcv.NewValue(cmplx.Sqrt(dotProduct))
+		return gcv.MakeValue(cmplx.Sqrt(dotProduct))
 	}
 
 	var dotProduct float64
 	for i := 0; i < v.Len(); i++ {
 		dotProduct += v.Get(i).Float64() * v.Get(i).Float64()
 	}
-	return gcv.NewValue(math.Sqrt(dotProduct))
+	return gcv.MakeValue(math.Sqrt(dotProduct))
 }
 
 // implementation of IndexOf method
 func (v *vector) IndexOf(val gcv.Value) int { return v.Elements().IndexOf(val) }
 
 // NewVector returns zero vector of size length
-func NewVector(space string, length int) Vector {
+func NewVector(space Space, length int) Vector {
 	vector := new(vector)
-	if space != RowSpace && space != ColSpace {
-		space = RowSpace
-	}
 	vector.space = space
 	vector.coreType = gcv.Int
 	elements := make([]gcv.Value, length)
 	for index := range elements {
-		val := gcv.NewValue(0)
+		val := gcv.MakeValue(0)
 		elements[index] = val
 	}
-	vector.elements = gcv.NewValues(elements...)
+	vector.elements = gcv.MakeValues(elements...)
 	return vector
 }
 
-// MakeVectorAlt returns Vector, but requires a gcv.Values
-func MakeVectorAlt(space string, elements gcv.Values) Vector {
+// MakeVectorAlt returns Vector, requires a framework Values type
+func MakeVectorAlt(space Space, elements gcv.Values) Vector {
 	vector := new(vector)
-	if space != RowSpace && space != ColSpace {
-		space = RowSpace
-	}
 	vector.space = space
 	vector.coreType = elements.Type()
 	vector.elements = elements.Copy()
 	return vector
 }
 
-// MakeVector returns Vector
-func MakeVector(space string, elements ...gcv.Value) Vector {
-	values := gcv.NewValues(elements...)
+// MakeVectorPure returns Vector, requires a pure interfaces
+func MakeVectorPure(space Space, elements ...interface{}) Vector {
+	values := gcv.MakeValuesPure(elements...)
+	vector := MakeVectorAlt(space, values)
+	return vector
+}
+
+// MakeVector returns Vector, requires a framework Value type
+func MakeVector(space Space, elements ...gcv.Value) Vector {
+	values := gcv.MakeValuesAlt(elements)
 	vector := MakeVectorAlt(space, values)
 	return vector
 }

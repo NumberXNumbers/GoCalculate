@@ -5,91 +5,94 @@ import (
 	"testing"
 )
 
-func TestNewValueSetValueGetValueTypePrint(t *testing.T) {
+func TestMakeValueSetValueGetValueTypePrint(t *testing.T) {
 	var floatTestValueA float64
-	valueTestAa := NewValue(floatTestValueA)
+	valueTestAa := MakeValue(floatTestValueA)
 
-	if valueTestAa.GetValueType() != "float64" {
+	if valueTestAa.GetValueType() != Float {
 		t.Fail()
 	}
 
 	var floatTestValueB float32
-	valueTestAb := NewValue(floatTestValueB)
+	valueTestAb := MakeValue(floatTestValueB)
 
-	if valueTestAb.GetValueType() != "float64" {
+	if valueTestAb.GetValueType() != Float {
 		t.Fail()
 	}
 
-	valueTestAa.PrintType()
-	valueTestAb.PrintRaw()
-
 	var intTestValueA int
-	valueTestBa := NewValue(intTestValueA)
+	valueTestBa := MakeValue(intTestValueA)
 
 	if valueTestBa.GetValueType() != Int {
 		t.Fail()
 	}
 
 	var intTestValueB int32
-	valueTestBb := NewValue(intTestValueB)
+	valueTestBb := MakeValue(intTestValueB)
 
 	if valueTestBb.GetValueType() != Int {
 		t.Fail()
 	}
 
 	var intTestValueC int64
-	valueTestBc := NewValue(intTestValueC)
+	valueTestBc := MakeValue(intTestValueC)
 
 	if valueTestBc.GetValueType() != Int {
 		t.Fail()
 	}
 
 	var complexTestValueA complex128
-	valueTestCa := NewValue(complexTestValueA)
+	valueTestCa := MakeValue(complexTestValueA)
 
 	if valueTestCa.GetValueType() != Complex {
 		t.Fail()
 	}
 
 	var complexTestValueB complex64
-	valueTestB := NewValue(complexTestValueB)
+	valueTestB := MakeValue(complexTestValueB)
 
 	if valueTestB.GetValueType() != Complex {
 		t.Fail()
 	}
 
 	var stringTestValue string
-	valueTestD := NewValue(stringTestValue)
+	valueTestD := MakeValue(stringTestValue)
 
 	if valueTestD.GetValueType() != Int {
+		t.Fail()
+	}
+
+	valueTestE := NewValue()
+
+	if valueTestE.GetValueType() != Int {
 		t.Fail()
 	}
 }
 
 func TestIntValue(t *testing.T) {
 	floatTestValue := 5.0
-	valueTestA := NewValue(floatTestValue)
+	valueTestA := MakeValue(floatTestValue)
 
 	if valueTestA.Int() != 5 {
 		t.Fail()
 	}
 
 	intTestValue := 5
-	valueTestB := NewValue(intTestValue)
+	valueTestB := MakeValue(intTestValue)
 
 	if valueTestB.Int() != 5 {
 		t.Fail()
 	}
 
 	complexTestValue := 5.0 + 2.0i
-	valueTestC := NewValue(complexTestValue)
+	valueTestC := MakeValue(complexTestValue)
 
 	if valueTestC.Int() != 5 {
 		t.Fail()
 	}
 
 	stringTestValue := "Hi"
-	valueTestD := NewValue(stringTestValue)
+	valueTestD := MakeValue(stringTestValue)
 
 	if valueTestD.Int() != 0 {
 		t.Fail()
@@ -98,28 +101,28 @@ func TestIntValue(t *testing.T) {
 
 func TestFloat64Value(t *testing.T) {
 	floatTestValue := 5.0
-	valueTestA := NewValue(floatTestValue)
+	valueTestA := MakeValue(floatTestValue)
 
 	if valueTestA.Float64() != 5.0 {
 		t.Fail()
 	}
 
 	intTestValue := 5
-	valueTestB := NewValue(intTestValue)
+	valueTestB := MakeValue(intTestValue)
 
 	if valueTestB.Float64() != 5.0 {
 		t.Fail()
 	}
 
 	complexTestValue := 5.0 + 2.0i
-	valueTestC := NewValue(complexTestValue)
+	valueTestC := MakeValue(complexTestValue)
 
 	if valueTestC.Float64() != 5.0 {
 		t.Fail()
 	}
 
 	stringTestValue := "Hi"
-	valueTestD := NewValue(stringTestValue)
+	valueTestD := MakeValue(stringTestValue)
 
 	if valueTestD.Float64() != 0 {
 		t.Fail()
@@ -128,38 +131,38 @@ func TestFloat64Value(t *testing.T) {
 
 func TestComplex128(t *testing.T) {
 	floatTestValue := 5.0
-	valueTestA := NewValue(floatTestValue)
+	valueTestA := MakeValue(floatTestValue)
 
 	if valueTestA.Complex128() != 5.0+0.0i {
 		t.Fail()
 	}
 
 	intTestValue := 5
-	valueTestB := NewValue(intTestValue)
+	valueTestB := MakeValue(intTestValue)
 
 	if valueTestB.Complex128() != 5.0+0.0i {
 		t.Fail()
 	}
 
 	complexTestValue := 5.0 + 2.0i
-	valueTestC := NewValue(complexTestValue)
+	valueTestC := MakeValue(complexTestValue)
 
 	if valueTestC.Complex128() != 5.0+2.0i {
 		t.Fail()
 	}
 
 	stringTestValue := "Hi"
-	valueTestD := NewValue(stringTestValue)
+	valueTestD := MakeValue(stringTestValue)
 
 	if valueTestD.Complex128() != 0+0i {
 		t.Fail()
 	}
 }
 
-func TestNewValuesAndValues(t *testing.T) {
-	testValueA := NewValue(0.5)
-	testValueB := NewValue(0.6)
-	testValues := NewValues(testValueA, testValueB)
+func TestMakeValuesAndValues(t *testing.T) {
+	testValueA := MakeValue(0.5)
+	testValueB := MakeValue(0.6)
+	testValues := MakeValues(testValueA, testValueB)
 
 	if !reflect.DeepEqual(testValues.Values()[0], testValueA) || !reflect.DeepEqual(testValues.Values()[1], testValueB) {
 		t.Fail()
@@ -167,16 +170,16 @@ func TestNewValuesAndValues(t *testing.T) {
 }
 
 func TestGetandSetValues(t *testing.T) {
-	testValueA := NewValue(0.5)
-	testValueB := NewValue(0.6)
-	testValues := NewValues(testValueA, testValueB)
+	testValueA := MakeValue(0.5)
+	testValueB := MakeValue(0.6)
+	testValues := MakeValuesPure(0.5, 0.6)
 
 	if !reflect.DeepEqual(testValues.Get(0), testValueA) || !reflect.DeepEqual(testValues.Get(1), testValueB) {
 		t.Fail()
 	}
 
-	newValueA := NewValue(1 + 0.3i)
-	newValueB := NewValue(8)
+	newValueA := MakeValue(1 + 0.3i)
+	newValueB := MakeValue(8)
 
 	testValues.Set(0, newValueA)
 	testValues.Set(1, newValueB)
@@ -187,7 +190,7 @@ func TestGetandSetValues(t *testing.T) {
 }
 
 func TestCopyValues(t *testing.T) {
-	testValueA := NewValue(0.5)
+	testValueA := MakeValue(0.5)
 	copyA := testValueA.Copy()
 
 	if copyA.GetValueType() != Float {
@@ -198,8 +201,8 @@ func TestCopyValues(t *testing.T) {
 		t.Fail()
 	}
 
-	testValueB := NewValue(0.6)
-	values := NewValues(testValueA, testValueB)
+	testValueB := MakeValue(0.6)
+	values := MakeValues(testValueA, testValueB)
 
 	testValues := values.Copy()
 
@@ -209,7 +212,7 @@ func TestCopyValues(t *testing.T) {
 		t.Fail()
 	}
 
-	testValueC := NewValue(1 + 5i)
+	testValueC := MakeValue(1 + 5i)
 	copyC := testValueC.Copy()
 
 	if copyC.GetValueType() != Complex {
@@ -232,18 +235,18 @@ func TestCopyValues(t *testing.T) {
 }
 
 func TestAppendValue(t *testing.T) {
-	testValueA := NewValue(0.5)
-	testValueB := NewValue(0.6)
-	testValuesA := NewValues(testValueA, testValueB)
+	testValueA := MakeValue(0.5)
+	testValueB := MakeValue(0.6)
+	testValuesA := MakeValues(testValueA, testValueB)
 
-	testValueC := NewValue(0.7)
+	testValueC := MakeValue(0.7)
 	testValuesA.Append(testValueC)
 
 	if !reflect.DeepEqual(testValuesA.Values()[2], testValueC) {
 		t.Fail()
 	}
 
-	testValuesB := NewValues()
+	testValuesB := MakeValues()
 	testValuesB.Append(testValueC)
 
 	if !reflect.DeepEqual(testValuesB.Values()[0], testValueC) {
@@ -252,10 +255,10 @@ func TestAppendValue(t *testing.T) {
 }
 
 func TestSubsetAndLenValues(t *testing.T) {
-	testValueA := NewValue(0.5)
-	testValueB := NewValue(0.6)
-	testValueC := NewValue(0.7)
-	values := NewValues(testValueA, testValueB, testValueC)
+	testValueA := MakeValue(0.5)
+	testValueB := MakeValue(0.6)
+	testValueC := MakeValue(0.7)
+	values := MakeValues(testValueA, testValueB, testValueC)
 
 	lenA := values.Len()
 
@@ -273,10 +276,10 @@ func TestSubsetAndLenValues(t *testing.T) {
 }
 
 func TestIndexOfValues(t *testing.T) {
-	testValueA := NewValue(5)
-	testValueB := NewValue(0.6)
-	testValueC := NewValue(0.7 + 1i)
-	values := NewValues(testValueA, testValueB, testValueC)
+	testValueA := MakeValue(5)
+	testValueB := MakeValue(0.6)
+	testValueC := MakeValue(0.7 + 1i)
+	values := MakeValues(testValueA, testValueB, testValueC)
 
 	indexOfA := values.IndexOf(testValueA)
 	if indexOfA != 0 {
@@ -293,7 +296,7 @@ func TestIndexOfValues(t *testing.T) {
 		t.Fail()
 	}
 
-	indexOfNone := values.IndexOf(NewValue(0.8))
+	indexOfNone := values.IndexOf(MakeValue(0.8))
 
 	if indexOfNone != -1 {
 		t.Fail()

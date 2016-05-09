@@ -13,7 +13,7 @@ func PolishCalculator(args []string) (value gcv.Value, err error) {
 		args[left], args[right] = args[right], args[left]
 	}
 
-	stack := gcv.NewValues()
+	stack := gcv.MakeValues()
 	var operand1 gcv.Value
 	var operand2 gcv.Value
 	var result gcv.Value

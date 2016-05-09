@@ -27,16 +27,16 @@ type Values interface {
 	Len() int
 
 	// Returns the Core Type of the Values. i.e the highest ranking Type
-	Type() string
+	Type() Type
 }
 
 type values struct {
 	vals     []Value
 	length   int
-	coreType string
+	coreType Type
 }
 
-func (v *values) Type() string { return v.coreType }
+func (v *values) Type() Type { return v.coreType }
 
 func (v *values) setValues(vals []Value) {
 	v.vals = make([]Value, len(vals))
@@ -44,7 +44,7 @@ func (v *values) setValues(vals []Value) {
 	v.coreType = Int
 	for index, val := range vals {
 		v.vals[index] = val.Copy()
-		if v.Type() != Complex && len(v.Type()) < len(val.GetValueType()) {
+		if v.Type() != Complex && v.Type() < val.GetValueType() {
 			v.coreType = val.GetValueType()
 		}
 	}
@@ -97,12 +97,27 @@ func (v *values) IndexOf(val Value) int {
 	return -1
 }
 
-// NewValues returns a Values type
-func NewValues(vals ...Value) Values {
+// MakeValuesAlt returns a Values type, but requires a framework []Value slice
+func MakeValuesAlt(vals []Value) Values {
 	newValues := new(values)
 	if vals == nil {
 		vals = make([]Value, 0)
 	}
 	newValues.setValues(vals)
+	return newValues
+}
+
+// MakeValuesPure returns a Values type, requires pure interfaces
+func MakeValuesPure(vals ...interface{}) Values {
+	var values []Value
+	for _, val := range vals {
+		values = append(values, MakeValue(val))
+	}
+	return MakeValuesAlt(values)
+}
+
+// MakeValues returns a Values type, requires a framework Value type
+func MakeValues(vals ...Value) Values {
+	newValues := MakeValuesAlt(vals)
 	return newValues
 }

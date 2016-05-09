@@ -9,7 +9,7 @@ import (
 
 // ReversePolishCalculator is a simple reverse polish calculator
 func ReversePolishCalculator(args []string) (value gcv.Value, err error) {
-	stack := gcv.NewValues()
+	stack := gcv.MakeValues()
 	var operand1 gcv.Value
 	var operand2 gcv.Value
 	var result gcv.Value

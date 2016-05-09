@@ -17,10 +17,10 @@ var (
 // TODO: this needs to be implemented. Below is place holder code.
 func StringToValueParser(s string) (output gcv.Value, err error) {
 	if i, e := strconv.ParseInt(s, 10, 64); e == nil {
-		output = gcv.NewValue(i)
+		output = gcv.MakeValue(i)
 		return
 	} else if f, e := strconv.ParseFloat(s, 64); e == nil {
-		output = gcv.NewValue(f)
+		output = gcv.MakeValue(f)
 		return
 	} else if isComplex.MatchString(s) {
 		s = s[:len(s)-1]
@@ -37,7 +37,7 @@ func StringToValueParser(s string) (output gcv.Value, err error) {
 		} else if f, e := strconv.ParseFloat(sSlice[1], 64); e == nil {
 			image = f
 		}
-		output = gcv.NewValue(complex(real, image))
+		output = gcv.MakeValue(complex(real, image))
 		return
 	}
 	err = errors.New("String is not type int, float or complex")
