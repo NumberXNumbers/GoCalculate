@@ -53,7 +53,7 @@ type vectors struct {
 func (v *vectors) setVectors(vects []Vector, space Space) {
 	v.length = len(vects)
 	v.space = space
-	v.coreType = gcv.Int
+	v.coreType = gcv.Real
 	v.vects = make([]Vector, v.Len())
 	for index, vect := range vects {
 		copyVect := vect.Copy()
@@ -93,8 +93,8 @@ func (v *vectors) Set(index int, vect Vector) {
 }
 
 func (v *vectors) SetValue(i int, j int, value gcv.Value) {
-	if v.Type() < value.GetValueType() {
-		v.coreType = value.GetValueType()
+	if v.Type() < value.Type() {
+		v.coreType = value.Type()
 	}
 	vector := v.vects[i]
 	values := vector.Elements()
@@ -136,15 +136,10 @@ func (v *vectors) IndexOf(vect Vector) int {
 		}
 		for valIndex, value := range values {
 			tempValue := vector.Get(valIndex)
-			if value.GetValueType() == gcv.Complex && value.Complex128() != tempValue.Complex128() {
+			if value.Type() == gcv.Complex && value.Complex() != tempValue.Complex() {
 				found = false
 				break
-			}
-			if value.GetValueType() == gcv.Float && value.Float64() != tempValue.Float64() {
-				found = false
-				break
-			}
-			if value.GetValueType() == gcv.Int && value.Int() != tempValue.Int() {
+			} else if value.Real() != tempValue.Real() {
 				found = false
 				break
 			}
@@ -165,7 +160,7 @@ func NewVectors(space Space, numVectors, lenVectors int) Vectors {
 	vectors.innerLength = lenVectors
 	vectors.vects = vects
 	vectors.space = space
-	vectors.coreType = gcv.Int
+	vectors.coreType = gcv.Real
 	for i := 0; i < vectors.Len(); i++ {
 		vect := NewVector(space, lenVectors)
 		vectors.Set(i, vect)
