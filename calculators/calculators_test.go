@@ -35,7 +35,7 @@ func TestReversePolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errA)
 	}
 
-	if testValueA.Float64() != 7.0 {
+	if testValueA.Real() != 7.0 {
 		t.Errorf("Expect %d, received %v", 7, testValueA)
 	}
 
@@ -43,7 +43,7 @@ func TestReversePolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errB)
 	}
 
-	if testValueB.Float64() != 4.0 {
+	if testValueB.Real() != 4.0 {
 		t.Errorf("Expect %d, received %v", 4, testValueB)
 	}
 
@@ -51,7 +51,7 @@ func TestReversePolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errC)
 	}
 
-	if testValueC.Float64() != 2.0 {
+	if testValueC.Real() != 2.0 {
 		t.Errorf("Expect %d, received %v", 2, testValueC)
 	}
 
@@ -75,7 +75,7 @@ func TestReversePolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errH)
 	}
 
-	if testValueH.Float64() != -0.3863636363636363 {
+	if testValueH.Real() != -0.3863636363636363 {
 		t.Errorf("Expect %d, received %v", 7, testValueH)
 	}
 
@@ -83,7 +83,7 @@ func TestReversePolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errI)
 	}
 
-	if testValueI.Complex128() != -0.08883947766013564+0.01806018430502029i {
+	if testValueI.Complex() != -0.08883947766013564+0.01806018430502029i {
 		t.Errorf("Expect %d, received %v", 7, testValueI)
 	}
 
@@ -91,7 +91,7 @@ func TestReversePolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errJ)
 	}
 
-	if testValueJ.Float64() != 1 {
+	if testValueJ.Real() != 1 {
 		t.Errorf("Expect %d, received %v", 7, testValueJ)
 	}
 
@@ -103,7 +103,7 @@ func TestReversePolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errL)
 	}
 
-	if testValueL.Complex128() != 9+0i {
+	if testValueL.Complex() != 9+0i {
 		t.Errorf("Expect %d, received %v", 7, testValueL)
 	}
 
@@ -133,7 +133,7 @@ func TestPolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errA)
 	}
 
-	if testValueA.Float64() != 7.0 {
+	if testValueA.Real() != 7.0 {
 		t.Errorf("Expect %d, received %v", 7, testValueA)
 	}
 
@@ -141,7 +141,7 @@ func TestPolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errB)
 	}
 
-	if testValueB.Float64() != 4.0 {
+	if testValueB.Real() != 4.0 {
 		t.Errorf("Expect %d, received %v", 4, testValueB)
 	}
 
@@ -149,7 +149,7 @@ func TestPolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errC)
 	}
 
-	if testValueC.Float64() != 2.0 {
+	if testValueC.Real() != 2.0 {
 		t.Errorf("Expect %d, received %v", 2, testValueC)
 	}
 
@@ -187,7 +187,7 @@ func TestInfixCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errA)
 	}
 
-	if testValueA.Float64() != 7.0 {
+	if testValueA.Real() != 7.0 {
 		t.Errorf("Expect %d, received %v", 7, testValueA)
 	}
 
@@ -195,7 +195,7 @@ func TestInfixCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errB)
 	}
 
-	if testValueB.Float64() != 5.0 {
+	if testValueB.Real() != 5.0 {
 		t.Errorf("Expect %d, received %v", 4, testValueB)
 	}
 
@@ -207,7 +207,7 @@ func TestInfixCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errB)
 	}
 
-	if testValueD.Float64() != 5.0 {
+	if testValueD.Real() != 5.0 {
 		t.Errorf("Expect %d, received %v", 4, testValueB)
 	}
 

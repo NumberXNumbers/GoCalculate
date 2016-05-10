@@ -90,8 +90,8 @@ func (m *matrix) Get(row int, col int) gcv.Value { return m.elements.Get(row).Ge
 
 // implementation of Set method
 func (m *matrix) Set(row int, col int, val gcv.Value) {
-	if m.Type() < val.GetValueType() {
-		m.coreType = val.GetValueType()
+	if m.Type() < val.Type() {
+		m.coreType = val.Type()
 	}
 	m.elements.SetValue(row, col, val)
 }
@@ -117,13 +117,13 @@ func (m *matrix) Tr() (gcv.Value, error) {
 	if m.Type() == gcv.Complex {
 		var complexTrace complex128
 		for i := 0; i < m.elements.Len(); i++ {
-			complexTrace += m.Get(i, i).Complex128()
+			complexTrace += m.Get(i, i).Complex()
 		}
 		trace = gcv.MakeValue(complexTrace)
 	} else {
 		var floatTrace float64
 		for i := 0; i < m.elements.Len(); i++ {
-			floatTrace += m.Get(i, i).Float64()
+			floatTrace += m.Get(i, i).Real()
 		}
 		trace = gcv.MakeValue(floatTrace)
 	}
@@ -140,7 +140,7 @@ func (m *matrix) Trans() {
 	for i := 0; i < transMatrixNumRows; i++ {
 		for j := 0; j < transMatrixNumCols; j++ {
 			if m.Type() == gcv.Complex {
-				transMatrixElements.SetValue(i, j, gcv.MakeValue(cmplx.Conj(m.Get(j, i).Complex128())))
+				transMatrixElements.SetValue(i, j, gcv.MakeValue(cmplx.Conj(m.Get(j, i).Complex())))
 				continue
 			}
 			transMatrixElements.SetValue(i, j, m.Get(j, i))
@@ -157,7 +157,7 @@ func NewMatrix(rows int, cols int) Matrix {
 	matrix := new(matrix)
 	matrix.numRows = rows
 	matrix.numCols = cols
-	matrix.coreType = gcv.Int
+	matrix.coreType = gcv.Real
 	matrix.elements = v.NewVectors(v.RowSpace, rows, cols)
 	return matrix
 }

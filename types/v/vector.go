@@ -67,8 +67,8 @@ func (v *vector) Get(index int) gcv.Value { return v.elements.Get(index) }
 
 // implementation of Set method
 func (v *vector) Set(index int, val gcv.Value) {
-	if v.coreType < val.GetValueType() {
-		v.coreType = val.GetValueType()
+	if v.coreType < val.Type() {
+		v.coreType = val.Type()
 	}
 	v.elements.Set(index, val)
 }
@@ -93,7 +93,7 @@ func (v *vector) Trans() {
 	if v.Type() == gcv.Complex {
 		for i := 0; i < v.Len(); i++ {
 			value := v.Get(i)
-			complexConj := cmplx.Conj(value.Complex128())
+			complexConj := cmplx.Conj(value.Complex())
 			value.SetValue(complexConj)
 			v.Set(i, value)
 		}
@@ -112,14 +112,14 @@ func (v *vector) Norm() gcv.Value {
 		var dotProduct complex128
 		conjVector := MakeConjVector(v)
 		for i := 0; i < v.Len(); i++ {
-			dotProduct += v.Get(i).Complex128() * conjVector.Get(i).Complex128()
+			dotProduct += v.Get(i).Complex() * conjVector.Get(i).Complex()
 		}
 		return gcv.MakeValue(cmplx.Sqrt(dotProduct))
 	}
 
 	var dotProduct float64
 	for i := 0; i < v.Len(); i++ {
-		dotProduct += v.Get(i).Float64() * v.Get(i).Float64()
+		dotProduct += v.Get(i).Real() * v.Get(i).Real()
 	}
 	return gcv.MakeValue(math.Sqrt(dotProduct))
 }
@@ -131,7 +131,7 @@ func (v *vector) IndexOf(val gcv.Value) int { return v.Elements().IndexOf(val) }
 func NewVector(space Space, length int) Vector {
 	vector := new(vector)
 	vector.space = space
-	vector.coreType = gcv.Int
+	vector.coreType = gcv.Real
 	elements := make([]gcv.Value, length)
 	for index := range elements {
 		val := gcv.MakeValue(0)

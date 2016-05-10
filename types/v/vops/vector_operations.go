@@ -14,7 +14,7 @@ import (
 func ScalarMultiplication(scalar gcv.Value, vector v.Vector) v.Vector {
 	newVector := v.NewVector(vector.Space(), vector.Len())
 	for i := 0; i < vector.Len(); i++ {
-		newVector.Set(i, gcv.MakeValue(scalar.Complex128()*vector.Get(i).Complex128()))
+		newVector.Set(i, gcv.MakeValue(scalar.Complex()*vector.Get(i).Complex()))
 	}
 
 	return newVector
@@ -26,7 +26,7 @@ func AngleTheta(vectorA v.Vector, vectorB v.Vector) (gcv.Value, error) {
 	normB := vectorB.Norm()
 	var theta gcv.Value
 
-	if normA.Int() == 0 || normB.Int() == 0 {
+	if normA.Real() == 0 || normB.Real() == 0 {
 		return theta, errors.New("Either Vector A or Vector B is the zero vector")
 	}
 
@@ -36,10 +36,10 @@ func AngleTheta(vectorA v.Vector, vectorB v.Vector) (gcv.Value, error) {
 		return theta, err
 	}
 
-	if dotProduct.GetValueType() == gcv.Complex {
-		theta = gcv.MakeValue(cmplx.Acos(dotProduct.Complex128() / (normA.Complex128() * normB.Complex128())))
+	if dotProduct.Type() == gcv.Complex {
+		theta = gcv.MakeValue(cmplx.Acos(dotProduct.Complex() / (normA.Complex() * normB.Complex())))
 	} else {
-		theta = gcv.MakeValue(math.Acos(dotProduct.Float64() / (normA.Float64() * normB.Float64())))
+		theta = gcv.MakeValue(math.Acos(dotProduct.Real() / (normA.Real() * normB.Real())))
 	}
 
 	return theta, nil
@@ -60,13 +60,13 @@ func InnerProduct(vectorA v.Vector, vectorB v.Vector) (gcv.Value, error) {
 	if vectorA.Elements().Type() == gcv.Complex || vectorB.Elements().Type() == gcv.Complex {
 		var complexProduct complex128
 		for i := 0; i < vectorA.Len(); i++ {
-			complexProduct += vectorA.Get(i).Complex128() * vectorB.Get(i).Complex128()
+			complexProduct += vectorA.Get(i).Complex() * vectorB.Get(i).Complex()
 		}
 		product = gcv.MakeValue(complexProduct)
 	} else {
 		var floatProduct float64
 		for i := 0; i < vectorA.Len(); i++ {
-			floatProduct += vectorA.Get(i).Float64() * vectorB.Get(i).Float64()
+			floatProduct += vectorA.Get(i).Real() * vectorB.Get(i).Real()
 		}
 		product = gcv.MakeValue(floatProduct)
 	}
@@ -90,10 +90,10 @@ func OuterProduct(vectorA v.Vector, vectorB v.Vector) (m.Matrix, error) {
 	for i := 0; i < vectorA.Len(); i++ {
 		for j := 0; j < vectorB.Len(); j++ {
 			if matrixType == gcv.Complex {
-				matrix.Set(i, j, gcv.MakeValue(vectorA.Get(i).Complex128()*vectorB.Get(j).Complex128()))
+				matrix.Set(i, j, gcv.MakeValue(vectorA.Get(i).Complex()*vectorB.Get(j).Complex()))
 				continue
 			}
-			matrix.Set(i, j, gcv.MakeValue(vectorA.Get(i).Float64()*vectorB.Get(j).Float64()))
+			matrix.Set(i, j, gcv.MakeValue(vectorA.Get(i).Real()*vectorB.Get(j).Real()))
 		}
 	}
 
@@ -114,11 +114,11 @@ func Addition(vectorA v.Vector, vectorB v.Vector) (v.Vector, error) {
 
 	if vectorA.Elements().Type() == gcv.Complex || vectorB.Elements().Type() == gcv.Complex {
 		for i := 0; i < vectorA.Len(); i++ {
-			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Complex128()+vectorB.Get(i).Complex128()))
+			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Complex()+vectorB.Get(i).Complex()))
 		}
 	} else {
 		for i := 0; i < vectorA.Len(); i++ {
-			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Float64()+vectorB.Get(i).Float64()))
+			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Real()+vectorB.Get(i).Real()))
 		}
 	}
 
@@ -139,11 +139,11 @@ func Subtraction(vectorA v.Vector, vectorB v.Vector) (v.Vector, error) {
 
 	if vectorA.Elements().Type() == gcv.Complex || vectorB.Elements().Type() == gcv.Complex {
 		for i := 0; i < vectorA.Len(); i++ {
-			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Complex128()-vectorB.Get(i).Complex128()))
+			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Complex()-vectorB.Get(i).Complex()))
 		}
 	} else {
 		for i := 0; i < vectorA.Len(); i++ {
-			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Float64()-vectorB.Get(i).Float64()))
+			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Real()-vectorB.Get(i).Real()))
 		}
 	}
 

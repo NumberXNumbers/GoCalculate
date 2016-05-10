@@ -252,10 +252,10 @@ func TestOuterProduct(t *testing.T) {
 
 	// fmt.Println(solutionMatrixA.Get(0, 0), solutionMatrixA.Get(0, 1), solutionMatrixA.Get(1, 0), solutionMatrixA.Get(1, 1))
 
-	if solutionMatrixA.Get(0, 0).Complex128() != resultMatrixA.Get(0, 0).Complex128() ||
-		solutionMatrixA.Get(1, 1).Complex128() != resultMatrixA.Get(1, 1).Complex128() ||
-		solutionMatrixA.Get(0, 1).Complex128() != resultMatrixA.Get(0, 1).Complex128() ||
-		solutionMatrixA.Get(1, 0).Complex128() != resultMatrixA.Get(1, 0).Complex128() {
+	if solutionMatrixA.Get(0, 0).Complex() != resultMatrixA.Get(0, 0).Complex() ||
+		solutionMatrixA.Get(1, 1).Complex() != resultMatrixA.Get(1, 1).Complex() ||
+		solutionMatrixA.Get(0, 1).Complex() != resultMatrixA.Get(0, 1).Complex() ||
+		solutionMatrixA.Get(1, 0).Complex() != resultMatrixA.Get(1, 0).Complex() {
 		t.Fail()
 	}
 
@@ -268,10 +268,10 @@ func TestOuterProduct(t *testing.T) {
 		t.Fail()
 	}
 
-	if solutionMatrixA.Get(0, 0).Complex128() != resultMatrixB.Get(0, 0).Complex128() ||
-		solutionMatrixA.Get(1, 1).Complex128() != resultMatrixB.Get(1, 1).Complex128() ||
-		solutionMatrixA.Get(0, 1).Complex128() != resultMatrixB.Get(0, 1).Complex128() ||
-		solutionMatrixA.Get(1, 0).Complex128() != resultMatrixB.Get(1, 0).Complex128() {
+	if solutionMatrixA.Get(0, 0).Complex() != resultMatrixB.Get(0, 0).Complex() ||
+		solutionMatrixA.Get(1, 1).Complex() != resultMatrixB.Get(1, 1).Complex() ||
+		solutionMatrixA.Get(0, 1).Complex() != resultMatrixB.Get(0, 1).Complex() ||
+		solutionMatrixA.Get(1, 0).Complex() != resultMatrixB.Get(1, 0).Complex() {
 		t.Fail()
 	}
 

@@ -5,156 +5,156 @@ import (
 	"testing"
 )
 
-func TestMakeValueSetValueGetValueTypePrint(t *testing.T) {
+func TestMakeValueSetValueTypePrint(t *testing.T) {
 	var floatTestValueA float64
 	valueTestAa := MakeValue(floatTestValueA)
 
-	if valueTestAa.GetValueType() != Float {
+	if valueTestAa.Type() != Real {
 		t.Fail()
 	}
 
 	var floatTestValueB float32
 	valueTestAb := MakeValue(floatTestValueB)
 
-	if valueTestAb.GetValueType() != Float {
+	if valueTestAb.Type() != Real {
 		t.Fail()
 	}
 
 	var intTestValueA int
 	valueTestBa := MakeValue(intTestValueA)
 
-	if valueTestBa.GetValueType() != Int {
+	if valueTestBa.Type() != Real {
 		t.Fail()
 	}
 
 	var intTestValueB int32
 	valueTestBb := MakeValue(intTestValueB)
 
-	if valueTestBb.GetValueType() != Int {
+	if valueTestBb.Type() != Real {
 		t.Fail()
 	}
 
 	var intTestValueC int64
 	valueTestBc := MakeValue(intTestValueC)
 
-	if valueTestBc.GetValueType() != Int {
+	if valueTestBc.Type() != Real {
 		t.Fail()
 	}
 
 	var complexTestValueA complex128
 	valueTestCa := MakeValue(complexTestValueA)
 
-	if valueTestCa.GetValueType() != Complex {
+	if valueTestCa.Type() != Complex {
 		t.Fail()
 	}
 
 	var complexTestValueB complex64
 	valueTestB := MakeValue(complexTestValueB)
 
-	if valueTestB.GetValueType() != Complex {
+	if valueTestB.Type() != Complex {
 		t.Fail()
 	}
 
 	var stringTestValue string
 	valueTestD := MakeValue(stringTestValue)
 
-	if valueTestD.GetValueType() != Int {
+	if valueTestD.Type() != Real {
 		t.Fail()
 	}
 
 	valueTestE := NewValue()
 
-	if valueTestE.GetValueType() != Int {
+	if valueTestE.Type() != Real {
 		t.Fail()
 	}
 }
 
-func TestIntValue(t *testing.T) {
+func TestRealImagValue(t *testing.T) {
 	floatTestValue := 5.0
 	valueTestA := MakeValue(floatTestValue)
 
-	if valueTestA.Int() != 5 {
+	if valueTestA.Real() != 5 {
 		t.Fail()
 	}
 
 	intTestValue := 5
 	valueTestB := MakeValue(intTestValue)
 
-	if valueTestB.Int() != 5 {
+	if valueTestB.Real() != 5 {
 		t.Fail()
 	}
 
 	complexTestValue := 5.0 + 2.0i
 	valueTestC := MakeValue(complexTestValue)
 
-	if valueTestC.Int() != 5 {
+	if valueTestC.Real() != 5 && valueTestC.Imag() != 2 {
 		t.Fail()
 	}
 
 	stringTestValue := "Hi"
 	valueTestD := MakeValue(stringTestValue)
 
-	if valueTestD.Int() != 0 {
+	if valueTestD.Real() != 0 {
 		t.Fail()
 	}
 }
 
-func TestFloat64Value(t *testing.T) {
+func TestValue(t *testing.T) {
 	floatTestValue := 5.0
 	valueTestA := MakeValue(floatTestValue)
 
-	if valueTestA.Float64() != 5.0 {
+	if valueTestA.Real() != 5.0 {
 		t.Fail()
 	}
 
 	intTestValue := 5
 	valueTestB := MakeValue(intTestValue)
 
-	if valueTestB.Float64() != 5.0 {
+	if valueTestB.Real() != 5.0 {
 		t.Fail()
 	}
 
 	complexTestValue := 5.0 + 2.0i
 	valueTestC := MakeValue(complexTestValue)
 
-	if valueTestC.Float64() != 5.0 {
+	if valueTestC.Real() != 5.0 {
 		t.Fail()
 	}
 
 	stringTestValue := "Hi"
 	valueTestD := MakeValue(stringTestValue)
 
-	if valueTestD.Float64() != 0 {
+	if valueTestD.Real() != 0 {
 		t.Fail()
 	}
 }
 
-func TestComplex128(t *testing.T) {
+func TestComplex(t *testing.T) {
 	floatTestValue := 5.0
 	valueTestA := MakeValue(floatTestValue)
 
-	if valueTestA.Complex128() != 5.0+0.0i {
+	if valueTestA.Complex() != 5.0+0.0i {
 		t.Fail()
 	}
 
 	intTestValue := 5
 	valueTestB := MakeValue(intTestValue)
 
-	if valueTestB.Complex128() != 5.0+0.0i {
+	if valueTestB.Complex() != 5.0+0.0i {
 		t.Fail()
 	}
 
 	complexTestValue := 5.0 + 2.0i
 	valueTestC := MakeValue(complexTestValue)
 
-	if valueTestC.Complex128() != 5.0+2.0i {
+	if valueTestC.Complex() != 5.0+2.0i {
 		t.Fail()
 	}
 
 	stringTestValue := "Hi"
 	valueTestD := MakeValue(stringTestValue)
 
-	if valueTestD.Complex128() != 0+0i {
+	if valueTestD.Complex() != 0+0i {
 		t.Fail()
 	}
 }
@@ -193,7 +193,7 @@ func TestCopyValues(t *testing.T) {
 	testValueA := MakeValue(0.5)
 	copyA := testValueA.Copy()
 
-	if copyA.GetValueType() != Float {
+	if copyA.Type() != Real {
 		t.Fail()
 	}
 
@@ -215,7 +215,7 @@ func TestCopyValues(t *testing.T) {
 	testValueC := MakeValue(1 + 5i)
 	copyC := testValueC.Copy()
 
-	if copyC.GetValueType() != Complex {
+	if copyC.Type() != Complex {
 		t.Fail()
 	}
 
@@ -225,7 +225,7 @@ func TestCopyValues(t *testing.T) {
 
 	copyC.SetValue(2)
 
-	if copyC.GetValueType() != Int {
+	if copyC.Type() != Real {
 		t.Fail()
 	}
 

@@ -41,11 +41,11 @@ func (v *values) Type() Type { return v.coreType }
 func (v *values) setValues(vals []Value) {
 	v.vals = make([]Value, len(vals))
 	v.length = len(vals)
-	v.coreType = Int
+	v.coreType = Real
 	for index, val := range vals {
 		v.vals[index] = val.Copy()
-		if v.Type() != Complex && v.Type() < val.GetValueType() {
-			v.coreType = val.GetValueType()
+		if v.Type() != Complex && v.Type() < val.Type() {
+			v.coreType = val.Type()
 		}
 	}
 }
@@ -84,13 +84,9 @@ func (v *values) Subset(start, finish int) Values {
 
 func (v *values) IndexOf(val Value) int {
 	for index, value := range v.Values() {
-		if value.GetValueType() == Complex && value.Complex128() == val.Complex128() {
+		if value.Type() == Complex && value.Complex() == val.Complex() {
 			return index
-		}
-		if value.GetValueType() == Float && value.Float64() == val.Float64() {
-			return index
-		}
-		if value.GetValueType() == Int && value.Int() == val.Int() {
+		} else if value.Real() == val.Real() {
 			return index
 		}
 	}

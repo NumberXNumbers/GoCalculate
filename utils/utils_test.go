@@ -19,8 +19,7 @@ func TestStringToValueParser(t *testing.T) {
 	valueF, errF := StringToValueParser(testStrF)
 	_, errG := StringToValueParser(testStrG)
 
-	intSolution := 1
-	floatSolution := 1.0
+	realSolution := 1.0
 	complexSolutionA := 1 + 0i
 	complexSolutionB := 1 - 0i
 
@@ -28,48 +27,48 @@ func TestStringToValueParser(t *testing.T) {
 		t.Fail()
 	}
 
-	if valueA.Int() != intSolution {
-		t.Errorf("Expecte %d, received %d", intSolution, valueA.Int())
+	if valueA.Real() != realSolution {
+		t.Errorf("Expecte %f, received %f", realSolution, valueA.Real())
 	}
 
 	if errB != nil {
 		t.Fail()
 	}
 
-	if valueB.Float64() != floatSolution {
-		t.Errorf("Expecte %f, received %f", floatSolution, valueB.Float64())
+	if valueB.Real() != realSolution {
+		t.Errorf("Expecte %f, received %f", realSolution, valueB.Real())
 	}
 
 	if errC != nil {
 		t.Fail()
 	}
 
-	if valueC.Complex128() != complexSolutionA {
-		t.Errorf("Expecte %f, received %f", complexSolutionA, valueB.Complex128())
+	if valueC.Complex() != complexSolutionA {
+		t.Errorf("Expecte %f, received %f", complexSolutionA, valueB.Complex())
 	}
 
 	if errD != nil {
 		t.Fail()
 	}
 
-	if valueD.Complex128() != complexSolutionA {
-		t.Errorf("Expecte %f, received %f", complexSolutionA, valueD.Complex128())
+	if valueD.Complex() != complexSolutionA {
+		t.Errorf("Expecte %f, received %f", complexSolutionA, valueD.Complex())
 	}
 
 	if errE != nil {
 		t.Fail()
 	}
 
-	if valueE.Complex128() != complexSolutionB {
-		t.Errorf("Expecte %f, received %f", complexSolutionB, valueE.Complex128())
+	if valueE.Complex() != complexSolutionB {
+		t.Errorf("Expecte %f, received %f", complexSolutionB, valueE.Complex())
 	}
 
 	if errF != nil {
 		t.Fail()
 	}
 
-	if valueF.Complex128() != complexSolutionB {
-		t.Errorf("Expecte %f, received %f", complexSolutionB, valueF.Complex128())
+	if valueF.Complex() != complexSolutionB {
+		t.Errorf("Expecte %f, received %f", complexSolutionB, valueF.Complex())
 	}
 
 	if errG == nil {

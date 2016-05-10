@@ -72,8 +72,8 @@ func TestTransMethodMatrix(t *testing.T) {
 
 	testMatrixB.Trans()
 	if !reflect.DeepEqual(testMatrixTransB.Get(0, 0), testMatrixB.Get(0, 0)) ||
-		testMatrixTransB.Get(0, 1).Complex128() != testMatrixB.Get(0, 1).Complex128() ||
-		testMatrixTransB.Get(1, 0).Complex128() != testMatrixB.Get(1, 0).Complex128() ||
+		testMatrixTransB.Get(0, 1).Complex() != testMatrixB.Get(0, 1).Complex() ||
+		testMatrixTransB.Get(1, 0).Complex() != testMatrixB.Get(1, 0).Complex() ||
 		!reflect.DeepEqual(testMatrixTransB.Get(1, 1), testMatrixB.Get(1, 1)) ||
 		testMatrixTransB.Type() != gcv.Complex {
 		t.Errorf("Expected %v, received %v", testMatrixTransB, testMatrixB)
@@ -83,16 +83,16 @@ func TestTransMethodMatrix(t *testing.T) {
 func TestTrMethodMatrix(t *testing.T) {
 	testMatrixA := NewIdentityMatrix(2)
 
-	if trA, _ := testMatrixA.Tr(); trA.Float64() != 2 {
-		t.Errorf("Expected %d, received %f", 2, trA.Float64())
+	if trA, _ := testMatrixA.Tr(); trA.Real() != 2 {
+		t.Errorf("Expected %d, received %f", 2, trA.Real())
 	}
 
 	testVectorBa := v.MakeVector(v.RowSpace, gcv.MakeValue(1-1i), gcv.MakeValue(2))
 	testVectorBb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(1+1i))
 	testMatrixB := MakeMatrix(testVectorBa, testVectorBb)
 
-	if trB, _ := testMatrixB.Tr(); trB.Complex128() != complex128(2) {
-		t.Errorf("Expected %v, received %v", complex128(2), trB.Complex128())
+	if trB, _ := testMatrixB.Tr(); trB.Complex() != complex128(2) {
+		t.Errorf("Expected %v, received %v", complex128(2), trB.Complex())
 	}
 
 	testMatrixC := NewMatrix(3, 4)
@@ -107,14 +107,14 @@ func TestSetAndGetMethodsMatrix(t *testing.T) {
 
 	testMatrixA.Set(0, 0, gcv.MakeValue(1))
 
-	if testMatrixA.Get(0, 0).Float64() != 1 {
-		t.Errorf("Expected %d, received %f", 1, testMatrixA.Get(0, 0).Float64())
+	if testMatrixA.Get(0, 0).Real() != 1 {
+		t.Errorf("Expected %d, received %f", 1, testMatrixA.Get(0, 0).Real())
 	}
 
 	testMatrixA.Set(0, 1, gcv.MakeValue(1+1i))
 
-	if testMatrixA.Get(0, 1).Complex128() != 1+1i {
-		t.Errorf("Expected %d, received %f", 1, testMatrixA.Get(0, 0).Complex128())
+	if testMatrixA.Get(0, 1).Complex() != 1+1i {
+		t.Errorf("Expected %d, received %f", 1, testMatrixA.Get(0, 0).Complex())
 	}
 }
 

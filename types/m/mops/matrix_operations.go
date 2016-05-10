@@ -12,11 +12,11 @@ func ScalarMultiplication(scalar gcv.Value, matrix m.Matrix) m.Matrix {
 	newMatrix := matrix.Copy()
 	for i := 0; i < matrix.GetNumRows(); i++ {
 		for j := 0; j < matrix.GetNumCols(); j++ {
-			if matrix.Type() == gcv.Complex || scalar.GetValueType() == gcv.Complex {
-				newMatrix.Set(i, j, gcv.MakeValue(scalar.Complex128()*matrix.Get(i, j).Complex128()))
+			if matrix.Type() == gcv.Complex || scalar.Type() == gcv.Complex {
+				newMatrix.Set(i, j, gcv.MakeValue(scalar.Complex()*matrix.Get(i, j).Complex()))
 				continue
 			}
-			newMatrix.Set(i, j, gcv.MakeValue(scalar.Float64()*matrix.Get(i, j).Float64()))
+			newMatrix.Set(i, j, gcv.MakeValue(scalar.Real()*matrix.Get(i, j).Real()))
 		}
 	}
 
@@ -42,13 +42,13 @@ func MultiplicationSimple(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) 
 			if matrixA.Type() == gcv.Complex || matrixB.Type() == gcv.Complex {
 				var sumComplex complex128
 				for k := 0; k < matrixA.GetNumCols(); k++ {
-					sumComplex += matrixA.Get(i, k).Complex128() * matrixB.Get(k, j).Complex128()
+					sumComplex += matrixA.Get(i, k).Complex() * matrixB.Get(k, j).Complex()
 				}
 				sum = gcv.MakeValue(sumComplex)
 			} else {
 				var sumFloat float64
 				for k := 0; k < matrixA.GetNumCols(); k++ {
-					sumFloat += matrixA.Get(i, k).Float64() * matrixB.Get(k, j).Float64()
+					sumFloat += matrixA.Get(i, k).Real() * matrixB.Get(k, j).Real()
 				}
 				sum = gcv.MakeValue(sumFloat)
 			}
@@ -69,10 +69,10 @@ func Addition(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) {
 	for i := 0; i < matrixA.GetNumRows(); i++ {
 		for j := 0; j < matrixA.GetNumCols(); j++ {
 			if matrixA.Type() == gcv.Complex || matrixB.Type() == gcv.Complex {
-				matrixAB.Set(i, j, gcv.MakeValue(matrixA.Get(i, j).Complex128()+matrixB.Get(i, j).Complex128()))
+				matrixAB.Set(i, j, gcv.MakeValue(matrixA.Get(i, j).Complex()+matrixB.Get(i, j).Complex()))
 				continue
 			}
-			matrixAB.Set(i, j, gcv.MakeValue(matrixA.Get(i, j).Float64()+matrixB.Get(i, j).Float64()))
+			matrixAB.Set(i, j, gcv.MakeValue(matrixA.Get(i, j).Real()+matrixB.Get(i, j).Real()))
 		}
 	}
 	return matrixAB, nil
@@ -89,10 +89,10 @@ func Subtraction(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) {
 	for i := 0; i < matrixA.GetNumRows(); i++ {
 		for j := 0; j < matrixA.GetNumCols(); j++ {
 			if matrixA.Type() == gcv.Complex || matrixB.Type() == gcv.Complex {
-				matrixAB.Set(i, j, gcv.MakeValue(matrixA.Get(i, j).Complex128()-matrixB.Get(i, j).Complex128()))
+				matrixAB.Set(i, j, gcv.MakeValue(matrixA.Get(i, j).Complex()-matrixB.Get(i, j).Complex()))
 				continue
 			}
-			matrixAB.Set(i, j, gcv.MakeValue(matrixA.Get(i, j).Float64()-matrixB.Get(i, j).Float64()))
+			matrixAB.Set(i, j, gcv.MakeValue(matrixA.Get(i, j).Real()-matrixB.Get(i, j).Real()))
 		}
 	}
 	return matrixAB, nil
