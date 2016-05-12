@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -14,6 +15,20 @@ var GoCalulateCmd = &cobra.Command{
             written in Go.
             Complete documentation is available at <website to come>`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Go Calculate World!")
+		fmt.Println("Go Calculate the World!")
 	},
+}
+
+//Execute adds all child commands to the GoCalculate root command sets flags appropriately.
+func Execute() {
+	AddCommands()
+	if err := GoCalulateCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+}
+
+// AddCommands adds child commands to the root command GoCalulateCmd.
+func AddCommands() {
+	GoCalulateCmd.AddCommand(calcCmd)
 }
