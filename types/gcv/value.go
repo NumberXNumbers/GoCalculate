@@ -76,13 +76,21 @@ func (v *value) SetValue(val interface{}) {
 		v.valueType = Complex
 		complexVal := val.(complex128)
 		v.real = real(complexVal)
-		v.imaginary = imag(complexVal)
+		imagValue := imag(complexVal)
+		if imagValue == 0 {
+			v.valueType = Real
+		}
+		v.imaginary = imagValue
 		break
 	case complex64:
 		v.valueType = Complex
 		complexVal := complex128(val.(complex64))
 		v.real = real(complexVal)
-		v.imaginary = imag(complexVal)
+		imagValue := imag(complexVal)
+		if imagValue == 0 {
+			v.valueType = Real
+		}
+		v.imaginary = imagValue
 		break
 	default:
 		v.valueType = Real

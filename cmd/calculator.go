@@ -29,11 +29,11 @@ var calcCmd = &cobra.Command{
 }
 
 var infixCmd = &cobra.Command{
-	Use:   "infix",
+	Use:   "infix [args...]",
 	Short: "Simple Infix calculator",
 	Long: `Simple Infix calculator.
-    All inputs must be of the in the prefix notation with spaces between each value and/or operation
-    Example '( 4 + 3 )' results in 7`,
+All inputs must be of the in the prefix notation with spaces between each value and/or operation`,
+	Example: "'GoCalculate calculator infix ( 4 + 3 )' results in 7",
 	Run: func(cmd *cobra.Command, args []string) {
 		value, err := calculators.InfixCalculator(args)
 		if err != nil {
@@ -48,11 +48,11 @@ var infixCmd = &cobra.Command{
 }
 
 var postfixCmd = &cobra.Command{
-	Use:   "postfix",
+	Use:   "postfix [args...]",
 	Short: "Simple Postfix calculator",
 	Long: `Simple Postfix calculator.
-    All inputs must be of the in the postfix notation with spaces between each value and/or operation
-    Example '4 3 +' results in 7`,
+All inputs must be of the in the postfix notation with spaces between each value and/or operation`,
+	Example: "'GoCalculate calculator postfix 4 3 +' results in 7",
 	Run: func(cmd *cobra.Command, args []string) {
 		value, err := calculators.ReversePolishCalculator(args)
 		if err != nil {
@@ -67,11 +67,11 @@ var postfixCmd = &cobra.Command{
 }
 
 var prefixCmd = &cobra.Command{
-	Use:   "prefix",
+	Use:   "prefix [args...]",
 	Short: "Simple Prefix calculator",
 	Long: `Simple Prefix calculator.
-    All inputs must be of the in the prefix notation with spaces between each value and/or operation
-    Example '+ 4 3' results in 7`,
+All inputs must be of the in the prefix notation with spaces between each value and/or operation`,
+	Example: "'GoCalculate calculator prefix + 4 3' results in 7",
 	Run: func(cmd *cobra.Command, args []string) {
 		value, err := calculators.PolishCalculator(args)
 		if err != nil {

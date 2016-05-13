@@ -2,10 +2,9 @@ package calculators
 
 import (
 	"errors"
-	"math"
-	"math/cmplx"
 
 	"github.com/NumberXNumbers/GoCalculate/types/gcv"
+	"github.com/NumberXNumbers/GoCalculate/types/gcv/gcvops"
 )
 
 func pop(stack gcv.Values) (gcv.Value, gcv.Values) {
@@ -24,46 +23,19 @@ const (
 )
 
 func calculate(firstValue, secondValue gcv.Value, s string) (result gcv.Value, err error) {
-	if firstValue.Type() == gcv.Complex || secondValue.Type() == gcv.Complex {
-		result, err = calculateComplex(firstValue.Complex(), secondValue.Complex(), s)
-	} else if firstValue.Type() == gcv.Real || secondValue.Type() == gcv.Real {
-		result, err = calculateReal(firstValue.Real(), secondValue.Real(), s)
-	}
-	return
-}
-
-func calculateComplex(firstValue, secondValue complex128, s string) (result gcv.Value, err error) {
 	switch s {
 	case add:
-		result = gcv.MakeValue(firstValue + secondValue)
+		result = gcvops.Add(firstValue, secondValue)
 	case times1, times2, times3:
-		result = gcv.MakeValue(firstValue * secondValue)
+		result = gcvops.Mult(firstValue, secondValue)
 	case div:
-		result = gcv.MakeValue(firstValue / secondValue)
+		result = gcvops.Div(firstValue, secondValue)
 	case sub:
-		result = gcv.MakeValue(firstValue - secondValue)
+		result = gcvops.Sub(firstValue, secondValue)
 	case pow:
-		result = gcv.MakeValue(cmplx.Pow(firstValue, secondValue))
-	default:
-		err = errors.New("IllegalArgumentException")
-	}
-	return
-}
-
-func calculateReal(firstValue, secondValue float64, s string) (result gcv.Value, err error) {
-	switch s {
-	case add:
-		result = gcv.MakeValue(firstValue + secondValue)
-	case times1, times2, times3:
-		result = gcv.MakeValue(firstValue * secondValue)
-	case div:
-		result = gcv.MakeValue(firstValue / secondValue)
-	case sub:
-		result = gcv.MakeValue(firstValue - secondValue)
-	case pow:
-		result = gcv.MakeValue(math.Pow(firstValue, secondValue))
+		result = gcvops.Pow(firstValue, secondValue)
 	case mod:
-		result = gcv.MakeValue(math.Mod(firstValue, secondValue))
+		result, err = gcvops.Mod(firstValue, secondValue)
 	default:
 		err = errors.New("IllegalArgumentException")
 	}

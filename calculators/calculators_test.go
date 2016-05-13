@@ -14,8 +14,8 @@ func TestReversePolishCalculator(t *testing.T) {
 	testArgsI := []string{"3.4+3i", "4.4-3i", "2.3+1i", "4+2i", "7.2+2i", "+", "-", "*", "/"}
 	testArgsJ := []string{"3.0", "2.0", "1.0", "exp", "%"}
 	testArgsK := []string{"3.0", "3.0", "&"}
-	testArgsL := []string{"3+0i", "2-0i", "exp"}
-	testArgsM := []string{"3+0i", "2-0i", "%"}
+	testArgsL := []string{"3+1i", "2-1i", "exp"}
+	testArgsM := []string{"3+1i", "2-1i", "%"}
 
 	testValueA, errA := ReversePolishCalculator(testArgsA)
 	testValueB, errB := ReversePolishCalculator(testArgsB)
@@ -103,7 +103,7 @@ func TestReversePolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errL)
 	}
 
-	if testValueL.Complex() != 9+0i {
+	if testValueL.Complex() != -1.6101653682947104+7.067695654968041i {
 		t.Errorf("Expect %d, received %v", 7, testValueL)
 	}
 
