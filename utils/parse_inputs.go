@@ -16,10 +16,7 @@ var (
 // StringToValueParser will parses inputs from the command line for real functions
 // TODO: this needs to be implemented. Below is place holder code.
 func StringToValueParser(s string) (output gcv.Value, err error) {
-	if i, e := strconv.ParseInt(s, 10, 64); e == nil {
-		output = gcv.MakeValue(i)
-		return
-	} else if f, e := strconv.ParseFloat(s, 64); e == nil {
+	if f, e := strconv.ParseFloat(s, 64); e == nil {
 		output = gcv.MakeValue(f)
 		return
 	} else if isComplex.MatchString(s) {

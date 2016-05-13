@@ -44,14 +44,14 @@ func TestMakeValueSetValueTypePrint(t *testing.T) {
 	var complexTestValueA complex128
 	valueTestCa := MakeValue(complexTestValueA)
 
-	if valueTestCa.Type() != Complex {
+	if valueTestCa.Type() != Real {
 		t.Fail()
 	}
 
 	var complexTestValueB complex64
 	valueTestB := MakeValue(complexTestValueB)
 
-	if valueTestB.Type() != Complex {
+	if valueTestB.Type() != Real {
 		t.Fail()
 	}
 
@@ -65,6 +65,20 @@ func TestMakeValueSetValueTypePrint(t *testing.T) {
 	valueTestE := NewValue()
 
 	if valueTestE.Type() != Real {
+		t.Fail()
+	}
+
+	complexTestValueA = 1 + 5i
+	valueTestF := MakeValue(complexTestValueA)
+
+	if valueTestF.Type() != Complex {
+		t.Fail()
+	}
+
+	complexTestValueB = 1 - 5i
+	valueTestG := MakeValue(complexTestValueB)
+
+	if valueTestG.Type() != Complex {
 		t.Fail()
 	}
 }
