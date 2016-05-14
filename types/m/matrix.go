@@ -2,10 +2,10 @@ package m
 
 import (
 	"errors"
-	"math/cmplx"
 	"reflect"
 
 	"github.com/NumberXNumbers/GoCalculate/types/gcv"
+	"github.com/NumberXNumbers/GoCalculate/types/gcv/gcvops"
 	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
 
@@ -108,24 +108,14 @@ func (m matrix) Copy() Matrix {
 
 // implementation of Tr method
 func (m *matrix) Tr() (gcv.Value, error) {
-	var trace gcv.Value
+	trace := gcv.NewValue()
 
 	if !m.IsSquare() {
 		return trace, errors.New("Matrix is not square")
 	}
 
-	if m.Type() == gcv.Complex {
-		var complexTrace complex128
-		for i := 0; i < m.elements.Len(); i++ {
-			complexTrace += m.Get(i, i).Complex()
-		}
-		trace = gcv.MakeValue(complexTrace)
-	} else {
-		var floatTrace float64
-		for i := 0; i < m.elements.Len(); i++ {
-			floatTrace += m.Get(i, i).Real()
-		}
-		trace = gcv.MakeValue(floatTrace)
+	for i := 0; i < m.elements.Len(); i++ {
+		trace = gcvops.Add(trace, m.Get(i, i))
 	}
 
 	return trace, nil
@@ -139,11 +129,7 @@ func (m *matrix) Trans() {
 
 	for i := 0; i < transMatrixNumRows; i++ {
 		for j := 0; j < transMatrixNumCols; j++ {
-			if m.Type() == gcv.Complex {
-				transMatrixElements.SetValue(i, j, gcv.MakeValue(cmplx.Conj(m.Get(j, i).Complex())))
-				continue
-			}
-			transMatrixElements.SetValue(i, j, m.Get(j, i))
+			transMatrixElements.SetValue(i, j, gcvops.Conj(m.Get(j, i)))
 		}
 	}
 

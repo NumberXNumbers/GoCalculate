@@ -46,6 +46,12 @@ func (v *value) Type() Type { return v.valueType }
 
 func (v *value) SetValue(val interface{}) {
 	switch val.(type) {
+	case Value:
+		value := val.(Value)
+		v.valueType = value.Type()
+		v.real = value.Real()
+		v.imaginary = value.Imag()
+		break
 	case int:
 		v.valueType = Real
 		v.real = float64(val.(int))

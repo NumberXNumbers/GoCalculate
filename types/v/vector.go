@@ -1,10 +1,8 @@
 package v
 
 import (
-	"math"
-	"math/cmplx"
-
 	"github.com/NumberXNumbers/GoCalculate/types/gcv"
+	"github.com/NumberXNumbers/GoCalculate/types/gcv/gcvops"
 )
 
 // Space is the space in which a vector lives. Either Column or Row space.
@@ -93,8 +91,7 @@ func (v *vector) Trans() {
 	if v.Type() == gcv.Complex {
 		for i := 0; i < v.Len(); i++ {
 			value := v.Get(i)
-			complexConj := cmplx.Conj(value.Complex())
-			value.SetValue(complexConj)
+			value.SetValue(gcvops.Conj(value))
 			v.Set(i, value)
 		}
 	}
@@ -108,20 +105,12 @@ func (v *vector) Trans() {
 
 // implementation of Norm method
 func (v *vector) Norm() gcv.Value {
-	if v.Type() == gcv.Complex {
-		var dotProduct complex128
-		conjVector := MakeConjVector(v)
-		for i := 0; i < v.Len(); i++ {
-			dotProduct += v.Get(i).Complex() * conjVector.Get(i).Complex()
-		}
-		return gcv.MakeValue(cmplx.Sqrt(dotProduct))
-	}
-
-	var dotProduct float64
+	dotProduct := gcv.NewValue()
+	conjVector := MakeConjVector(v)
 	for i := 0; i < v.Len(); i++ {
-		dotProduct += v.Get(i).Real() * v.Get(i).Real()
+		dotProduct = gcvops.Add(dotProduct, gcvops.Mult(v.Get(i), conjVector.Get(i)))
 	}
-	return gcv.MakeValue(math.Sqrt(dotProduct))
+	return gcvops.Sqrt(dotProduct)
 }
 
 // implementation of IndexOf method
