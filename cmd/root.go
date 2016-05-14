@@ -7,8 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//GoCalulateCmd is CoCaluate's root command
-var GoCalulateCmd = &cobra.Command{
+//GoCalculateCmd is GoCalcuate's root command
+var GoCalculateCmd = &cobra.Command{
 	Use:   "GoCalulate",
 	Short: "GoCaulate is a command line tool for numerical analysis",
 	Long: `Fast and Simple Numerical Analysis command line tool
@@ -22,7 +22,7 @@ var GoCalulateCmd = &cobra.Command{
 //Execute adds all child commands to the GoCalculate root command sets flags appropriately.
 func Execute() {
 	AddCommands()
-	if err := GoCalulateCmd.Execute(); err != nil {
+	if err := GoCalculateCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
@@ -30,5 +30,5 @@ func Execute() {
 
 // AddCommands adds child commands to the root command GoCalulateCmd.
 func AddCommands() {
-	GoCalulateCmd.AddCommand(calcCmd)
+	GoCalculateCmd.AddCommand(calcCmd)
 }

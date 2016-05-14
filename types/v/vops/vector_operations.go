@@ -2,10 +2,9 @@ package vops
 
 import (
 	"errors"
-	"math"
-	"math/cmplx"
 
 	"github.com/NumberXNumbers/GoCalculate/types/gcv"
+	"github.com/NumberXNumbers/GoCalculate/types/gcv/gcvops"
 	"github.com/NumberXNumbers/GoCalculate/types/m"
 	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
@@ -36,18 +35,14 @@ func AngleTheta(vectorA v.Vector, vectorB v.Vector) (gcv.Value, error) {
 		return theta, err
 	}
 
-	if dotProduct.Type() == gcv.Complex {
-		theta = gcv.MakeValue(cmplx.Acos(dotProduct.Complex() / (normA.Complex() * normB.Complex())))
-	} else {
-		theta = gcv.MakeValue(math.Acos(dotProduct.Real() / (normA.Real() * normB.Real())))
-	}
+	theta = gcvops.Acos(gcvops.Div(dotProduct, gcvops.Mult(normA, normB)))
 
 	return theta, nil
 }
 
 // InnerProduct returns the inner product for real Vectors
 func InnerProduct(vectorA v.Vector, vectorB v.Vector) (gcv.Value, error) {
-	var product gcv.Value
+	product := gcv.NewValue()
 
 	if vectorA.Len() != vectorB.Len() {
 		return product, errors.New("Length of vectors does not match")
@@ -57,18 +52,8 @@ func InnerProduct(vectorA v.Vector, vectorB v.Vector) (gcv.Value, error) {
 		return product, errors.New("One or both vector types are not consistent with the vector inner product")
 	}
 
-	if vectorA.Elements().Type() == gcv.Complex || vectorB.Elements().Type() == gcv.Complex {
-		var complexProduct complex128
-		for i := 0; i < vectorA.Len(); i++ {
-			complexProduct += vectorA.Get(i).Complex() * vectorB.Get(i).Complex()
-		}
-		product = gcv.MakeValue(complexProduct)
-	} else {
-		var floatProduct float64
-		for i := 0; i < vectorA.Len(); i++ {
-			floatProduct += vectorA.Get(i).Real() * vectorB.Get(i).Real()
-		}
-		product = gcv.MakeValue(floatProduct)
+	for i := 0; i < vectorA.Len(); i++ {
+		product = gcvops.Add(product, gcvops.Mult(vectorA.Get(i), vectorB.Get(i)))
 	}
 
 	return product, nil
@@ -82,18 +67,9 @@ func OuterProduct(vectorA v.Vector, vectorB v.Vector) (m.Matrix, error) {
 
 	matrix := m.NewMatrix(vectorA.Len(), vectorB.Len())
 
-	matrixType := matrix.Type()
-	if vectorA.Type() == gcv.Complex || vectorB.Type() == gcv.Complex {
-		matrixType = gcv.Complex
-	}
-
 	for i := 0; i < vectorA.Len(); i++ {
 		for j := 0; j < vectorB.Len(); j++ {
-			if matrixType == gcv.Complex {
-				matrix.Set(i, j, gcv.MakeValue(vectorA.Get(i).Complex()*vectorB.Get(j).Complex()))
-				continue
-			}
-			matrix.Set(i, j, gcv.MakeValue(vectorA.Get(i).Real()*vectorB.Get(j).Real()))
+			matrix.Set(i, j, gcvops.Mult(vectorA.Get(i), vectorB.Get(j)))
 		}
 	}
 
@@ -112,14 +88,8 @@ func Addition(vectorA v.Vector, vectorB v.Vector) (v.Vector, error) {
 
 	vector := v.NewVector(vectorA.Space(), vectorA.Len())
 
-	if vectorA.Elements().Type() == gcv.Complex || vectorB.Elements().Type() == gcv.Complex {
-		for i := 0; i < vectorA.Len(); i++ {
-			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Complex()+vectorB.Get(i).Complex()))
-		}
-	} else {
-		for i := 0; i < vectorA.Len(); i++ {
-			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Real()+vectorB.Get(i).Real()))
-		}
+	for i := 0; i < vectorA.Len(); i++ {
+		vector.Set(i, gcvops.Add(vectorA.Get(i), vectorB.Get(i)))
 	}
 
 	return vector, nil
@@ -136,15 +106,8 @@ func Subtraction(vectorA v.Vector, vectorB v.Vector) (v.Vector, error) {
 	}
 
 	vector := v.NewVector(vectorA.Space(), vectorA.Len())
-
-	if vectorA.Elements().Type() == gcv.Complex || vectorB.Elements().Type() == gcv.Complex {
-		for i := 0; i < vectorA.Len(); i++ {
-			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Complex()-vectorB.Get(i).Complex()))
-		}
-	} else {
-		for i := 0; i < vectorA.Len(); i++ {
-			vector.Set(i, gcv.MakeValue(vectorA.Get(i).Real()-vectorB.Get(i).Real()))
-		}
+	for i := 0; i < vectorA.Len(); i++ {
+		vector.Set(i, gcvops.Sub(vectorA.Get(i), vectorB.Get(i)))
 	}
 
 	return vector, nil

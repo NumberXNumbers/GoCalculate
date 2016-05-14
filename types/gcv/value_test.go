@@ -81,6 +81,14 @@ func TestMakeValueSetValueTypePrint(t *testing.T) {
 	if valueTestG.Type() != Complex {
 		t.Fail()
 	}
+
+	valueTestH := NewValue()
+	value := MakeValue(complexTestValueA)
+	valueTestH.SetValue(value)
+
+	if valueTestH.Type() != Complex {
+		t.Fail()
+	}
 }
 
 func TestRealImagValue(t *testing.T) {

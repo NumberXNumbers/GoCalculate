@@ -17,8 +17,8 @@ func TestMatrixScalarMulti(t *testing.T) {
 	testScalarA := gcv.MakeValue(2.0)
 	testScalarB := gcv.MakeValue(2 + 1i)
 
-	resultMatrixA := ScalarMultiplication(testScalarA, testMatrix)
-	resultMatrixB := ScalarMultiplication(testScalarB, testMatrix)
+	resultMatrixA := SMult(testScalarA, testMatrix)
+	resultMatrixB := SMult(testScalarB, testMatrix)
 
 	if !reflect.DeepEqual(resultMatrixA.Get(0, 0), gcv.MakeValue(2.0)) ||
 		!reflect.DeepEqual(resultMatrixA.Get(0, 1), gcv.MakeValue(4.0)) ||
@@ -35,12 +35,12 @@ func TestMatrixScalarMulti(t *testing.T) {
 	}
 }
 
-func TestMatrixMultiSimple(t *testing.T) {
+func TestMatrixMultSimple(t *testing.T) {
 	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0))
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
 	testMatrixA := m.MakeMatrix(testVectorAa, testVectorAb)
 
-	resultMatrixA, errA := MultiplicationSimple(testMatrixA, testMatrixA)
+	resultMatrixA, errA := MultSimple(testMatrixA, testMatrixA)
 
 	if errA != nil {
 		t.Fail()
@@ -57,7 +57,7 @@ func TestMatrixMultiSimple(t *testing.T) {
 	testVectorBb := v.MakeVector(v.RowSpace, gcv.MakeValue(0+0i), gcv.MakeValue(2+0i))
 	testMatrixB := m.MakeMatrix(testVectorBa, testVectorBb)
 
-	resultMatrixB, errB := MultiplicationSimple(testMatrixB, testMatrixB)
+	resultMatrixB, errB := MultSimple(testMatrixB, testMatrixB)
 
 	if errB != nil {
 		t.Fail()
@@ -74,7 +74,7 @@ func TestMatrixMultiSimple(t *testing.T) {
 	testVectorCb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
 	testMatrixC := m.MakeMatrix(testVectorCa, testVectorCb)
 
-	_, errC := MultiplicationSimple(testMatrixC, testMatrixC)
+	_, errC := MultSimple(testMatrixC, testMatrixC)
 
 	if errC == nil {
 		t.Fail()
@@ -84,7 +84,7 @@ func TestMatrixMultiSimple(t *testing.T) {
 	testVectorDb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(1))
 	testMatrixD := m.MakeMatrix(testVectorDa, testVectorDb)
 
-	resultMatrixD, errD := MultiplicationSimple(testMatrixD, testMatrixD)
+	resultMatrixD, errD := MultSimple(testMatrixD, testMatrixD)
 
 	if errD != nil {
 		t.Fail()
@@ -96,6 +96,19 @@ func TestMatrixMultiSimple(t *testing.T) {
 		!reflect.DeepEqual(resultMatrixD.Get(1, 1), gcv.MakeValue(1)) {
 		t.Error("Failure: Test 1")
 	}
+
+	resultMatrixE, errE := MultSimple(testMatrixA, testMatrixD)
+
+	if errE != nil {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual(resultMatrixE.Get(0, 0), gcv.MakeValue(2)) ||
+		!reflect.DeepEqual(resultMatrixE.Get(0, 1), gcv.MakeValue(0)) ||
+		!reflect.DeepEqual(resultMatrixE.Get(1, 0), gcv.MakeValue(0)) ||
+		!reflect.DeepEqual(resultMatrixE.Get(1, 1), gcv.MakeValue(2)) {
+		t.Error("Failure: Test 1")
+	}
 }
 
 func TestMatrixAddition(t *testing.T) {
@@ -103,7 +116,7 @@ func TestMatrixAddition(t *testing.T) {
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
 	testMatrixA := m.MakeMatrix(testVectorAa, testVectorAb)
 
-	resultMatrixA, errA := Addition(testMatrixA, testMatrixA)
+	resultMatrixA, errA := Add(testMatrixA, testMatrixA)
 
 	if errA != nil {
 		t.Fail()
@@ -120,7 +133,7 @@ func TestMatrixAddition(t *testing.T) {
 	testVectorBb := v.MakeVector(v.RowSpace, gcv.MakeValue(0+0i), gcv.MakeValue(2+0i))
 	testMatrixB := m.MakeMatrix(testVectorBa, testVectorBb)
 
-	resultMatrixB, errB := Addition(testMatrixB, testMatrixB)
+	resultMatrixB, errB := Add(testMatrixB, testMatrixB)
 
 	if errB != nil {
 		t.Fail()
@@ -137,7 +150,7 @@ func TestMatrixAddition(t *testing.T) {
 	testVectorCb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
 	testMatrixC := m.MakeMatrix(testVectorCa, testVectorCb)
 
-	_, errC := Addition(testMatrixA, testMatrixC)
+	_, errC := Add(testMatrixA, testMatrixC)
 
 	if errC == nil {
 		t.Fail()
@@ -149,7 +162,7 @@ func TestMatrixSubtraction(t *testing.T) {
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
 	testMatrixA := m.MakeMatrix(testVectorAa, testVectorAb)
 
-	resultMatrixA, errA := Subtraction(testMatrixA, testMatrixA)
+	resultMatrixA, errA := Sub(testMatrixA, testMatrixA)
 
 	if errA != nil {
 		t.Fail()
@@ -166,7 +179,7 @@ func TestMatrixSubtraction(t *testing.T) {
 	testVectorBb := v.MakeVector(v.RowSpace, gcv.MakeValue(0+0i), gcv.MakeValue(2+0i))
 	testMatrixB := m.MakeMatrix(testVectorBa, testVectorBb)
 
-	resultMatrixB, errB := Subtraction(testMatrixB, testMatrixB)
+	resultMatrixB, errB := Sub(testMatrixB, testMatrixB)
 
 	if errB != nil {
 		t.Fail()
@@ -183,7 +196,7 @@ func TestMatrixSubtraction(t *testing.T) {
 	testVectorCb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
 	testMatrixC := m.MakeMatrix(testVectorCa, testVectorCb)
 
-	_, errC := Subtraction(testMatrixA, testMatrixC)
+	_, errC := Sub(testMatrixA, testMatrixC)
 
 	if errC == nil {
 		t.Fail()
