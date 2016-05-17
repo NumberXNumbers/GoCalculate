@@ -175,7 +175,7 @@ func MakeMatrixAlt(elements v.Vectors) Matrix {
 
 // MakeMatrix returns a new matrix. takes individual vectors as args
 func MakeMatrix(elements ...v.Vector) Matrix {
-	vectors := v.MakeVectors(v.RowSpace, elements...)
+	vectors := v.MakeVectorsAlt(v.RowSpace, elements)
 	matrix := MakeMatrixAlt(vectors)
 	return matrix
 }

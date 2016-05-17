@@ -36,7 +36,7 @@ func TestReversePolishCalculator(t *testing.T) {
 	}
 
 	if testValueA.Real() != 7.0 {
-		t.Errorf("Expect %d, received %v", 7, testValueA)
+		t.Errorf("Expect %d, received %v", 7, testValueA.Real())
 	}
 
 	if errB != nil {
@@ -44,7 +44,7 @@ func TestReversePolishCalculator(t *testing.T) {
 	}
 
 	if testValueB.Real() != 4.0 {
-		t.Errorf("Expect %d, received %v", 4, testValueB)
+		t.Errorf("Expect %d, received %v", 4, testValueB.Real())
 	}
 
 	if errC != nil {
@@ -52,7 +52,7 @@ func TestReversePolishCalculator(t *testing.T) {
 	}
 
 	if testValueC.Real() != 2.0 {
-		t.Errorf("Expect %d, received %v", 2, testValueC)
+		t.Errorf("Expect %d, received %v", 2, testValueC.Real())
 	}
 
 	if errD == nil {
@@ -76,15 +76,15 @@ func TestReversePolishCalculator(t *testing.T) {
 	}
 
 	if testValueH.Real() != -0.3863636363636363 {
-		t.Errorf("Expect %d, received %v", 7, testValueH)
+		t.Errorf("Expect %v, received %v", -0.3863636363636363, testValueH.Real())
 	}
 
 	if errI != nil {
 		t.Errorf("Expect there to be no error, received %s", errI)
 	}
 
-	if testValueI.Complex() != -0.08883947766013564+0.01806018430502029i {
-		t.Errorf("Expect %d, received %v", 7, testValueI)
+	if testValueI.Complex() != -0.049265368625230635-0.07610221088954763i {
+		t.Errorf("Expect %v, received %v", -0.049265368625230635-0.07610221088954763i, testValueI.Complex())
 	}
 
 	if errJ != nil {
@@ -92,7 +92,7 @@ func TestReversePolishCalculator(t *testing.T) {
 	}
 
 	if testValueJ.Real() != 1 {
-		t.Errorf("Expect %d, received %v", 7, testValueJ)
+		t.Errorf("Expect %d, received %v", 1, testValueJ.Real())
 	}
 
 	if errK == nil {
@@ -103,8 +103,8 @@ func TestReversePolishCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errL)
 	}
 
-	if testValueL.Complex() != -1.6101653682947104+7.067695654968041i {
-		t.Errorf("Expect %d, received %v", 7, testValueL)
+	if testValueL.Complex() != 12.054709343346778-6.707996187723516i {
+		t.Errorf("Expect %v, received %v", 12.054709343346778-6.707996187723516i, testValueL.Complex())
 	}
 
 	if errM == nil {
