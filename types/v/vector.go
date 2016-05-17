@@ -75,7 +75,7 @@ func (v *vector) Set(index int, val gcv.Value) {
 func (v *vector) Space() Space { return v.space }
 
 // implementation of Type method
-func (v *vector) Type() gcv.Type { return v.elements.Type() }
+func (v *vector) Type() gcv.Type { return v.coreType }
 
 // implementation of Copy method
 func (v *vector) Copy() Vector { return MakeVectorAlt(v.Space(), v.Elements()) }

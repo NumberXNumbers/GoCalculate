@@ -44,7 +44,7 @@ func (v *values) setValues(vals []Value) {
 	v.coreType = Real
 	for index, val := range vals {
 		v.vals[index] = val.Copy()
-		if v.Type() != Complex && v.Type() < val.Type() {
+		if v.Type() < val.Type() {
 			v.coreType = val.Type()
 		}
 	}
@@ -54,7 +54,12 @@ func (v *values) Len() int { return v.length }
 
 func (v *values) Values() []Value { return v.vals }
 
-func (v *values) Set(index int, val Value) { v.vals[index] = val }
+func (v *values) Set(index int, val Value) {
+	if v.Type() < val.Type() {
+		v.coreType = val.Type()
+	}
+	v.vals[index] = val
+}
 
 func (v *values) Get(index int) Value { return v.vals[index] }
 
