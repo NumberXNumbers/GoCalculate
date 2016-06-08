@@ -29,7 +29,7 @@ func ReversePolishCalculator(args []string) (value gcv.Value, err error) {
 			operand1, stack = pop(stack)
 			operand2, stack = pop(stack)
 
-			result, err = calculate(operand2, operand1, argument)
+			result, err = calculateV(operand2, operand1, argument)
 
 			if err != nil {
 				return

@@ -172,9 +172,9 @@ func TestPolishCalculator(t *testing.T) {
 
 func TestInfixCalculator(t *testing.T) {
 	testArgsA := []string{"4", "+", "3"}
-	testArgsB := []string{"5", "*", "(", "2", "-", "1", ")"}
+	testArgsB := []string{"5", "+", "1", "*", "(", "2", "-", "1", ")"}
 	testArgsC := []string{"5", "+", "-"}
-	testArgsD := []string{"5", "*", "(", "2", "-", "(", "1", ")", ")"}
+	testArgsD := []string{"5", "*", "1", "+", "(", "2", "-", "(", "1", ")", ")"}
 	testArgsE := []string{"5", "*", "(", "2", "&", "1", ")"}
 
 	testValueA, errA := InfixCalculator(testArgsA)
@@ -187,16 +187,16 @@ func TestInfixCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errA)
 	}
 
-	if testValueA.Real() != 7.0 {
-		t.Errorf("Expect %d, received %v", 7, testValueA)
+	if testValueA.Real() != 7 {
+		t.Errorf("Expect %d, received %v", 7, testValueA.Real())
 	}
 
 	if errB != nil {
 		t.Errorf("Expect there to be no error, received %s", errB)
 	}
 
-	if testValueB.Real() != 5.0 {
-		t.Errorf("Expect %d, received %v", 4, testValueB)
+	if testValueB.Real() != 6 {
+		t.Errorf("Expect %d, received %v", 6, testValueB.Real())
 	}
 
 	if errC == nil {
@@ -207,8 +207,8 @@ func TestInfixCalculator(t *testing.T) {
 		t.Errorf("Expect there to be no error, received %s", errB)
 	}
 
-	if testValueD.Real() != 5.0 {
-		t.Errorf("Expect %d, received %v", 4, testValueB)
+	if testValueD.Real() != 6 {
+		t.Errorf("Expect %d, received %v", 6, testValueD.Real())
 	}
 
 	if errE == nil {

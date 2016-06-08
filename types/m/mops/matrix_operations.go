@@ -6,9 +6,10 @@ import (
 	"github.com/NumberXNumbers/GoCalculate/types/gcv"
 	"github.com/NumberXNumbers/GoCalculate/types/gcv/gcvops"
 	"github.com/NumberXNumbers/GoCalculate/types/m"
+	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
 
-// SMult is an operation for multiplying a Matrix by a scalar float64 value
+// SMult is an operation for multiplying a Matrix by a scalar Value
 func SMult(scalar gcv.Value, matrix m.Matrix) m.Matrix {
 	newMatrix := matrix.Copy()
 	for i := 0; i < matrix.GetNumRows(); i++ {
@@ -18,6 +19,58 @@ func SMult(scalar gcv.Value, matrix m.Matrix) m.Matrix {
 	}
 
 	return newMatrix
+}
+
+// SDiv will divide a Matrix by a scalar Value
+func SDiv(scalar gcv.Value, matrix m.Matrix) m.Matrix {
+	newMatrix := matrix.Copy()
+	for i := 0; i < matrix.GetNumRows(); i++ {
+		for j := 0; j < matrix.GetNumCols(); j++ {
+			newMatrix.Set(i, j, gcvops.Div(matrix.Get(i, j), scalar))
+		}
+	}
+
+	return newMatrix
+}
+
+// VMMult will multiply a vector V and a matrix M together by V*M
+func VMMult(vector v.Vector, matrix m.Matrix) (v.Vector, error) {
+	if vector.Space() != v.RowSpace {
+		return nil, errors.New("Vector is not in Row Space")
+	}
+	rows, _ := matrix.Dim()
+	if vector.Len() != rows {
+		return nil, errors.New("Vector Length not equal to the number of rows in Matrix")
+	}
+	newVector := vector.Copy()
+	for i := 0; i < matrix.GetNumRows(); i++ {
+		sum := gcv.NewValue()
+		for j := 0; j < matrix.GetNumCols(); j++ {
+			sum = gcvops.Add(sum, gcvops.Mult(vector.Get(j), matrix.Get(j, i)))
+		}
+		newVector.Set(i, sum)
+	}
+	return newVector, nil
+}
+
+// MVMult will multiply a vector V and a matrix M together by M*V
+func MVMult(vector v.Vector, matrix m.Matrix) (v.Vector, error) {
+	if vector.Space() != v.ColSpace {
+		return nil, errors.New("Vector is not in Column Space")
+	}
+	_, cols := matrix.Dim()
+	if vector.Len() != cols {
+		return nil, errors.New("Vector Length not equal to the number of columns in Matrix")
+	}
+	newVector := vector.Copy()
+	for i := 0; i < matrix.GetNumRows(); i++ {
+		sum := gcv.NewValue()
+		for j := 0; j < matrix.GetNumCols(); j++ {
+			sum = gcvops.Add(sum, gcvops.Mult(matrix.Get(i, j), vector.Get(j)))
+		}
+		newVector.Set(i, sum)
+	}
+	return newVector, nil
 }
 
 // MultSimple is an operation that will multiple two matrices of any size (m X k) and (k X n) together

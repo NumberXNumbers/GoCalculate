@@ -9,7 +9,7 @@ import (
 	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
 
-func TestMatrixScalarMulti(t *testing.T) {
+func TestSMult(t *testing.T) {
 	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testMatrix := m.MakeMatrix(testVectorAa, testVectorAb)
@@ -35,7 +35,95 @@ func TestMatrixScalarMulti(t *testing.T) {
 	}
 }
 
-func TestMatrixMultSimple(t *testing.T) {
+func TestVMMult(t *testing.T) {
+	testVectorA := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(1))
+	testMatrix := m.MakeMatrix(testVectorA, testVectorA)
+
+	resultVectorA, errA := VMMult(testVectorA, testMatrix)
+
+	if errA != nil {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual(resultVectorA.Get(0), gcv.MakeValue(2.0)) ||
+		!reflect.DeepEqual(resultVectorA.Get(1), gcv.MakeValue(2.0)) {
+		t.Error("Failure: Test 1")
+	}
+
+	testVectorA.Trans()
+	_, errB := VMMult(testVectorA, testMatrix)
+
+	if errB == nil {
+		t.Fail()
+	}
+
+	testVectorA.Trans()
+	testVectorA.Append(gcv.NewValue())
+	_, errC := VMMult(testVectorA, testMatrix)
+
+	if errC == nil {
+		t.Fail()
+	}
+}
+
+func TestMVMult(t *testing.T) {
+	testVectorA := v.MakeVector(v.ColSpace, gcv.MakeValue(1), gcv.MakeValue(2))
+	testMatrix := m.MakeMatrix(testVectorA, testVectorA)
+
+	resultMatrixA, errA := MVMult(testVectorA, testMatrix)
+
+	if errA != nil {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual(resultMatrixA.Get(0), gcv.MakeValue(5.0)) ||
+		!reflect.DeepEqual(resultMatrixA.Get(1), gcv.MakeValue(5.0)) {
+		t.Error("Failure: Test 1")
+	}
+
+	testVectorA.Trans()
+	_, errB := MVMult(testVectorA, testMatrix)
+
+	if errB == nil {
+		t.Fail()
+	}
+
+	testVectorA.Trans()
+	testVectorA.Append(gcv.NewValue())
+	_, errC := MVMult(testVectorA, testMatrix)
+
+	if errC == nil {
+		t.Fail()
+	}
+}
+
+func TestSDiv(t *testing.T) {
+	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
+	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(2+2i), gcv.MakeValue(2-4i))
+	testMatrixA := m.MakeMatrix(testVectorAa, testVectorAa)
+	testMatrixB := m.MakeMatrix(testVectorAb, testVectorAb)
+
+	testScalar := gcv.MakeValue(2.0)
+
+	resultMatrixA := SDiv(testScalar, testMatrixA)
+	resultMatrixB := SDiv(testScalar, testMatrixB)
+
+	if !reflect.DeepEqual(resultMatrixA.Get(0, 0), gcv.MakeValue(0.5)) ||
+		!reflect.DeepEqual(resultMatrixA.Get(0, 1), gcv.MakeValue(1.0)) ||
+		!reflect.DeepEqual(resultMatrixA.Get(1, 0), gcv.MakeValue(0.5)) ||
+		!reflect.DeepEqual(resultMatrixA.Get(1, 1), gcv.MakeValue(1.0)) {
+		t.Error("Failure: Test 1")
+	}
+
+	if !reflect.DeepEqual(resultMatrixB.Get(0, 0), gcv.MakeValue(1+1i)) ||
+		!reflect.DeepEqual(resultMatrixB.Get(0, 1), gcv.MakeValue(1-2i)) ||
+		!reflect.DeepEqual(resultMatrixB.Get(1, 0), gcv.MakeValue(1+1i)) ||
+		!reflect.DeepEqual(resultMatrixB.Get(1, 1), gcv.MakeValue(1-2i)) {
+		t.Error("Failure: Test 2")
+	}
+}
+
+func TestMultSimple(t *testing.T) {
 	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0))
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
 	testMatrixA := m.MakeMatrix(testVectorAa, testVectorAb)
@@ -111,7 +199,7 @@ func TestMatrixMultSimple(t *testing.T) {
 	}
 }
 
-func TestMatrixAddition(t *testing.T) {
+func TestAdd(t *testing.T) {
 	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0))
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
 	testMatrixA := m.MakeMatrix(testVectorAa, testVectorAb)
@@ -157,7 +245,7 @@ func TestMatrixAddition(t *testing.T) {
 	}
 }
 
-func TestMatrixSubtraction(t *testing.T) {
+func TestSub(t *testing.T) {
 	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0))
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
 	testMatrixA := m.MakeMatrix(testVectorAa, testVectorAb)
