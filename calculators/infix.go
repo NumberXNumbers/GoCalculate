@@ -7,6 +7,17 @@ import (
 	"github.com/NumberXNumbers/GoCalculate/utils"
 )
 
+var (
+	orderOfOperations = map[string]uint{
+		"exp": 3,
+		"*":   2,
+		"x":   2,
+		"/":   2,
+		"+":   1,
+		"-":   1,
+	}
+)
+
 // InfixCalculator will calculate an infix calculation
 func InfixCalculator(args []string) (value gcv.Value, err error) {
 	stack := gcv.MakeValues()
@@ -50,19 +61,37 @@ func InfixCalculator(args []string) (value gcv.Value, err error) {
 			operatorStack = append(operatorStack, arg)
 		}
 
-		if stack.Len() > 1 && len(operatorStack) > 0 {
-			operand1, stack = pop(stack)
-			operand2, stack = pop(stack)
+		if stack.Len() == 3 && len(operatorStack) == 2 {
 
-			operator := operatorStack[0]
-			operatorStack = operatorStack[1:]
-			result, err = calculate(operand2, operand1, operator)
+			if orderOfOperations[operatorStack[0]] >= orderOfOperations[operatorStack[1]] {
+				operand1, stack = dequeue(stack)
+				operand2, stack = dequeue(stack)
 
-			if err != nil {
-				return
+				operator := operatorStack[0]
+				operatorStack = operatorStack[1:]
+				result, err = calculateV(operand1, operand2, operator)
+
+				if err != nil {
+					return
+				}
+
+				stack.Append(result)
+			} else {
+				operand1, stack = pop(stack)
+				operand2, stack = pop(stack)
+
+				operator := operatorStack[1]
+				operatorStack = operatorStack[:1]
+
+				result, err = calculateV(operand2, operand1, operator)
+
+				if err != nil {
+					return
+				}
+
+				stack.Append(result)
 			}
 
-			stack.Append(result)
 		}
 
 		if stack.Len() == 1 && len(operatorStack) > 1 {
@@ -70,6 +99,21 @@ func InfixCalculator(args []string) (value gcv.Value, err error) {
 			return
 		}
 		index++
+	}
+
+	if stack.Len() == 2 && len(operatorStack) == 1 {
+		operand1, stack = dequeue(stack)
+		operand2, stack = dequeue(stack)
+
+		operator := operatorStack[0]
+		operatorStack = operatorStack[1:]
+		result, err = calculateV(operand1, operand2, operator)
+
+		if err != nil {
+			return
+		}
+
+		stack.Append(result)
 	}
 
 	value = stack.Get(0)

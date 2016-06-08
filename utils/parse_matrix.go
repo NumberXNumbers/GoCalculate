@@ -6,7 +6,6 @@ import (
 
 	"github.com/NumberXNumbers/GoCalculate/types/gcv"
 	"github.com/NumberXNumbers/GoCalculate/types/m"
-	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
 
 // StringToMatrixParser takes a string and returns a matrix if string is
@@ -40,29 +39,25 @@ func StringToMatrixParser(s string) (matrix m.Matrix, err error) {
 		mSlice = append(mSlice, strings.Split(subSlice, ","))
 	}
 
-	var vector v.Vector
-	var vectors []v.Vector
+	length := len(mSlice[0])
+	matrix = m.NewMatrix(len(mSlice), length)
 	var value gcv.Value
 
-	length := len(mSlice[0])
 	// vSlice stands for vector string slice
-	for _, vSlice := range mSlice {
+	for indexI, vSlice := range mSlice {
 		if len(vSlice) != length {
 			err = errors.New("Inconsistent lengths")
 			return
 		}
-		vector = v.NewVector(v.RowSpace, length)
-		for index, val := range vSlice {
+		for indexJ, val := range vSlice {
 			value, err = StringToValueParser(val)
 			if err != nil {
 				return
 			}
-			vector.Set(index, value.Copy())
+			matrix.Set(indexI, indexJ, value.Copy())
 		}
-		vectors = append(vectors, vector.Copy())
 	}
 
-	matrix = m.MakeMatrix(vectors...)
 	// fmt.Println(matrix)
 	return
 }

@@ -10,12 +10,12 @@ import (
 	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
 
-func TestVectorScalarMulti(t *testing.T) {
+func TestSMult(t *testing.T) {
 	testVector := v.MakeVector(v.ColSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 
 	testScalar := gcv.MakeValue(2.0 + 1i)
 
-	resultVector := ScalarMultiplication(testScalar, testVector)
+	resultVector := SMult(testScalar, testVector)
 
 	if !reflect.DeepEqual(resultVector.Get(0), gcv.MakeValue(2+1i)) ||
 		!reflect.DeepEqual(resultVector.Get(1), gcv.MakeValue(4+2i)) ||
@@ -24,10 +24,24 @@ func TestVectorScalarMulti(t *testing.T) {
 	}
 }
 
-func TestVectorAddition(t *testing.T) {
+func TestSDiv(t *testing.T) {
+	testVector := v.MakeVector(v.ColSpace, gcv.MakeValue(1), gcv.MakeValue(2))
+
+	testScalar := gcv.MakeValue(2.0)
+
+	resultVector := SDiv(testScalar, testVector)
+
+	if !reflect.DeepEqual(resultVector.Get(0), gcv.MakeValue(0.5)) ||
+		!reflect.DeepEqual(resultVector.Get(1), gcv.MakeValue(1)) ||
+		resultVector.Space() != v.ColSpace {
+		t.Fail()
+	}
+}
+
+func TestAdd(t *testing.T) {
 	testVectorA := v.MakeVector(v.ColSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 
-	resultVectorA, errA := Addition(testVectorA, testVectorA)
+	resultVectorA, errA := Add(testVectorA, testVectorA)
 
 	if errA != nil {
 		t.Fail()
@@ -41,7 +55,7 @@ func TestVectorAddition(t *testing.T) {
 
 	testVectorB := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2+1i))
 
-	resultVectorB, errB := Addition(testVectorB, testVectorB)
+	resultVectorB, errB := Add(testVectorB, testVectorB)
 
 	if errB != nil {
 		t.Fail()
@@ -57,7 +71,7 @@ func TestVectorAddition(t *testing.T) {
 
 	testVectorCb := v.MakeVector(v.ColSpace, gcv.MakeValue(1), gcv.MakeValue(2+1i))
 
-	_, errC := Addition(testVectorCa, testVectorCb)
+	_, errC := Add(testVectorCa, testVectorCb)
 
 	if errC == nil {
 		t.Error("Expected error")
@@ -66,17 +80,17 @@ func TestVectorAddition(t *testing.T) {
 	testVectorDa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2), gcv.MakeValue(3))
 	testVectorDb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2+1i))
 
-	_, errD := Addition(testVectorDa, testVectorDb)
+	_, errD := Add(testVectorDa, testVectorDb)
 
 	if errD == nil {
 		t.Error("Expected error")
 	}
 }
 
-func TestVectorSubtraction(t *testing.T) {
+func TestSub(t *testing.T) {
 	testVectorA := v.MakeVector(v.ColSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 
-	resultVectorA, errA := Subtraction(testVectorA, testVectorA)
+	resultVectorA, errA := Sub(testVectorA, testVectorA)
 
 	if errA != nil {
 		t.Fail()
@@ -91,7 +105,7 @@ func TestVectorSubtraction(t *testing.T) {
 
 	testVectorB := v.MakeVector(v.RowSpace, gcv.MakeValue(1+1i), gcv.MakeValue(2+1i))
 
-	resultVectorB, errB := Subtraction(testVectorB, testVectorB)
+	resultVectorB, errB := Sub(testVectorB, testVectorB)
 
 	if errB != nil {
 		t.Fail()
@@ -107,7 +121,7 @@ func TestVectorSubtraction(t *testing.T) {
 	testVectorCa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testVectorCb := v.MakeVector(v.ColSpace, gcv.MakeValue(1), gcv.MakeValue(2+1i))
 
-	_, errC := Subtraction(testVectorCa, testVectorCb)
+	_, errC := Sub(testVectorCa, testVectorCb)
 
 	if errC == nil {
 		t.Error("Expected error")
@@ -116,7 +130,7 @@ func TestVectorSubtraction(t *testing.T) {
 	testVectorDa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2), gcv.MakeValue(3))
 	testVectorDb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2+1i))
 
-	_, errD := Subtraction(testVectorDa, testVectorDb)
+	_, errD := Sub(testVectorDa, testVectorDb)
 
 	if errD == nil {
 		t.Error("Expected error")
@@ -174,7 +188,7 @@ func TestInnerProduct(t *testing.T) {
 	}
 }
 
-func TestAngleTheta(t *testing.T) {
+func TestAcos(t *testing.T) {
 	testElementsAa := gcv.MakeValues(gcv.MakeValue(1), gcv.MakeValue(0))
 	testElementsAb := gcv.MakeValues(gcv.MakeValue(0), gcv.MakeValue(1))
 	testVectorAa := v.MakeVectorAlt(v.RowSpace, testElementsAa)
@@ -182,7 +196,7 @@ func TestAngleTheta(t *testing.T) {
 
 	solutionA := gcv.MakeValue(float64(math.Pi / float64(2)))
 
-	resultA, errA := AngleTheta(testVectorAa, testVectorAb)
+	resultA, errA := Acos(testVectorAa, testVectorAb)
 
 	if errA != nil {
 		t.Fail()
@@ -197,7 +211,7 @@ func TestAngleTheta(t *testing.T) {
 
 	solutionB := gcv.MakeValue(complex128(math.Pi / complex128(2)))
 
-	resultB, errB := AngleTheta(testVectorBa, testVectorBb)
+	resultB, errB := Acos(testVectorBa, testVectorBb)
 
 	if errB != nil {
 		t.Fail()
@@ -210,7 +224,7 @@ func TestAngleTheta(t *testing.T) {
 	testVectorCa := v.MakeVectorAlt(v.ColSpace, testElementsAa)
 	testVectorCb := v.MakeVectorAlt(v.RowSpace, testElementsAb)
 
-	_, errC := AngleTheta(testVectorCa, testVectorCb)
+	_, errC := Acos(testVectorCa, testVectorCb)
 
 	if errC == nil {
 		t.Error("Expected error")
@@ -219,7 +233,7 @@ func TestAngleTheta(t *testing.T) {
 	testVectorDa := v.MakeVector(v.RowSpace, gcv.MakeValue(1+1i), gcv.MakeValue(2+1i))
 	testVectorDb := v.MakeVector(v.ColSpace, gcv.MakeValue(1-1i), gcv.MakeValue(2-1i), gcv.MakeValue(3-1i))
 
-	_, errD := AngleTheta(testVectorDa, testVectorDb)
+	_, errD := Acos(testVectorDa, testVectorDb)
 
 	if errD == nil {
 		t.Error("Expected error")
@@ -227,7 +241,7 @@ func TestAngleTheta(t *testing.T) {
 
 	testVectorE := v.NewVector(v.ColSpace, 2)
 
-	_, errE := AngleTheta(testVectorE, testVectorE)
+	_, errE := Acos(testVectorE, testVectorE)
 
 	if errE == nil {
 		t.Error("Expected error")

@@ -9,8 +9,8 @@ import (
 	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
 
-// ScalarMultiplication multiplies a real vector by a scalar
-func ScalarMultiplication(scalar gcv.Value, vector v.Vector) v.Vector {
+// SMult multiplies a real vector by a scalar
+func SMult(scalar gcv.Value, vector v.Vector) v.Vector {
 	newVector := v.NewVector(vector.Space(), vector.Len())
 	for i := 0; i < vector.Len(); i++ {
 		newVector.Set(i, gcv.MakeValue(scalar.Complex()*vector.Get(i).Complex()))
@@ -19,8 +19,17 @@ func ScalarMultiplication(scalar gcv.Value, vector v.Vector) v.Vector {
 	return newVector
 }
 
-// AngleTheta returns the angle theta between Vector A and Vector B using the dot product
-func AngleTheta(vectorA v.Vector, vectorB v.Vector) (gcv.Value, error) {
+// SDiv will divide a vector by a scalar
+func SDiv(scalar gcv.Value, vector v.Vector) v.Vector {
+	newVector := vector.Copy()
+	for i := 0; i < newVector.Len(); i++ {
+		newVector.Set(i, gcvops.Div(vector.Get(i), scalar))
+	}
+	return newVector
+}
+
+// Acos returns the angle theta between Vector A and Vector B using the dot product
+func Acos(vectorA v.Vector, vectorB v.Vector) (gcv.Value, error) {
 	normA := vectorA.Norm()
 	normB := vectorB.Norm()
 	var theta gcv.Value
@@ -76,8 +85,8 @@ func OuterProduct(vectorA v.Vector, vectorB v.Vector) (m.Matrix, error) {
 	return matrix, nil
 }
 
-// Addition adds two real vectors together
-func Addition(vectorA v.Vector, vectorB v.Vector) (v.Vector, error) {
+// Add adds two real vectors together
+func Add(vectorA v.Vector, vectorB v.Vector) (v.Vector, error) {
 	if vectorA.Space() != vectorB.Space() {
 		return nil, errors.New("Vectors are not of same type. Must be both be either column vectors or row vectors")
 	}
@@ -95,8 +104,8 @@ func Addition(vectorA v.Vector, vectorB v.Vector) (v.Vector, error) {
 	return vector, nil
 }
 
-// Subtraction subtracts two real vectors together
-func Subtraction(vectorA v.Vector, vectorB v.Vector) (v.Vector, error) {
+// Sub subtracts two real vectors together
+func Sub(vectorA v.Vector, vectorB v.Vector) (v.Vector, error) {
 	if vectorA.Space() != vectorB.Space() {
 		return nil, errors.New("Vectors are not of same type. Must be both be either column vectors or row vectors")
 	}

@@ -11,6 +11,10 @@ func pop(stack gcv.Values) (gcv.Value, gcv.Values) {
 	return stack.Get(stack.Len() - 1), stack.Subset(0, stack.Len()-2)
 }
 
+func dequeue(stack gcv.Values) (gcv.Value, gcv.Values) {
+	return stack.Get(0), stack.Subset(1, stack.Len()-1)
+}
+
 const (
 	add    = "+"
 	sub    = "-"
@@ -22,7 +26,8 @@ const (
 	mod    = "%"
 )
 
-func calculate(firstValue, secondValue gcv.Value, s string) (result gcv.Value, err error) {
+// calculateV will calculate two values together
+func calculateV(firstValue, secondValue gcv.Value, s string) (result gcv.Value, err error) {
 	switch s {
 	case add:
 		result = gcvops.Add(firstValue, secondValue)
