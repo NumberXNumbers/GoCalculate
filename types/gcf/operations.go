@@ -114,12 +114,9 @@ func Mult(constA Const, constB Const) Const {
 		}
 		return MakeConst(vector)
 	}
-	if constA.Type() == Matrix && constB.Type() == Matrix {
-		matrix, err := mops.MultSimple(constA.Matrix(), constB.Matrix())
-		if err != nil {
-			panic(err)
-		}
-		return MakeConst(matrix)
+	matrix, err := mops.MultSimple(constA.Matrix(), constB.Matrix())
+	if err != nil {
+		panic(err)
 	}
-	panic("One or More Types are incorrect")
+	return MakeConst(matrix)
 }

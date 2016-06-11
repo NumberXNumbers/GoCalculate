@@ -23,9 +23,10 @@ func calcErr(method string, e error) {
 // This will hold code to calculate using infix, prefix or postfix notation
 var calcCmd = &cobra.Command{
 	Use:   "calculator",
-	Short: "Simple calculator tool for simple calculations",
+	Short: "Simple sample calculator tool for simple calculations",
 	Long: `Simple calculator tool for simple calculations.
-    Requires sub-commands infix, postfix or prefix`,
+    Requires sub-commands infix, postfix or prefix.
+	The purpose for this tool is to show what GoCalculate can do`,
 }
 
 var infixCmd = &cobra.Command{

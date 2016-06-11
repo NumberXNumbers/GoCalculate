@@ -8,11 +8,13 @@ import (
 )
 
 var (
+	// C style order of opertations. Mod is of same level as multiplication and division
 	orderOfOperations = map[string]uint{
 		"exp": 3,
 		"*":   2,
 		"x":   2,
 		"/":   2,
+		"%":   2,
 		"+":   1,
 		"-":   1,
 	}
@@ -20,7 +22,7 @@ var (
 
 // InfixCalculator will calculate an infix calculation
 func InfixCalculator(args []string) (value gcv.Value, err error) {
-	stack := gcv.MakeValues()
+	operandStack := gcv.MakeValues()
 	var operatorStack []string
 	var operand1 gcv.Value
 	var operand2 gcv.Value
@@ -36,7 +38,7 @@ func InfixCalculator(args []string) (value gcv.Value, err error) {
 	for index < len(args) {
 		arg = args[index]
 		if v, e := utils.StringToValueParser(arg); e == nil {
-			stack.Append(v)
+			operandStack.Append(v)
 		} else if arg == "(" {
 			leftParens++
 			for i := index + 1; i < len(args); i++ {
@@ -56,16 +58,21 @@ func InfixCalculator(args []string) (value gcv.Value, err error) {
 			if err != nil {
 				return
 			}
-			stack.Append(result)
+			operandStack.Append(result)
 		} else {
 			operatorStack = append(operatorStack, arg)
 		}
 
-		if stack.Len() == 3 && len(operatorStack) == 2 {
+		if len(operatorStack) > operandStack.Len() || operandStack.Len() > len(operatorStack)+1 {
+			err = errors.New("Operators-Operand mismatch error")
+			return
+		}
+
+		if operandStack.Len() == 3 && len(operatorStack) == 2 {
 
 			if orderOfOperations[operatorStack[0]] >= orderOfOperations[operatorStack[1]] {
-				operand1, stack = dequeue(stack)
-				operand2, stack = dequeue(stack)
+				operand1, operandStack = dequeue(operandStack)
+				operand2, operandStack = dequeue(operandStack)
 
 				operator := operatorStack[0]
 				operatorStack = operatorStack[1:]
@@ -75,10 +82,10 @@ func InfixCalculator(args []string) (value gcv.Value, err error) {
 					return
 				}
 
-				stack.Append(result)
+				operandStack.Append(result)
 			} else {
-				operand1, stack = pop(stack)
-				operand2, stack = pop(stack)
+				operand1, operandStack = pop(operandStack)
+				operand2, operandStack = pop(operandStack)
 
 				operator := operatorStack[1]
 				operatorStack = operatorStack[:1]
@@ -89,21 +96,17 @@ func InfixCalculator(args []string) (value gcv.Value, err error) {
 					return
 				}
 
-				stack.Append(result)
+				operandStack.Append(result)
 			}
 
 		}
 
-		if stack.Len() == 1 && len(operatorStack) > 1 {
-			err = errors.New("IndexOutOfBoundsException")
-			return
-		}
 		index++
 	}
 
-	if stack.Len() == 2 && len(operatorStack) == 1 {
-		operand1, stack = dequeue(stack)
-		operand2, stack = dequeue(stack)
+	if operandStack.Len() == 2 && len(operatorStack) == 1 {
+		operand1, operandStack = dequeue(operandStack)
+		operand2, operandStack = dequeue(operandStack)
 
 		operator := operatorStack[0]
 		operatorStack = operatorStack[1:]
@@ -113,9 +116,9 @@ func InfixCalculator(args []string) (value gcv.Value, err error) {
 			return
 		}
 
-		stack.Append(result)
+		operandStack.Append(result)
 	}
 
-	value = stack.Get(0)
+	value = operandStack.Get(0)
 	return
 }

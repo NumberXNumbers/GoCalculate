@@ -84,6 +84,11 @@ func evalHelper(f *Function, inputs ...interface{}) Const {
 				operatorStack = append(operatorStack, f.getOp(i))
 			}
 		}
+
+		if len(operatorStack) > len(operandStack) || len(operandStack) > len(operatorStack)+1 {
+			panic("Operators-Operand mismatch error")
+		}
+
 		if len(operandStack) == 3 && len(operatorStack) == 2 {
 			var operand1 Const
 			var operand2 Const
@@ -96,10 +101,7 @@ func evalHelper(f *Function, inputs ...interface{}) Const {
 				operator = operatorStack[0]
 				operatorStack = operatorStack[1:]
 
-				h, ok := binaryFuncs[operator]
-				if ok && i == 0 {
-					panic("Binary Function at index 1")
-				}
+				h := binaryFuncs[operator]
 
 				result := h(operand1, operand2)
 
@@ -112,20 +114,13 @@ func evalHelper(f *Function, inputs ...interface{}) Const {
 				operator = operatorStack[1]
 				operatorStack = operatorStack[:1]
 
-				h, ok := binaryFuncs[operator]
-				if ok && i == 0 {
-					panic("Binary Function at index 1")
-				}
+				h := binaryFuncs[operator]
 
 				result := h(operand1, operand2)
 
 				operandStack = append(operandStack, result)
 			}
 
-		}
-
-		if len(operandStack) == 1 && len(operatorStack) > 1 {
-			panic("Index Out Of Bounds Exception")
 		}
 
 		i++
@@ -137,10 +132,7 @@ func evalHelper(f *Function, inputs ...interface{}) Const {
 
 		operator := operatorStack[0]
 
-		h, ok := binaryFuncs[operator]
-		if ok && i == 0 {
-			panic("Binary Function at index 1")
-		}
+		h := binaryFuncs[operator]
 
 		return h(operand1, operand2)
 	}
