@@ -176,12 +176,16 @@ func TestInfixCalculator(t *testing.T) {
 	testArgsC := []string{"5", "+", "-"}
 	testArgsD := []string{"5", "*", "1", "+", "(", "2", "-", "(", "1", ")", ")"}
 	testArgsE := []string{"5", "*", "(", "2", "&", "1", ")"}
+	testArgsF := []string{"5", "+", "2", "%", "10+2i"}
+	testArgsG := []string{"5", "%", "10+2i", "+", "2"}
 
 	testValueA, errA := InfixCalculator(testArgsA)
 	testValueB, errB := InfixCalculator(testArgsB)
 	_, errC := InfixCalculator(testArgsC)
 	testValueD, errD := InfixCalculator(testArgsD)
 	_, errE := InfixCalculator(testArgsE)
+	_, errF := InfixCalculator(testArgsF)
+	_, errG := InfixCalculator(testArgsG)
 
 	if errA != nil {
 		t.Errorf("Expect there to be no error, received %s", errA)
@@ -212,6 +216,14 @@ func TestInfixCalculator(t *testing.T) {
 	}
 
 	if errE == nil {
+		t.Fail()
+	}
+
+	if errF == nil {
+		t.Fail()
+	}
+
+	if errG == nil {
 		t.Fail()
 	}
 }
