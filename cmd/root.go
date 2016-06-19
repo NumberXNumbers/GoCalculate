@@ -28,7 +28,7 @@ func Execute() {
 	}
 }
 
-// AddCommands adds child commands to the root command GoCalulateCmd.
+// AddCommands adds child commands to the root command GoCalculateCmd.
 func AddCommands() {
 	GoCalculateCmd.AddCommand(calcCmd)
 }

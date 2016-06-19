@@ -1,6 +1,6 @@
 package gcv
 
-// Values works as GoCalulate's main list of values
+// Values works as GoCalculate's main list of values
 type Values interface {
 	// Returns the index of val. If val is not in Values it returns -1.
 	IndexOf(val Value) int

@@ -115,6 +115,61 @@ func TestFn6(t *testing.T) {
 	}
 }
 
+func TestCalculateA(t *testing.T) {
+	matrixA := m.NewIdentityMatrix(3)
+	matrixB := m.NewIdentityMatrix(3)
+	vectorA := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	calculation := Calculate(vectorA, "*", "(", matrixA, "+", "(", matrixB, "*", MakeConst(2), "-", matrixA, ")", "/", 2, ")", "-", vectorB, "/", gcv.MakeValue(2))
+	if calculation.Vector().Get(0).Real() != 2 ||
+		calculation.Vector().Get(1).Real() != 4 ||
+		calculation.Vector().Get(2).Real() != 6 {
+		t.Fail()
+	}
+}
+
+func TestCalculateB(t *testing.T) {
+	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	calculation := Calculate("(", MakeConst(2), ")", "*", vectorB)
+	if calculation.Vector().Get(0).Real() != 4 ||
+		calculation.Vector().Get(1).Real() != 8 ||
+		calculation.Vector().Get(2).Real() != 12 {
+		t.Fail()
+	}
+}
+
+func TestCalculatePanicOperatorsOperandMismatch(t *testing.T) {
+	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	calculation := Calculate("(", MakeConst(2), ")", ")", "*", vectorB)
+
+	if calculation != nil {
+		t.Error("Expected Panic")
+	}
+}
+
+func TestCalculatePanicUnsupportedType(t *testing.T) {
+	vectorB := NewVar(Vector)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	calculation := Calculate("(", MakeConst(2), ")", "*", vectorB)
+
+	if calculation != nil {
+		t.Error("Expected Panic")
+	}
+}
+
 func TestPanicAddVector(t *testing.T) {
 	v1 := MakeConst(v.NewVector(v.RowSpace, 3))
 	v2 := MakeConst(v.NewVector(v.ColSpace, 3))

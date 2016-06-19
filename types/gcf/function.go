@@ -16,6 +16,8 @@ var (
 		"+":   1,
 		"-":   1,
 	}
+	leftParen  = "("
+	rightParen = ")"
 )
 
 // Function is the function type for GoCalculate
@@ -61,13 +63,13 @@ func evalHelper(f *Function, inputs ...interface{}) Const {
 			operandStack = append(operandStack, variable.Eval(inputs[f.varNum[variable]]))
 		} else if f.typeInput(i) == Operation {
 			operation := f.getOp(i)
-			if operation == "(" {
+			if operation == leftParen {
 				var subArgs []interface{}
 				leftParens++
 				for index := i + 1; index < len(f.args); index++ {
-					if f.typeInput(index) == Operation && f.getOp(index) == ")" {
+					if f.typeInput(index) == Operation && f.getOp(index) == rightParen {
 						rightParens++
-					} else if f.typeInput(index) == Operation && f.getOp(index) == "(" {
+					} else if f.typeInput(index) == Operation && f.getOp(index) == leftParen {
 						leftParens++
 					}
 					if rightParens != leftParens {

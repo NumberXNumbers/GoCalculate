@@ -10,7 +10,7 @@ const (
 	Complex
 )
 
-// Value is the main return type for the GoCalulate Framework
+// Value is the main return type for the GoCalculate Framework
 type Value interface {
 	// returns the real part of a value
 	Real() float64

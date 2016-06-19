@@ -48,13 +48,13 @@ type Matrix interface {
 	// Det() (float64, error)
 
 	// TODO Inverse of Matrix. Returns error if there is no inverse
-	// Inv() (MatrixReal, error)
+	// Inv() (Matrix, error)
 
 	// Get element at location (row, col)
 	Get(row int, col int) gcv.Value
 
 	// Set element at location (row, col)
-	Set(row int, col int, value gcv.Value)
+	Set(row int, col int, value interface{})
 }
 
 type matrix struct {
@@ -89,7 +89,9 @@ func (m *matrix) Elements() v.Vectors { return m.elements }
 func (m *matrix) Get(row int, col int) gcv.Value { return m.elements.Get(row).Get(col) }
 
 // implementation of Set method
-func (m *matrix) Set(row int, col int, val gcv.Value) {
+func (m *matrix) Set(row int, col int, value interface{}) {
+	val := gcv.NewValue()
+	val.SetValue(value)
 	if m.Type() < val.Type() {
 		m.coreType = val.Type()
 	}
