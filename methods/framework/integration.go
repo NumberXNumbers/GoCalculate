@@ -25,60 +25,51 @@ func Euler1D(a float64, b float64, N int, initValue float64, f *gcf.Function) gc
 }
 
 // TrapezoidRule is for solving the numerical integration using the trapezoid rule
-func TrapezoidRule(a float64, b float64, N int, f *gcf.Function) gcv.Value {
+func TrapezoidRule(a float64, b float64, f *gcf.Function) gcv.Value {
 	var omega float64
-	h := (b - a) / float64(N)
+	h := (b - a)
 	x := a
 
-	for i := 0; i < N; i++ {
-		omega += f.Eval(x+h).Value().Real() + f.Eval(x).Value().Real()
-		x += h
-	}
+	omega = f.Eval(x+h).Value().Real() + f.Eval(x).Value().Real()
 
 	return gcv.MakeValue(h / 2 * omega)
 }
 
 // SimpsonRule for solving numerical integration
-func SimpsonRule(a float64, b float64, N int, f *gcf.Function) gcv.Value {
+func SimpsonRule(a float64, b float64, f *gcf.Function) gcv.Value {
 	var omega float64
-	h := (b - a) / float64(N)
+	h := (b - a) / 2
 	x := a
 
-	for i := 0; i < N; i++ {
-		omega += f.Eval(x).Value().Real() + 4*f.Eval(x+h).Value().Real() + f.Eval(x+2*h).Value().Real()
-		x += h
-	}
-	return gcv.MakeValue(h / 6 * omega)
+	omega = f.Eval(x).Value().Real() + 4*f.Eval(x+h).Value().Real() + f.Eval(x+2*h).Value().Real()
+
+	return gcv.MakeValue(h / 3 * omega)
 }
 
 // Simpson38Rule is Simpson's 3/8ths rule for solving numerical integration
-func Simpson38Rule(a float64, b float64, N int, f *gcf.Function) gcv.Value {
+func Simpson38Rule(a float64, b float64, f *gcf.Function) gcv.Value {
 	var omega float64
-	h := (b - a) / float64(N)
+	h := (b - a) / 3
 	x := a
 
-	for i := 0; i < N; i++ {
-		omega += f.Eval(x).Value().Real() + 3*f.Eval(x+h).Value().Real() + 3*f.Eval(x+2*h).Value().Real() + f.Eval(x+3*h).Value().Real()
-		x += h
-	}
-	return gcv.MakeValue(h / 8 * omega)
+	omega = f.Eval(x).Value().Real() + 3*f.Eval(x+h).Value().Real() + 3*f.Eval(x+2*h).Value().Real() + f.Eval(x+3*h).Value().Real()
+
+	return gcv.MakeValue(3 * h / 8 * omega)
 }
 
 // BooleRule is Boole's rule for solving numerical integration
-func BooleRule(a float64, b float64, N int, f *gcf.Function) gcv.Value {
+func BooleRule(a float64, b float64, f *gcf.Function) gcv.Value {
 	var omega float64
-	h := (b - a) / float64(N)
+	h := (b - a) / 4
 	x := a
 
-	for i := 0; i < N; i++ {
-		omega += 7*f.Eval(x).Value().Real() +
-			32*f.Eval(x+h).Value().Real() +
-			12*f.Eval(x+2*h).Value().Real() +
-			32*f.Eval(x+3*h).Value().Real() +
-			7*f.Eval(x+4*h).Value().Real()
-		x += h
-	}
-	return gcv.MakeValue(h / 90 * omega)
+	omega = 7*f.Eval(x).Value().Real() +
+		32*f.Eval(x+h).Value().Real() +
+		12*f.Eval(x+2*h).Value().Real() +
+		32*f.Eval(x+3*h).Value().Real() +
+		7*f.Eval(x+4*h).Value().Real()
+
+	return gcv.MakeValue(2 * h / 45 * omega)
 }
 
 // RungeKutta2 or midpoint method returns a solution found using the 2nd order runge-kutta

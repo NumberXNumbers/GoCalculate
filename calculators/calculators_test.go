@@ -1,6 +1,9 @@
 package calculators
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestReversePolishCalculator(t *testing.T) {
 	testArgsA := []string{"4", "3", "+"}
@@ -173,57 +176,85 @@ func TestPolishCalculator(t *testing.T) {
 func TestInfixCalculator(t *testing.T) {
 	testArgsA := []string{"4", "+", "3"}
 	testArgsB := []string{"5", "+", "1", "*", "(", "2", "-", "1", ")"}
-	testArgsC := []string{"5", "+", "-"}
 	testArgsD := []string{"5", "*", "1", "+", "(", "2", "-", "(", "1", ")", ")"}
+
+	testValueA := InfixCalculator(testArgsA)
+	testValueB := InfixCalculator(testArgsB)
+	testValueD := InfixCalculator(testArgsD)
+
+	if testValueA.Value().Real() != 7 {
+		t.Errorf("Expect %d, received %v", 7, testValueA.Value().Real())
+	}
+
+	if testValueB.Value().Real() != 6 {
+		t.Errorf("Expect %d, received %v", 6, testValueB.Value().Real())
+	}
+
+	if testValueD.Value().Real() != 6 {
+		t.Errorf("Expect %d, received %v", 6, testValueD.Value().Real())
+	}
+}
+
+func TestPanicInfixC(t *testing.T) {
+	testArgsC := []string{"5", "+", "-"}
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("InfixCalculator Error: %v\n", r)
+		}
+	}()
+
+	errC := InfixCalculator(testArgsC)
+
+	if errC != nil {
+		t.Error("Expected panic")
+	}
+}
+
+func TestPanicInfixE(t *testing.T) {
 	testArgsE := []string{"5", "*", "(", "2", "&", "1", ")"}
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("InfixCalculator Error: %v\n", r)
+		}
+	}()
+
+	errE := InfixCalculator(testArgsE)
+
+	if errE != nil {
+		t.Error("Expected panic")
+	}
+}
+
+func TestPanicInfixF(t *testing.T) {
 	testArgsF := []string{"5", "+", "2", "%", "10+2i"}
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("InfixCalculator Error: %v\n", r)
+		}
+	}()
+
+	errF := InfixCalculator(testArgsF)
+
+	if errF != nil {
+		t.Error("Expected panic")
+	}
+}
+
+func TestPanicInfixG(t *testing.T) {
 	testArgsG := []string{"5", "%", "10+2i", "+", "2"}
 
-	testValueA, errA := InfixCalculator(testArgsA)
-	testValueB, errB := InfixCalculator(testArgsB)
-	_, errC := InfixCalculator(testArgsC)
-	testValueD, errD := InfixCalculator(testArgsD)
-	_, errE := InfixCalculator(testArgsE)
-	_, errF := InfixCalculator(testArgsF)
-	_, errG := InfixCalculator(testArgsG)
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("InfixCalculator Error: %v\n", r)
+		}
+	}()
 
-	if errA != nil {
-		t.Errorf("Expect there to be no error, received %s", errA)
-	}
+	errG := InfixCalculator(testArgsG)
 
-	if testValueA.Real() != 7 {
-		t.Errorf("Expect %d, received %v", 7, testValueA.Real())
-	}
-
-	if errB != nil {
-		t.Errorf("Expect there to be no error, received %s", errB)
-	}
-
-	if testValueB.Real() != 6 {
-		t.Errorf("Expect %d, received %v", 6, testValueB.Real())
-	}
-
-	if errC == nil {
-		t.Fail()
-	}
-
-	if errD != nil {
-		t.Errorf("Expect there to be no error, received %s", errB)
-	}
-
-	if testValueD.Real() != 6 {
-		t.Errorf("Expect %d, received %v", 6, testValueD.Real())
-	}
-
-	if errE == nil {
-		t.Fail()
-	}
-
-	if errF == nil {
-		t.Fail()
-	}
-
-	if errG == nil {
-		t.Fail()
+	if errG != nil {
+		t.Error("Expected panic")
 	}
 }

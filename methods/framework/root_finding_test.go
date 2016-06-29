@@ -3,12 +3,14 @@ package methods
 import (
 	"math"
 	"testing"
+
+	"github.com/NumberXNumbers/GoCalculate/types/gcf"
 )
 
 func TestBisection1D(t *testing.T) {
-	testFunction := func(x float64) float64 {
-		return math.Pow(x, 3) + 5*math.Pow(x, 2) + x - 5
-	}
+	x := gcf.NewVar(gcf.Value)
+	regVars := []gcf.Var{x}
+	testFunction := gcf.MakeFunc(regVars, x, "^", 3, "+", 5, "*", x, "^", 2, "+", x, "-", 5)
 
 	rootA, errA := Bisection1D(0, 2, math.Pow(10, -4), 100, testFunction)
 
@@ -16,8 +18,8 @@ func TestBisection1D(t *testing.T) {
 		t.Errorf("Unexpected error, %v", errA)
 	}
 
-	if math.Abs(rootA-0.8434) >= math.Pow(10, -4) {
-		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA-0.8434))
+	if math.Abs(rootA.Real()-0.8434) >= math.Pow(10, -4) {
+		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA.Real()-0.8434))
 	}
 
 	_, errB := Bisection1D(0, 2, math.Pow(10, -4), 5, testFunction)
@@ -28,9 +30,9 @@ func TestBisection1D(t *testing.T) {
 }
 
 func TestFixedPointIteration1D(t *testing.T) {
-	testFunction := func(x float64) float64 {
-		return math.Sqrt((5 - x - math.Pow(x, 3)) / 5.0)
-	}
+	x := gcf.NewVar(gcf.Value)
+	regVars := []gcf.Var{x}
+	testFunction := gcf.MakeFunc(regVars, "Sqrt", "(", "(", 5, "-", x, "-", x, "^", 3, ")", "/", 5, ")")
 
 	rootA, errA := FixedPointIteration1D(0.7, math.Pow(10, -4), 100, testFunction)
 
@@ -38,8 +40,8 @@ func TestFixedPointIteration1D(t *testing.T) {
 		t.Errorf("Unexpected error, %v", errA)
 	}
 
-	if math.Abs(rootA-0.8434) >= math.Pow(10, -4) {
-		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA-0.8434))
+	if math.Abs(rootA.Real()-0.8434) >= math.Pow(10, -4) {
+		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA.Real()-0.8434))
 	}
 
 	_, errB := FixedPointIteration1D(0.7, math.Pow(10, -4), 5, testFunction)
@@ -50,13 +52,10 @@ func TestFixedPointIteration1D(t *testing.T) {
 }
 
 func TestNewton1D(t *testing.T) {
-	testFunction := func(x float64) float64 {
-		return math.Pow(x, 3) + 5*math.Pow(x, 2) + x - 5
-	}
-
-	testFunctionD := func(x float64) float64 {
-		return 3*math.Pow(x, 2) + 10*x + 1
-	}
+	x := gcf.NewVar(gcf.Value)
+	regVars := []gcf.Var{x}
+	testFunction := gcf.MakeFunc(regVars, x, "^", 3, "+", 5, "*", x, "^", 2, "+", x, "-", 5)
+	testFunctionD := gcf.MakeFunc(regVars, 3, "*", x, "^", 2, "+", 10, "*", x, "+", 1)
 
 	rootA, errA := Newton1D(0.7, math.Pow(10, -4), 5, testFunction, testFunctionD)
 
@@ -64,8 +63,8 @@ func TestNewton1D(t *testing.T) {
 		t.Errorf("Unexpected error, %v", errA)
 	}
 
-	if math.Abs(rootA-0.8434) >= math.Pow(10, -4) {
-		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA-0.8434))
+	if math.Abs(rootA.Real()-0.8434) >= math.Pow(10, -4) {
+		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA.Real()-0.8434))
 	}
 
 	_, errB := Newton1D(0.7, math.Pow(10, -4), 2, testFunction, testFunctionD)
@@ -76,17 +75,11 @@ func TestNewton1D(t *testing.T) {
 }
 
 func TestModifiedNewton1D(t *testing.T) {
-	testFunction := func(x float64) float64 {
-		return math.Pow(x, 3) + 5*math.Pow(x, 2) + x - 5
-	}
-
-	testFunctionD := func(x float64) float64 {
-		return 3*math.Pow(x, 2) + 10*x + 1
-	}
-
-	testFunctionDD := func(x float64) float64 {
-		return 6*x + 10
-	}
+	x := gcf.NewVar(gcf.Value)
+	regVars := []gcf.Var{x}
+	testFunction := gcf.MakeFunc(regVars, x, "^", 3, "+", 5, "*", x, "^", 2, "+", x, "-", 5)
+	testFunctionD := gcf.MakeFunc(regVars, 3, "*", x, "^", 2, "+", 10, "*", x, "+", 1)
+	testFunctionDD := gcf.MakeFunc(regVars, 6, "*", x, "+", 10)
 
 	rootA, errA := ModifiedNewton1D(0.7, math.Pow(10, -4), 5, testFunction, testFunctionD, testFunctionDD)
 
@@ -94,8 +87,8 @@ func TestModifiedNewton1D(t *testing.T) {
 		t.Errorf("Unexpected error, %v", errA)
 	}
 
-	if math.Abs(rootA-0.8434) >= math.Pow(10, -4) {
-		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA-0.8434))
+	if math.Abs(rootA.Real()-0.8434) >= math.Pow(10, -4) {
+		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA.Real()-0.8434))
 	}
 
 	_, errB := ModifiedNewton1D(0.7, math.Pow(10, -4), 2, testFunction, testFunctionD, testFunctionDD)
@@ -106,9 +99,9 @@ func TestModifiedNewton1D(t *testing.T) {
 }
 
 func TestSecant1D(t *testing.T) {
-	testFunction := func(x float64) float64 {
-		return math.Pow(x, 3) + 5*math.Pow(x, 2) + x - 5
-	}
+	x := gcf.NewVar(gcf.Value)
+	regVars := []gcf.Var{x}
+	testFunction := gcf.MakeFunc(regVars, x, "^", 3, "+", 5, "*", x, "^", 2, "+", x, "-", 5)
 
 	rootA, errA := Secant1D(0.7, 0.75, math.Pow(10, -4), 5, testFunction)
 
@@ -116,8 +109,8 @@ func TestSecant1D(t *testing.T) {
 		t.Errorf("Unexpected error, %v", errA)
 	}
 
-	if math.Abs(rootA-0.8434) >= math.Pow(10, -4) {
-		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA-0.8434))
+	if math.Abs(rootA.Real()-0.8434) >= math.Pow(10, -4) {
+		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA.Real()-0.8434))
 	}
 
 	_, errB := Secant1D(0.7, 0.75, math.Pow(10, -4), 2, testFunction)
@@ -128,9 +121,9 @@ func TestSecant1D(t *testing.T) {
 }
 
 func TestFalsePosition1D(t *testing.T) {
-	testFunction := func(x float64) float64 {
-		return math.Pow(x, 3) + 5*math.Pow(x, 2) + x - 5
-	}
+	x := gcf.NewVar(gcf.Value)
+	regVars := []gcf.Var{x}
+	testFunction := gcf.MakeFunc(regVars, x, "^", 3, "+", 5, "*", x, "^", 2, "+", x, "-", 5)
 
 	rootA, errA := FalsePosition1D(0.7, 0.75, math.Pow(10, -4), 5, testFunction)
 
@@ -138,8 +131,8 @@ func TestFalsePosition1D(t *testing.T) {
 		t.Errorf("Unexpected error, %v", errA)
 	}
 
-	if math.Abs(rootA-0.8434) >= math.Pow(10, -4) {
-		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA-0.8434))
+	if math.Abs(rootA.Real()-0.8434) >= math.Pow(10, -4) {
+		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA.Real()-0.8434))
 	}
 
 	_, errB := FalsePosition1D(0.7, 0.75, math.Pow(10, -4), 2, testFunction)
@@ -150,9 +143,9 @@ func TestFalsePosition1D(t *testing.T) {
 }
 
 func TestSteffensen1D(t *testing.T) {
-	testFunction := func(x float64) float64 {
-		return math.Sqrt((5 - x - math.Pow(x, 3)) / 5.0)
-	}
+	x := gcf.NewVar(gcf.Value)
+	regVars := []gcf.Var{x}
+	testFunction := gcf.MakeFunc(regVars, "Sqrt", "(", "(", 5, "-", x, "-", x, "^", 3, ")", "/", 5, ")")
 
 	rootA, errA := Steffensen1D(0.7, math.Pow(10, -4), 5, testFunction)
 
@@ -160,8 +153,8 @@ func TestSteffensen1D(t *testing.T) {
 		t.Errorf("Unexpected error, %v", errA)
 	}
 
-	if math.Abs(rootA-0.8434) >= math.Pow(10, -4) {
-		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA-0.8434))
+	if math.Abs(rootA.Real()-0.8434) >= math.Pow(10, -4) {
+		t.Errorf("Expected %v, received %v", math.Pow(10, -4), math.Abs(rootA.Real()-0.8434))
 	}
 
 	_, errB := Steffensen1D(0.7, math.Pow(10, -4), 2, testFunction)
