@@ -207,7 +207,7 @@ func Mod(valueA gcv.Value, valueB gcv.Value) (gcv.Value, error) {
 // if either Value is of type Complex an error is returned
 func Floor(value gcv.Value) (gcv.Value, error) {
 	if value.Type() == gcv.Complex {
-		return nil, errors.New("Modulo is not supported for Complex numbers")
+		return nil, errors.New("Floor is not supported for Complex numbers")
 	}
 	return gcv.MakeValue(math.Floor(value.Real())), nil
 }
@@ -216,7 +216,7 @@ func Floor(value gcv.Value) (gcv.Value, error) {
 // if either Value is of type Complex an error is returned
 func Ceil(value gcv.Value) (gcv.Value, error) {
 	if value.Type() == gcv.Complex {
-		return nil, errors.New("Modulo is not supported for Complex numbers")
+		return nil, errors.New("Ceil is not supported for Complex numbers")
 	}
 	return gcv.MakeValue(math.Ceil(value.Real())), nil
 }
@@ -225,7 +225,7 @@ func Ceil(value gcv.Value) (gcv.Value, error) {
 // if either Value is of type Complex an error is returned
 func Max(valueA gcv.Value, valueB gcv.Value) (gcv.Value, error) {
 	if valueA.Type() == gcv.Complex || valueB.Type() == gcv.Complex {
-		return nil, errors.New("Modulo is not supported for Complex numbers")
+		return nil, errors.New("Max is not supported for Complex numbers")
 	}
 	return gcv.MakeValue(math.Max(valueA.Real(), valueB.Real())), nil
 }
@@ -234,7 +234,7 @@ func Max(valueA gcv.Value, valueB gcv.Value) (gcv.Value, error) {
 // if either Value is of type Complex an error is returned
 func Min(valueA gcv.Value, valueB gcv.Value) (gcv.Value, error) {
 	if valueA.Type() == gcv.Complex || valueB.Type() == gcv.Complex {
-		return nil, errors.New("Modulo is not supported for Complex numbers")
+		return nil, errors.New("Min is not supported for Complex numbers")
 	}
 	return gcv.MakeValue(math.Min(valueA.Real(), valueB.Real())), nil
 }
@@ -243,7 +243,7 @@ func Min(valueA gcv.Value, valueB gcv.Value) (gcv.Value, error) {
 // if either Value is of type Complex an error is returned
 func Erf(value gcv.Value) (gcv.Value, error) {
 	if value.Type() == gcv.Complex {
-		return nil, errors.New("Modulo is not supported for Complex numbers")
+		return nil, errors.New("Erf is not supported for Complex numbers")
 	}
 	return gcv.MakeValue(math.Erf(value.Real())), nil
 }

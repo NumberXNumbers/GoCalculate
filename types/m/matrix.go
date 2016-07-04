@@ -44,17 +44,20 @@ type Matrix interface {
 	// Trace of Matrix. Returns error if matrix is not square
 	Tr() (gcv.Value, error)
 
-	// TODO Determinate of Matrix. Returns error is there is no determinate
-	// Det() (float64, error)
+	// Swaps two matrix rows
+	Swap(rowA, rowB int)
+
+	// Returns the Determinate of a matrix or error if matrix is not square.
+	Det() (gcv.Value, error)
 
 	// TODO Inverse of Matrix. Returns error if there is no inverse
-	// Inv() (MatrixReal, error)
+	// Inv() (Matrix, error)
 
 	// Get element at location (row, col)
 	Get(row int, col int) gcv.Value
 
 	// Set element at location (row, col)
-	Set(row int, col int, value gcv.Value)
+	Set(row int, col int, value interface{})
 }
 
 type matrix struct {
@@ -89,7 +92,9 @@ func (m *matrix) Elements() v.Vectors { return m.elements }
 func (m *matrix) Get(row int, col int) gcv.Value { return m.elements.Get(row).Get(col) }
 
 // implementation of Set method
-func (m *matrix) Set(row int, col int, val gcv.Value) {
+func (m *matrix) Set(row int, col int, value interface{}) {
+	val := gcv.NewValue()
+	val.SetValue(value)
 	if m.Type() < val.Type() {
 		m.coreType = val.Type()
 	}
@@ -136,6 +141,49 @@ func (m *matrix) Trans() {
 	m.numRows = transMatrixNumRows
 	m.numCols = transMatrixNumCols
 	m.elements = transMatrixElements
+}
+
+// implementation of Swap
+func (m *matrix) Swap(rowA, rowB int) {
+	vectorA := m.Elements().Get(rowA).Copy()
+	vectorB := m.Elements().Get(rowB).Copy()
+	m.elements.Set(rowA, vectorB)
+	m.elements.Set(rowB, vectorA)
+}
+
+// implementation of Det method
+func (m *matrix) Det() (gcv.Value, error) {
+	if !m.IsSquare() {
+		return nil, errors.New("Matrix is not square")
+	}
+
+	pivots := 0
+	var det gcv.Value
+	rows, cols := m.Dim()
+	for i := 0; i < cols; i++ {
+		for j := i + 1; j < rows; j++ {
+			valueA := m.Get(i, i).Copy()
+			valueB := m.Get(j, i).Copy()
+			if valueA.Real() < valueB.Real() || valueA.Complex() == 0 {
+				m.Swap(i, j)
+				pivots++
+				vector := sub(m.Elements().Get(j), sMult(valueA, sDiv(valueB, m.Elements().Get(i))))
+				m.elements.Set(j, vector)
+			} else {
+				vector := sub(m.Elements().Get(j), sMult(valueB, sDiv(valueA, m.Elements().Get(i))))
+				m.elements.Set(j, vector)
+			}
+		}
+		if i > 1 {
+			det = gcvops.Mult(m.Get(i, i), det)
+		} else if i == 1 {
+			det = gcvops.Mult(m.Get(1, 1), m.Get(0, 0))
+		}
+	}
+	if pivots%2 != 0 {
+		det = gcvops.Mult(gcv.MakeValue(-1), det)
+	}
+	return det, nil
 }
 
 // NewMatrix returns a new matrix of type Matrix

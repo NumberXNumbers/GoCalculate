@@ -36,14 +36,18 @@ var infixCmd = &cobra.Command{
 All inputs must be of the in the prefix notation with spaces between each value and/or operation`,
 	Example: "'GoCalculate calculator infix ( 4 + 3 )' results in 7",
 	Run: func(cmd *cobra.Command, args []string) {
-		value, err := calculators.InfixCalculator(args)
-		if err != nil {
-			calcErr("InfixCalculator", err)
-		}
-		if value.Type() == gcv.Complex {
-			fmt.Println(value.Complex())
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Printf("InfixCalculator Error: %v\n", r)
+			}
+		}()
+
+		value := calculators.InfixCalculator(args)
+
+		if value.Value().Type() == gcv.Complex {
+			fmt.Println(value.Value().Complex())
 		} else {
-			fmt.Println(value.Real())
+			fmt.Println(value.Value().Real())
 		}
 	},
 }
