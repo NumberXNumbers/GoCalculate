@@ -1,4 +1,4 @@
-package utils
+package parsers
 
 import (
 	"errors"
@@ -8,10 +8,10 @@ import (
 	"github.com/NumberXNumbers/GoCalculate/types/m"
 )
 
-// StringToMatrixParser takes a string and returns a matrix if string is
+// Matrix takes a string and returns a matrix if string is
 // of matrix format, else error.
 // Example of matrix format: [1 2 3: 2+2i 2 0: 3.0 2.3 0+3i]
-func StringToMatrixParser(s string) (matrix m.Matrix, err error) {
+func Matrix(s string) (matrix m.Matrix, err error) {
 	if !strings.HasPrefix(s, "[") || !strings.HasSuffix(s, "]") {
 		err = errors.New("String is not of type Matrix")
 		return
@@ -50,7 +50,7 @@ func StringToMatrixParser(s string) (matrix m.Matrix, err error) {
 			return
 		}
 		for indexJ, val := range vSlice {
-			value, err = StringToValueParser(val)
+			value, err = Value(val)
 			if err != nil {
 				return
 			}

@@ -177,10 +177,12 @@ func TestInfixCalculator(t *testing.T) {
 	testArgsA := []string{"4", "+", "3"}
 	testArgsB := []string{"5", "+", "1", "*", "(", "2", "-", "1", ")"}
 	testArgsD := []string{"5", "*", "1", "+", "(", "2", "-", "(", "1", ")", ")"}
+	testArgsH := []string{"Sqrt", "(", "Sin", "1.2", "^", "2", "+", "Cos", "1.2", "^", "2", ")"}
 
 	testValueA := InfixCalculator(testArgsA)
 	testValueB := InfixCalculator(testArgsB)
 	testValueD := InfixCalculator(testArgsD)
+	testValueH := InfixCalculator(testArgsH)
 
 	if testValueA.Value().Real() != 7 {
 		t.Errorf("Expect %d, received %v", 7, testValueA.Value().Real())
@@ -191,6 +193,10 @@ func TestInfixCalculator(t *testing.T) {
 	}
 
 	if testValueD.Value().Real() != 6 {
+		t.Errorf("Expect %d, received %v", 6, testValueD.Value().Real())
+	}
+
+	if testValueH.Value().Real() != 1 {
 		t.Errorf("Expect %d, received %v", 6, testValueD.Value().Real())
 	}
 }

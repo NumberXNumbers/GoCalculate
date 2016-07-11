@@ -1,6 +1,7 @@
 package m
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -185,11 +186,11 @@ func TestMakeConj(t *testing.T) {
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb)
 	testMatrixA := MakeMatrixAlt(testVectorsA)
-	solutionMatrix := MakeConjMatrix(testMatrixA)
+	solutionMatrixA := MakeConjMatrix(testMatrixA)
 
 	testMatrixA.Trans()
-	if !reflect.DeepEqual(testMatrixA, solutionMatrix) {
-		t.Errorf("Expected %v, received %v", solutionMatrix, testMatrixA)
+	if !reflect.DeepEqual(testMatrixA, solutionMatrixA) {
+		t.Errorf("Expected %v, received %v", solutionMatrixA, testMatrixA)
 	}
 }
 
@@ -198,11 +199,11 @@ func TestSwap(t *testing.T) {
 	testVectorAb := v.MakeVectorPure(v.RowSpace, 3, 2)
 	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb)
 	testMatrixA := MakeMatrixAlt(testVectorsA)
-	solutionMatrix := MakeMatrix(testVectorAb, testVectorAa)
+	solutionMatrixA := MakeMatrix(testVectorAb, testVectorAa)
 
 	testMatrixA.Swap(0, 1)
-	if !reflect.DeepEqual(testMatrixA, solutionMatrix) {
-		t.Errorf("Expected %v, received %v", solutionMatrix, testMatrixA)
+	if !reflect.DeepEqual(testMatrixA, solutionMatrixA) {
+		t.Errorf("Expected %v, received %v", solutionMatrixA, testMatrixA)
 	}
 }
 
@@ -256,5 +257,170 @@ func TestDet(t *testing.T) {
 
 	if errD == nil {
 		t.Error("Expected error")
+	}
+}
+
+func TestAug(t *testing.T) {
+	testMatrixA := NewIdentityMatrix(3)
+	testMatrixB := NewIdentityMatrix(3)
+	testVectorAa := v.MakeVectorPure(v.RowSpace, 1, 0, 0, 1, 0, 0)
+	testVectorAb := v.MakeVectorPure(v.RowSpace, 0, 1, 0, 0, 1, 0)
+	testVectorAc := v.MakeVectorPure(v.RowSpace, 0, 0, 1, 0, 0, 1)
+	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb, testVectorAc)
+	solutionMatrixA := MakeMatrixAlt(testVectorsA)
+	resultMatrixABa := testMatrixA.Aug(testMatrixB)
+
+	if !reflect.DeepEqual(solutionMatrixA, resultMatrixABa) {
+		t.Errorf("Expected %v, received %v", solutionMatrixA, resultMatrixABa)
+	}
+
+	testVectorB := v.MakeVectorPure(v.ColSpace, 1, 1, 1)
+
+	testVectorBa := v.MakeVectorPure(v.RowSpace, 1, 0, 0, 1)
+	testVectorBb := v.MakeVectorPure(v.RowSpace, 0, 1, 0, 1)
+	testVectorBc := v.MakeVectorPure(v.RowSpace, 0, 0, 1, 1)
+	testVectorsB := v.MakeVectors(v.RowSpace, testVectorBa, testVectorBb, testVectorBc)
+	solutionMatrixB := MakeMatrixAlt(testVectorsB)
+	resultMatrixABb := testMatrixA.Aug(testVectorB)
+
+	if !reflect.DeepEqual(solutionMatrixB, resultMatrixABb) {
+		t.Errorf("Expected %v, received %v", solutionMatrixB, resultMatrixABb)
+	}
+}
+
+func TestArgPanicMatrixRowsIncorrect(t *testing.T) {
+	testMatrixA := NewIdentityMatrix(3)
+	testMatrixB := NewIdentityMatrix(2)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := testMatrixA.Aug(testMatrixB)
+
+	if result != nil {
+		t.Error("Expected Error")
+	}
+}
+
+func TestArgPanicVectorLengthIncorrect(t *testing.T) {
+	testMatrixA := NewIdentityMatrix(3)
+	testVectorB := v.NewVector(v.ColSpace, 2)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := testMatrixA.Aug(testVectorB)
+
+	if result != nil {
+		t.Error("Expected Error")
+	}
+}
+
+func TestArgPanicVectorMustBeColSpace(t *testing.T) {
+	testMatrixA := NewIdentityMatrix(3)
+	testVectorB := v.NewVector(v.RowSpace, 3)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := testMatrixA.Aug(testVectorB)
+
+	if result != nil {
+		t.Error("Expected Error")
+	}
+}
+
+func TestArgPanicTypeNotSupported(t *testing.T) {
+	testMatrixA := NewIdentityMatrix(3)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := testMatrixA.Aug(3)
+
+	if result != nil {
+		t.Error("Expected Error")
+	}
+}
+
+func TestSub(t *testing.T) {
+	testMatrixA := NewIdentityMatrix(4)
+	solutionMatrixA := NewIdentityMatrix(2)
+	resultMatrixA := testMatrixA.Sub(1, 1, 1, 1)
+
+	if !reflect.DeepEqual(solutionMatrixA, resultMatrixA) {
+		t.Errorf("Expected %v, received %v", solutionMatrixA, resultMatrixA)
+	}
+
+	testVectorBa := v.MakeVectorPure(v.RowSpace, 1, 0)
+	testVectorBb := v.MakeVectorPure(v.RowSpace, 0, 1)
+	testVectorBc := v.MakeVectorPure(v.RowSpace, 0, 0)
+	testVectorsB := v.MakeVectors(v.RowSpace, testVectorBa, testVectorBb, testVectorBc)
+	solutionMatrixB := MakeMatrixAlt(testVectorsB)
+	resultMatrixB := testMatrixA.Sub(1, 0, 1, 1)
+
+	if !reflect.DeepEqual(solutionMatrixB, resultMatrixB) {
+		t.Errorf("Expected %v, received %v", solutionMatrixB, resultMatrixB)
+	}
+
+	testVectorCa := v.MakeVectorPure(v.RowSpace, 1, 0, 0, 0)
+	testVectorCb := v.MakeVectorPure(v.RowSpace, 0, 1, 0, 0)
+	testVectorCc := v.MakeVectorPure(v.RowSpace, 0, 0, 1, 0)
+	testVectorsC := v.MakeVectors(v.RowSpace, testVectorCa, testVectorCb, testVectorCc)
+	solutionMatrixC := MakeMatrixAlt(testVectorsC)
+	resultMatrixC := testMatrixA.Sub(0, 1, 0, 0)
+
+	if !reflect.DeepEqual(solutionMatrixC, resultMatrixC) {
+		t.Errorf("Expected %v, received %v", solutionMatrixC, resultMatrixC)
+	}
+
+	testVectorDa := v.MakeVectorPure(v.RowSpace, 0, 0)
+	testVectorDb := v.MakeVectorPure(v.RowSpace, 1, 0)
+	testVectorDc := v.MakeVectorPure(v.RowSpace, 0, 1)
+	testVectorsD := v.MakeVectors(v.RowSpace, testVectorDa, testVectorDb, testVectorDc)
+	solutionMatrixD := MakeMatrixAlt(testVectorsD)
+	resultMatrixD := testMatrixA.Sub(0, 1, 1, 1)
+
+	if !reflect.DeepEqual(solutionMatrixD, resultMatrixD) {
+		t.Errorf("Expected %v, received %v", solutionMatrixD, resultMatrixD)
+	}
+
+	testVectorEa := v.MakeVectorPure(v.RowSpace, 0, 0, 0)
+	testVectorEb := v.MakeVectorPure(v.RowSpace, 1, 0, 0)
+	testVectorEc := v.MakeVectorPure(v.RowSpace, 0, 1, 0)
+	testVectorsE := v.MakeVectors(v.RowSpace, testVectorEa, testVectorEb, testVectorEc)
+	solutionMatrixE := MakeMatrixAlt(testVectorsE)
+	resultMatrixE := testMatrixA.Sub(0, 1, 1, 0)
+
+	if !reflect.DeepEqual(solutionMatrixE, resultMatrixE) {
+		t.Errorf("Expected %v, received %v", solutionMatrixE, resultMatrixE)
+	}
+}
+
+func TestSubPanicDimOutOfBounds(t *testing.T) {
+	testMatrixA := NewIdentityMatrix(4)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	resultMatrixA := testMatrixA.Sub(3, 2, 0, 0)
+
+	if resultMatrixA != nil {
+		t.Error("Expected Error")
 	}
 }

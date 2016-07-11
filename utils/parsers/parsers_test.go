@@ -1,4 +1,4 @@
-package utils
+package parsers
 
 import (
 	"reflect"
@@ -8,7 +8,7 @@ import (
 	"github.com/NumberXNumbers/GoCalculate/types/v"
 )
 
-func TestStringToValueParser(t *testing.T) {
+func TestValue(t *testing.T) {
 	testStrA := "1"
 	testStrB := "1.0"
 	testStrC := "1+0i"
@@ -20,16 +20,16 @@ func TestStringToValueParser(t *testing.T) {
 	testStrI := "-5+3i"
 	testStrJ := "5-3i"
 
-	valueA, errA := StringToValueParser(testStrA)
-	valueB, errB := StringToValueParser(testStrB)
-	valueC, errC := StringToValueParser(testStrC)
-	valueD, errD := StringToValueParser(testStrD)
-	valueE, errE := StringToValueParser(testStrE)
-	valueF, errF := StringToValueParser(testStrF)
-	_, errG := StringToValueParser(testStrG)
-	valueH, errH := StringToValueParser(testStrH)
-	valueI, errI := StringToValueParser(testStrI)
-	valueJ, errJ := StringToValueParser(testStrJ)
+	valueA, errA := Value(testStrA)
+	valueB, errB := Value(testStrB)
+	valueC, errC := Value(testStrC)
+	valueD, errD := Value(testStrD)
+	valueE, errE := Value(testStrE)
+	valueF, errF := Value(testStrF)
+	_, errG := Value(testStrG)
+	valueH, errH := Value(testStrH)
+	valueI, errI := Value(testStrI)
+	valueJ, errJ := Value(testStrJ)
 
 	realSolution := 1.0
 	complexSolutionA := 1 + 0i
@@ -115,7 +115,7 @@ func TestStringToValueParser(t *testing.T) {
 	}
 }
 
-func TestStringToMatrixParser(t *testing.T) {
+func TestMatrix(t *testing.T) {
 	testStrA := "[1 2 3: 4 5 6: 7 8 9]"
 	testStrB := "[1.0 -5+4i 5.0: 4 3 2]"
 	testStrC := "[2 3: 4 5: 6 6: 7 7]"
@@ -128,17 +128,17 @@ func TestStringToMatrixParser(t *testing.T) {
 	testStrH := "[1 2 3 4 5 6 7 8 9]"
 	testStrI := "[1 2 3: 1 * 3]"
 
-	valueA, errA := StringToMatrixParser(testStrA)
-	valueB, errB := StringToMatrixParser(testStrB)
-	valueC, errC := StringToMatrixParser(testStrC)
-	valueD, errD := StringToMatrixParser(testStrD)
-	_, errE := StringToMatrixParser(testStrE)
-	_, errFa := StringToMatrixParser(testStrFa)
-	_, errFb := StringToValueParser(testStrFb)
-	_, errGa := StringToMatrixParser(testStrGa)
-	_, errGb := StringToValueParser(testStrGb)
-	_, errH := StringToMatrixParser(testStrH)
-	_, errI := StringToMatrixParser(testStrI)
+	valueA, errA := Matrix(testStrA)
+	valueB, errB := Matrix(testStrB)
+	valueC, errC := Matrix(testStrC)
+	valueD, errD := Matrix(testStrD)
+	_, errE := Matrix(testStrE)
+	_, errFa := Matrix(testStrFa)
+	_, errFb := Value(testStrFb)
+	_, errGa := Matrix(testStrGa)
+	_, errGb := Value(testStrGb)
+	_, errH := Matrix(testStrH)
+	_, errI := Matrix(testStrI)
 
 	solMatrixA := m.MakeMatrix(v.MakeVectorPure(v.RowSpace, 1, 2, 3), v.MakeVectorPure(v.RowSpace, 4, 5, 6), v.MakeVectorPure(v.RowSpace, 7, 8, 9))
 	solMatrixB := m.MakeMatrix(v.MakeVectorPure(v.RowSpace, 1.0, -5+4i, 5.0), v.MakeVectorPure(v.RowSpace, 4, 3, 2))
@@ -206,7 +206,7 @@ func TestStringToMatrixParser(t *testing.T) {
 	}
 }
 
-func TestStringToVectorParser(t *testing.T) {
+func TestVector(t *testing.T) {
 	testStrA := "[1 2 3 4 5 6 7 8 9]"
 	testStrB := "[1.0 -5+4i 5.0 4 3 2]"
 	testStrC := "[2 3 4 5 6 6 7 7]"
@@ -216,14 +216,14 @@ func TestStringToVectorParser(t *testing.T) {
 	testStrFb := "[1 2 3 4 5 6 7 8"
 	testStrH := "[1 2 3 1 * 3]"
 
-	valueA, errA := StringToVectorParser(testStrA)
-	valueB, errB := StringToVectorParser(testStrB)
-	valueC, errC := StringToVectorParser(testStrC)
-	valueD, errD := StringToVectorParser(testStrD)
-	_, errE := StringToVectorParser(testStrE)
-	_, errFa := StringToVectorParser(testStrFa)
-	_, errFb := StringToValueParser(testStrFb)
-	_, errH := StringToVectorParser(testStrH)
+	valueA, errA := Vector(testStrA)
+	valueB, errB := Vector(testStrB)
+	valueC, errC := Vector(testStrC)
+	valueD, errD := Vector(testStrD)
+	_, errE := Vector(testStrE)
+	_, errFa := Vector(testStrFa)
+	_, errFb := Value(testStrFb)
+	_, errH := Vector(testStrH)
 
 	solVectorA := v.MakeVectorPure(v.RowSpace, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 	solVectorB := v.MakeVectorPure(v.RowSpace, 1.0, -5+4i, 5.0, 4, 3, 2)

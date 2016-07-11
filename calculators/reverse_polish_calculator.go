@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/NumberXNumbers/GoCalculate/types/gcv"
-	"github.com/NumberXNumbers/GoCalculate/utils"
+	"github.com/NumberXNumbers/GoCalculate/utils/parsers"
 )
 
 // ReversePolishCalculator is a simple reverse polish calculator
@@ -20,7 +20,7 @@ func ReversePolishCalculator(args []string) (value gcv.Value, err error) {
 	}
 
 	for _, argument := range args {
-		if v, e := utils.StringToValueParser(argument); e == nil {
+		if v, e := parsers.Value(argument); e == nil {
 			stack.Append(v)
 			continue
 		}

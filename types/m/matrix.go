@@ -58,6 +58,15 @@ type Matrix interface {
 
 	// Set element at location (row, col)
 	Set(row int, col int, value interface{})
+
+	// Aug will take either a Vector or a Matrix and will create a new augmented matrix
+	Aug(b interface{}) Matrix
+
+	// Sub will return a sub matrix. top are the number or rows to cut from the top.
+	// bottom are the number of rows to cut from the bottom.
+	// left are columns to cut from the left.
+	// right are columns to cut from the right.
+	Sub(top, bottom, left, right int) Matrix
 }
 
 type matrix struct {
@@ -184,6 +193,71 @@ func (m *matrix) Det() (gcv.Value, error) {
 		det = gcvops.Mult(gcv.MakeValue(-1), det)
 	}
 	return det, nil
+}
+
+// implementation of Aug method
+func (m *matrix) Aug(b interface{}) Matrix {
+	var augmentedMatrix Matrix
+	switch b.(type) {
+	case Matrix:
+		rowsA, colsA := m.Dim()
+		matrixB := b.(Matrix)
+		rowsB, colsB := matrixB.Dim()
+		if rowsA != rowsB {
+			panic("Number of rows in b not equal to rows in matrix to be augmented")
+		}
+		augmentedMatrix = NewMatrix(rowsA, colsA+colsB)
+		for i := 0; i < rowsA; i++ {
+			for j := 0; j < colsA+colsB; j++ {
+				if j < colsA {
+					augmentedMatrix.Set(i, j, m.Get(i, j))
+				} else {
+					augmentedMatrix.Set(i, j, matrixB.Get(i, j-colsA))
+				}
+			}
+		}
+	case v.Vector:
+		vector := b.(v.Vector)
+		if vector.Space() != v.ColSpace {
+			panic("Vector not in ColSpace")
+		}
+		rowsA, colsA := m.Dim()
+		if vector.Len() != rowsA {
+			panic("Vector Length not equal to Number of rows of matrix to be augmented")
+		}
+		augmentedMatrix = NewMatrix(rowsA, colsA+1)
+		for i := 0; i < rowsA; i++ {
+			for j := 0; j < colsA+1; j++ {
+				if j < colsA {
+					augmentedMatrix.Set(i, j, m.Get(i, j))
+				} else {
+					augmentedMatrix.Set(i, j, vector.Get(j-colsA))
+				}
+			}
+		}
+	default:
+		panic("Type of b is not supported. Must be either Vector or Matrix")
+	}
+	return augmentedMatrix
+}
+
+func (m *matrix) Sub(top, bottom, left, right int) Matrix {
+	rows, cols := m.Dim()
+	tPlusB := (top + bottom)
+	lPlusR := (left + right)
+	if rows < tPlusB || cols < lPlusR {
+		panic("Requested dimensions are greater than dimensions of primary matrix")
+	}
+
+	subMatrix := NewMatrix(rows-tPlusB, cols-lPlusR)
+
+	for i := 0; i < rows-tPlusB; i++ {
+		for j := 0; j < cols-lPlusR; j++ {
+			subMatrix.Set(i, j, m.Get(i+top, j+left))
+		}
+	}
+
+	return subMatrix
 }
 
 // NewMatrix returns a new matrix of type Matrix
