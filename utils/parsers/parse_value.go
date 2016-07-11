@@ -1,4 +1,4 @@
-package utils
+package parsers
 
 import (
 	"errors"
@@ -15,8 +15,8 @@ var (
 	minus     = "-"
 )
 
-// StringToValueParser will parses inputs from the command line into gcv Value types
-func StringToValueParser(s string) (output gcv.Value, err error) {
+// Value will parses inputs from the command line into gcv Value types
+func Value(s string) (output gcv.Value, err error) {
 	if f, e := strconv.ParseFloat(s, 64); e == nil {
 		output = gcv.MakeValue(f)
 		return

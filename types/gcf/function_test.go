@@ -290,6 +290,13 @@ func TestCalculateJ(t *testing.T) {
 	}
 }
 
+func TestCalculateK(t *testing.T) {
+	calculation := Calculate("Sqrt", "(", "Sin", math.Pi/2, pow, 2, "+", "Cos", math.Pi/2, pow, 2, ")")
+	if math.Abs(calculation.Value().Real()-1) > 10e-6 {
+		t.Fail()
+	}
+}
+
 func TestFunctionPanicOperatorNotSupported(t *testing.T) {
 	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
 

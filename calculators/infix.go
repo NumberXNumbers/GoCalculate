@@ -2,7 +2,7 @@ package calculators
 
 import (
 	"github.com/NumberXNumbers/GoCalculate/types/gcf"
-	"github.com/NumberXNumbers/GoCalculate/utils"
+	"github.com/NumberXNumbers/GoCalculate/utils/parsers"
 )
 
 var (
@@ -23,7 +23,7 @@ func InfixCalculator(args []string) gcf.Const {
 	var argsForCalculation []interface{}
 
 	for _, arg := range args {
-		if v, e := utils.StringToValueParser(arg); e == nil {
+		if v, e := parsers.Value(arg); e == nil {
 			argsForCalculation = append(argsForCalculation, v)
 		} else {
 			argsForCalculation = append(argsForCalculation, arg)
