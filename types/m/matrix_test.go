@@ -2,6 +2,7 @@ package m
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 	"testing"
 
@@ -355,10 +356,10 @@ func TestArgPanicTypeNotSupported(t *testing.T) {
 	}
 }
 
-func TestSub(t *testing.T) {
+func TestTrim(t *testing.T) {
 	testMatrixA := NewIdentityMatrix(4)
 	solutionMatrixA := NewIdentityMatrix(2)
-	resultMatrixA := testMatrixA.Sub(1, 1, 1, 1)
+	resultMatrixA := testMatrixA.Trim(1, 1, 1, 1)
 
 	if !reflect.DeepEqual(solutionMatrixA, resultMatrixA) {
 		t.Errorf("Expected %v, received %v", solutionMatrixA, resultMatrixA)
@@ -369,7 +370,7 @@ func TestSub(t *testing.T) {
 	testVectorBc := v.MakeVectorPure(v.RowSpace, 0, 0)
 	testVectorsB := v.MakeVectors(v.RowSpace, testVectorBa, testVectorBb, testVectorBc)
 	solutionMatrixB := MakeMatrixAlt(testVectorsB)
-	resultMatrixB := testMatrixA.Sub(1, 0, 1, 1)
+	resultMatrixB := testMatrixA.Trim(1, 0, 1, 1)
 
 	if !reflect.DeepEqual(solutionMatrixB, resultMatrixB) {
 		t.Errorf("Expected %v, received %v", solutionMatrixB, resultMatrixB)
@@ -380,7 +381,7 @@ func TestSub(t *testing.T) {
 	testVectorCc := v.MakeVectorPure(v.RowSpace, 0, 0, 1, 0)
 	testVectorsC := v.MakeVectors(v.RowSpace, testVectorCa, testVectorCb, testVectorCc)
 	solutionMatrixC := MakeMatrixAlt(testVectorsC)
-	resultMatrixC := testMatrixA.Sub(0, 1, 0, 0)
+	resultMatrixC := testMatrixA.Trim(0, 1, 0, 0)
 
 	if !reflect.DeepEqual(solutionMatrixC, resultMatrixC) {
 		t.Errorf("Expected %v, received %v", solutionMatrixC, resultMatrixC)
@@ -391,7 +392,7 @@ func TestSub(t *testing.T) {
 	testVectorDc := v.MakeVectorPure(v.RowSpace, 0, 1)
 	testVectorsD := v.MakeVectors(v.RowSpace, testVectorDa, testVectorDb, testVectorDc)
 	solutionMatrixD := MakeMatrixAlt(testVectorsD)
-	resultMatrixD := testMatrixA.Sub(0, 1, 1, 1)
+	resultMatrixD := testMatrixA.Trim(0, 1, 1, 1)
 
 	if !reflect.DeepEqual(solutionMatrixD, resultMatrixD) {
 		t.Errorf("Expected %v, received %v", solutionMatrixD, resultMatrixD)
@@ -402,14 +403,14 @@ func TestSub(t *testing.T) {
 	testVectorEc := v.MakeVectorPure(v.RowSpace, 0, 1, 0)
 	testVectorsE := v.MakeVectors(v.RowSpace, testVectorEa, testVectorEb, testVectorEc)
 	solutionMatrixE := MakeMatrixAlt(testVectorsE)
-	resultMatrixE := testMatrixA.Sub(0, 1, 1, 0)
+	resultMatrixE := testMatrixA.Trim(0, 1, 1, 0)
 
 	if !reflect.DeepEqual(solutionMatrixE, resultMatrixE) {
 		t.Errorf("Expected %v, received %v", solutionMatrixE, resultMatrixE)
 	}
 }
 
-func TestSubPanicDimOutOfBounds(t *testing.T) {
+func TestTrimPanicDimOutOfBounds(t *testing.T) {
 	testMatrixA := NewIdentityMatrix(4)
 
 	defer func() {
@@ -418,9 +419,58 @@ func TestSubPanicDimOutOfBounds(t *testing.T) {
 		}
 	}()
 
-	resultMatrixA := testMatrixA.Sub(3, 2, 0, 0)
+	resultMatrixA := testMatrixA.Trim(3, 2, 0, 0)
 
 	if resultMatrixA != nil {
 		t.Error("Expected Error")
+	}
+}
+
+func TestInv(t *testing.T) {
+	testVectorAa := v.MakeVectorPure(v.RowSpace, 0, 2, 4)
+	testVectorAb := v.MakeVectorPure(v.RowSpace, 4, 1, 5)
+	testVectorAc := v.MakeVectorPure(v.RowSpace, 3, 3, 0)
+	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb, testVectorAc)
+	testMatrixA, errA := MakeMatrixAlt(testVectorsA).Inv()
+
+	if errA != nil {
+		t.Fail()
+	}
+
+	if degree, _ := testMatrixA.Dim(); degree != 3 {
+		t.Fail()
+	}
+
+	if math.Abs(testMatrixA.Get(0, 0).Real()-(-0.227272727)) > 10e-8 ||
+		math.Abs(testMatrixA.Get(0, 1).Real()-0.181818181) > 10e-8 ||
+		math.Abs(testMatrixA.Get(0, 2).Real()-0.090909090) > 10e-8 ||
+		math.Abs(testMatrixA.Get(1, 0).Real()-0.227272727) > 10e-8 ||
+		math.Abs(testMatrixA.Get(1, 1).Real()-(-0.181818181)) > 10e-8 ||
+		math.Abs(testMatrixA.Get(1, 2).Real()-0.242424242) > 10e-8 ||
+		math.Abs(testMatrixA.Get(2, 0).Real()-0.136363636) > 10e-8 ||
+		math.Abs(testMatrixA.Get(2, 1).Real()-0.090909090) > 10e-8 ||
+		math.Abs(testMatrixA.Get(2, 2).Real()-(-0.121212121)) > 10e-8 {
+		t.Fail()
+	}
+
+	testVectorsB := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb)
+	_, errB := MakeMatrixAlt(testVectorsB).Inv()
+
+	if errB == nil {
+		t.Fail()
+	}
+
+	testMatrixC := NewMatrix(2, 2)
+	_, errC := testMatrixC.Inv()
+
+	if errC == nil {
+		t.Fail()
+	}
+
+	testMatrixC.Set(0, 0, 1)
+	_, errD := testMatrixC.Inv()
+
+	if errD == nil {
+		t.Fail()
 	}
 }
