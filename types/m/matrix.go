@@ -2,6 +2,7 @@ package m
 
 import (
 	"errors"
+	"math"
 	"reflect"
 
 	"github.com/NumberXNumbers/GoCalculate/types/gcv"
@@ -50,8 +51,8 @@ type Matrix interface {
 	// Returns the Determinate of a matrix or error if matrix is not square.
 	Det() (gcv.Value, error)
 
-	// TODO Inverse of Matrix. Returns error if there is no inverse
-	// Inv() (Matrix, error)
+	// Inverse of Matrix. Returns error if there is no inverse
+	Inv() (Matrix, error)
 
 	// Get element at location (row, col)
 	Get(row int, col int) gcv.Value
@@ -62,11 +63,12 @@ type Matrix interface {
 	// Aug will take either a Vector or a Matrix and will create a new augmented matrix
 	Aug(b interface{}) Matrix
 
-	// Sub will return a sub matrix. top are the number or rows to cut from the top.
+	// Trim will trim off rows or columns from a matrix to for a new sub matrix.
+	//  top are the number or rows to cut from the top.
 	// bottom are the number of rows to cut from the bottom.
 	// left are columns to cut from the left.
 	// right are columns to cut from the right.
-	Sub(top, bottom, left, right int) Matrix
+	Trim(top, bottom, left, right int) Matrix
 }
 
 type matrix struct {
@@ -166,32 +168,39 @@ func (m *matrix) Det() (gcv.Value, error) {
 		return nil, errors.New("Matrix is not square")
 	}
 
+	matrixCopy := m.Copy()
+
 	pivots := 0
 	var det gcv.Value
-	rows, cols := m.Dim()
+	rows, cols := matrixCopy.Dim()
 	for i := 0; i < cols; i++ {
 		for j := i + 1; j < rows; j++ {
-			valueA := m.Get(i, i).Copy()
-			valueB := m.Get(j, i).Copy()
+			valueA := matrixCopy.Get(i, i).Copy()
+			valueB := matrixCopy.Get(j, i).Copy()
 			if valueA.Real() < valueB.Real() || valueA.Complex() == 0 {
-				m.Swap(i, j)
+				matrixCopy.Swap(i, j)
 				pivots++
-				vector := sub(m.Elements().Get(j), sMult(valueA, sDiv(valueB, m.Elements().Get(i))))
-				m.elements.Set(j, vector)
+				vector := sub(matrixCopy.Elements().Get(j), sMult(valueA, sDiv(valueB, matrixCopy.Elements().Get(i))))
+				matrixCopy.Elements().Set(j, vector)
 			} else {
-				vector := sub(m.Elements().Get(j), sMult(valueB, sDiv(valueA, m.Elements().Get(i))))
-				m.elements.Set(j, vector)
+				vector := sub(matrixCopy.Elements().Get(j), sMult(valueB, sDiv(valueA, matrixCopy.Elements().Get(i))))
+				matrixCopy.Elements().Set(j, vector)
 			}
 		}
 		if i > 1 {
-			det = gcvops.Mult(m.Get(i, i), det)
+			det = gcvops.Mult(matrixCopy.Get(i, i), det)
 		} else if i == 1 {
-			det = gcvops.Mult(m.Get(1, 1), m.Get(0, 0))
+			det = gcvops.Mult(matrixCopy.Get(1, 1), matrixCopy.Get(0, 0))
 		}
 	}
 	if pivots%2 != 0 {
 		det = gcvops.Mult(gcv.MakeValue(-1), det)
 	}
+
+	if math.IsNaN(det.Real()) || math.IsNaN(det.Imag()) {
+		return nil, errors.New("Determinate is not a number")
+	}
+
 	return det, nil
 }
 
@@ -241,7 +250,7 @@ func (m *matrix) Aug(b interface{}) Matrix {
 	return augmentedMatrix
 }
 
-func (m *matrix) Sub(top, bottom, left, right int) Matrix {
+func (m *matrix) Trim(top, bottom, left, right int) Matrix {
 	rows, cols := m.Dim()
 	tPlusB := (top + bottom)
 	lPlusR := (left + right)
@@ -258,6 +267,50 @@ func (m *matrix) Sub(top, bottom, left, right int) Matrix {
 	}
 
 	return subMatrix
+}
+
+func (m *matrix) Inv() (Matrix, error) {
+	if !m.IsSquare() {
+		return nil, errors.New("Matrix is not square")
+	}
+
+	if value, err := m.Det(); err == nil && value.Complex() == 0 {
+		return nil, errors.New("Matrix does not have an inverse")
+	} else if err != nil {
+		return nil, err
+	}
+
+	degree, _ := m.Dim()
+
+	idMatrix := NewIdentityMatrix(degree)
+
+	augMatrix := m.Aug(idMatrix)
+
+	for i := 0; i < degree; i++ {
+		valueA := augMatrix.Get(i, i).Copy()
+		if valueA.Complex() == 0 {
+			count := i
+			for count < degree && valueA.Complex() == 0 {
+				augMatrix.Swap(i, count)
+				valueA = augMatrix.Get(i, i).Copy()
+				count++
+			}
+		}
+
+		if valueA.Complex() != 1 {
+			augMatrix.Elements().Set(i, sDiv(valueA, augMatrix.Elements().Get(i)))
+		}
+
+		for j := 0; j < degree; j++ {
+			if i != j {
+				valueB := augMatrix.Get(j, i).Copy()
+				vector := sub(augMatrix.Elements().Get(j), sMult(valueB, augMatrix.Elements().Get(i)))
+				augMatrix.Elements().Set(j, vector)
+			}
+		}
+	}
+
+	return augMatrix.Trim(0, 0, degree, 0), nil
 }
 
 // NewMatrix returns a new matrix of type Matrix
