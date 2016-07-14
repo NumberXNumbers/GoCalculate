@@ -36,6 +36,7 @@ func Vector(s string) (vector v.Vector, err error) {
 	if strings.HasPrefix(s, graveAccent) {
 		if strings.Index(s, leftBracket) == offsetGraveAccent {
 			isColumnVector = true
+			s = strings.TrimLeft(s, graveAccent)
 		} else {
 			err = errors.New("String is not of type Vector")
 			return
@@ -45,6 +46,7 @@ func Vector(s string) (vector v.Vector, err error) {
 	if strings.HasSuffix(s, apostrophe) {
 		if strings.Index(s, rightBracket) == len(s)-offsetApostrophe {
 			transposeVector = true
+			s = strings.TrimRight(s, apostrophe)
 		} else {
 			err = errors.New("String is not of type Vector")
 			return
