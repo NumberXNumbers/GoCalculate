@@ -2,7 +2,6 @@ package methods
 
 import (
 	"errors"
-	"fmt"
 	"math"
 
 	"github.com/NumberXNumbers/GoCalculate/types/gcf"
@@ -200,8 +199,6 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 	omega := initialCondition
 	done := false
 
-	fmt.Println(TOL)
-
 	solutionSet := v.MakeVectors(v.RowSpace, v.MakeVectorPure(v.RowSpace, theta, omega))
 
 	var kappa float64
@@ -226,7 +223,6 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 			3544.0*kappa3/2565.0+1859.0*kappa4/4104.0-11.0*kappa5/40.0).Value().Real()
 
 		remainder = math.Abs(kappa/360.0-128.0*kappa3/4275.0-2197.0*kappa4/75240.0+kappa5/50.0+2.0*kappa6/55.0) / stepSize
-		fmt.Println(remainder)
 		if remainder <= TOL {
 			theta += stepSize
 			omega += 25.0*kappa/216.0 + 1408.0*kappa3/2565.0 + 2197.0*kappa4/4104.0 - kappa5/5.0

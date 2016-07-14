@@ -30,8 +30,8 @@ func PolishCalculator(args []string) (value gcv.Value, err error) {
 		}
 
 		if stack.Len() > 1 {
-			operand1, stack = pop(stack)
-			operand2, stack = pop(stack)
+			operand2, stack = dequeue(stack)
+			operand1, stack = dequeue(stack)
 
 			result, err = calculateV(operand1, operand2, argument)
 
