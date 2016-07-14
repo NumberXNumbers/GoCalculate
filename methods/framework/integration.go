@@ -2,6 +2,7 @@ package methods
 
 import (
 	"errors"
+	"fmt"
 	"math"
 
 	"github.com/NumberXNumbers/GoCalculate/types/gcf"
@@ -86,7 +87,7 @@ func RungeKutta2(a float64, b float64, N int, initialCondition float64, f *gcf.F
 	var kappa float64
 	var kappa2 float64
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f.Eval(theta, omega).Value().Real()
 		kappa2 = stepSize * f.Eval(theta+stepSize/2.0, omega+kappa/2.0).Value().Real()
 
@@ -174,7 +175,7 @@ func RungeKutta4(a float64, b float64, N int, initialCondition float64, f *gcf.F
 	var kappa3 float64
 	var kappa4 float64
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f.Eval(theta, omega).Value().Real()
 		kappa2 = stepSize * f.Eval(theta+stepSize/2.0, omega+kappa/2.0).Value().Real()
 		kappa3 = stepSize * f.Eval(theta+stepSize/2.0, omega+kappa2/2.0).Value().Real()
@@ -191,12 +192,15 @@ func RungeKutta4(a float64, b float64, N int, initialCondition float64, f *gcf.F
 }
 
 // RungeKuttaFehlbery returns a solution to the runge-kutta-fehlbery method
+// Algorithm from Numerical Analysis - By Burden and Faires
 func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 	TOL float64, maxStep float64, minStep float64, f *gcf.Function) m.Matrix {
 	stepSize := maxStep
 	theta := a
 	omega := initialCondition
 	done := false
+
+	fmt.Println(TOL)
 
 	solutionSet := v.MakeVectors(v.RowSpace, v.MakeVectorPure(v.RowSpace, theta, omega))
 
@@ -216,14 +220,14 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 		kappa3 = stepSize * f.Eval(theta+3.0*stepSize/8.0, omega+3.0*kappa/32.0+9.0*kappa2/32.0).Value().Real()
 		kappa4 = stepSize * f.Eval(theta+12.0*stepSize/13.0, omega+1932.0*kappa/2197.0-
 			7200.0*kappa2/2197.0+7296.0*kappa3/2197.0).Value().Real()
-		kappa5 = stepSize * f.Eval(theta+stepSize, omega+439.0*kappa-8.0*kappa2+
+		kappa5 = stepSize * f.Eval(theta+stepSize, omega+439.0*kappa/216.0-8.0*kappa2+
 			3680.0*kappa3/513.0-845.0*kappa4/4104.0).Value().Real()
 		kappa6 = stepSize * f.Eval(theta+stepSize/2.0, omega-8.0*kappa/27.0+2.0*kappa2-
 			3544.0*kappa3/2565.0+1859.0*kappa4/4104.0-11.0*kappa5/40.0).Value().Real()
 
 		remainder = math.Abs(kappa/360.0-128.0*kappa3/4275.0-2197.0*kappa4/75240.0+kappa5/50.0+2.0*kappa6/55.0) / stepSize
-
-		if remainder < TOL {
+		fmt.Println(remainder)
+		if remainder <= TOL {
 			theta += stepSize
 			omega += 25.0*kappa/216.0 + 1408.0*kappa3/2565.0 + 2197.0*kappa4/4104.0 - kappa5/5.0
 
@@ -244,7 +248,7 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 			stepSize = maxStep
 		}
 
-		if theta > b {
+		if theta >= b {
 			done = true
 		} else if theta+stepSize > b {
 			stepSize = b - theta

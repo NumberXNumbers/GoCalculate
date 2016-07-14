@@ -69,3 +69,29 @@ func TestBooleRule(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestRungeKutta(t *testing.T) {
+	x := gcf.NewVar(gcf.Value)
+	y := gcf.NewVar(gcf.Value)
+	regVars := []gcf.Var{x, y}
+	f := gcf.MakeFunc(regVars, y, "-", x, "^", 2, "+", 1)
+	a := 0.0
+	b := 2.0
+	N := 10
+	initialCondition := 0.5
+	solutionMatrixA := RungeKutta2(a, b, N, initialCondition, f)
+	if result := solutionMatrixA.Get(10, 1).Real(); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+	solutionMatrixB := RungeKutta4(a, b, N, initialCondition, f)
+	if result := solutionMatrixB.Get(10, 1).Real(); math.Abs(result-5.3054720) > 1e-2 {
+		t.Fail()
+	}
+	TOL := 1e-5
+	maxStep := 0.25
+	minStep := 0.01
+	solutionMatrixC := RungeKuttaFehlbery(a, b, initialCondition, TOL, maxStep, minStep, f)
+	if result := solutionMatrixC.Get(9, 1).Real(); math.Abs(result-5.3054720) > 1e-4 {
+		t.Fail()
+	}
+}

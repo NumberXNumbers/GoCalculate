@@ -81,7 +81,7 @@ func RungeKutta2(a float32, b float32, N int, initialCondition float32, f func(x
 	var kappa float32
 	var kappa2 float32
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f(theta, omega)
 		kappa2 = stepSize * f(theta+stepSize/2, omega+kappa/2)
 
@@ -181,7 +181,7 @@ func RungeKutta4(a float32, b float32, N int, initialCondition float32, f func(x
 	var kappa3 float32
 	var kappa4 float32
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f(theta, omega)
 		kappa2 = stepSize * f(theta+stepSize/2, omega+kappa/2)
 		kappa3 = stepSize * f(theta+stepSize/2, omega+kappa2/2)
@@ -198,6 +198,7 @@ func RungeKutta4(a float32, b float32, N int, initialCondition float32, f func(x
 }
 
 // RungeKuttaFehlbery returns a solution to the runge-kutta-fehlbery method
+// Algorithm from Numerical Analysis - By Burden and Faires
 func RungeKuttaFehlbery(a float32, b float32, initialCondition float32,
 	TOL float32, maxStep float32, minStep float32,
 	f func(x, y float32) float32) [][]float32 {
@@ -226,21 +227,21 @@ func RungeKuttaFehlbery(a float32, b float32, initialCondition float32,
 		kappa3 = stepSize * f(theta+3*stepSize/8, omega+3*kappa/32+9*kappa2/32)
 		kappa4 = stepSize * f(theta+12*stepSize/13, omega+1932*kappa/2197-
 			7200*kappa2/2197+7296*kappa3/2197)
-		kappa5 = stepSize * f(theta+stepSize, omega+439*kappa-8*kappa2+
+		kappa5 = stepSize * f(theta+stepSize, omega+439*kappa/216-8*kappa2+
 			3680*kappa3/513-845*kappa4/4104)
 		kappa6 = stepSize * f(theta+stepSize/2, omega-8*kappa/27+2*kappa2-
 			3544*kappa3/2565+1859*kappa4/4104-11*kappa5/40)
 
 		remainder = float32(math.Abs(float64(kappa/360-128*kappa3/4275-2197*kappa4/75240+kappa5/50+2*kappa6/55))) / stepSize
 
-		if remainder < TOL {
+		if remainder <= TOL {
 			theta += stepSize
 			omega += 25*kappa/216 + 1408*kappa3/2565 + 2197*kappa4/4104 - kappa5/5
 
 			solutionSet = append(solutionSet, []float32{theta, omega})
 		}
 
-		delta = 0.84 * float32(math.Pow(float64(TOL/remainder), 1/4))
+		delta = 0.84 * float32(math.Pow(float64(TOL/remainder), 1.0/4.0))
 
 		if delta <= 0.1 {
 			stepSize = 0.1 * stepSize
@@ -254,7 +255,7 @@ func RungeKuttaFehlbery(a float32, b float32, initialCondition float32,
 			stepSize = maxStep
 		}
 
-		if theta > b {
+		if theta >= b {
 			done = true
 		} else if theta+stepSize > b {
 			stepSize = b - theta
