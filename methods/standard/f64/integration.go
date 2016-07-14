@@ -81,7 +81,7 @@ func RungeKutta2(a float64, b float64, N int, initialCondition float64, f func(x
 	var kappa float64
 	var kappa2 float64
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f(theta, omega)
 		kappa2 = stepSize * f(theta+stepSize/2.0, omega+kappa/2.0)
 
@@ -181,7 +181,7 @@ func RungeKutta4(a float64, b float64, N int, initialCondition float64, f func(x
 	var kappa3 float64
 	var kappa4 float64
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f(theta, omega)
 		kappa2 = stepSize * f(theta+stepSize/2.0, omega+kappa/2.0)
 		kappa3 = stepSize * f(theta+stepSize/2.0, omega+kappa2/2.0)
@@ -226,14 +226,14 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 		kappa3 = stepSize * f(theta+3.0*stepSize/8.0, omega+3.0*kappa/32.0+9.0*kappa2/32.0)
 		kappa4 = stepSize * f(theta+12.0*stepSize/13.0, omega+1932.0*kappa/2197.0-
 			7200.0*kappa2/2197.0+7296.0*kappa3/2197.0)
-		kappa5 = stepSize * f(theta+stepSize, omega+439.0*kappa-8.0*kappa2+
+		kappa5 = stepSize * f(theta+stepSize, omega+439.0*kappa/216.0-8.0*kappa2+
 			3680.0*kappa3/513.0-845.0*kappa4/4104.0)
 		kappa6 = stepSize * f(theta+stepSize/2.0, omega-8.0*kappa/27.0+2.0*kappa2-
 			3544.0*kappa3/2565.0+1859.0*kappa4/4104.0-11.0*kappa5/40.0)
 
 		remainder = math.Abs(kappa/360.0-128.0*kappa3/4275.0-2197.0*kappa4/75240.0+kappa5/50.0+2.0*kappa6/55.0) / stepSize
 
-		if remainder < TOL {
+		if remainder <= TOL {
 			theta += stepSize
 			omega += 25.0*kappa/216.0 + 1408.0*kappa3/2565.0 + 2197.0*kappa4/4104.0 - kappa5/5.0
 
@@ -254,7 +254,7 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 			stepSize = maxStep
 		}
 
-		if theta > b {
+		if theta >= b {
 			done = true
 		} else if theta+stepSize > b {
 			stepSize = b - theta
@@ -267,6 +267,7 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 }
 
 // AdamsBashforth2 returns a solution found using the 2nd order Adams-Bashforth method
+// Algorithm from Numerical Analysis - By Burden and Faires
 func AdamsBashforth2(a float64, b float64, N int, initialCondition1 float64,
 	initialCondition2 float64, f func(x, y float64) float64) [][]float64 {
 	stepSize := (b - a) / float64(N)
