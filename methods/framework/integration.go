@@ -100,8 +100,8 @@ func RungeKutta2(a float64, b float64, N int, initialCondition float64, f *gcf.F
 	return solutionSet
 }
 
-// ModifiedEulerMethod returns a [][]float64
-func ModifiedEulerMethod(a float64, b float64, N int, initialCondition float64, f *gcf.Function) m.Matrix {
+// ModifiedEuler returns a solution to the ModifiedEuler method
+func ModifiedEuler(a float64, b float64, N int, initialCondition float64, f *gcf.Function) m.Matrix {
 	stepSize := (b - a) / float64(N)
 	theta := a
 	omega := initialCondition
@@ -114,12 +114,12 @@ func ModifiedEulerMethod(a float64, b float64, N int, initialCondition float64, 
 	var kappa float64
 	var kappa2 float64
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f.Eval(theta, omega).Value().Real()
+		theta += stepSize
 		kappa2 = stepSize * f.Eval(theta, omega+kappa).Value().Real()
 
 		omega += (kappa + kappa2) / 2.0
-		theta += stepSize
 
 		solutionSet.Set(i+1, 0, theta)
 		solutionSet.Set(i+1, 1, omega)
@@ -128,8 +128,8 @@ func ModifiedEulerMethod(a float64, b float64, N int, initialCondition float64, 
 	return solutionSet
 }
 
-// HeunMethod returns a solution to the 3rd order runge-kutta method
-func HeunMethod(a float64, b float64, N int, initialCondition float64, f *gcf.Function) m.Matrix {
+// Heun returns a solution to the 3rd order runge-kutta method (Heun method)
+func Heun(a float64, b float64, N int, initialCondition float64, f *gcf.Function) m.Matrix {
 	stepSize := (b - a) / float64(N)
 	theta := a
 	omega := initialCondition
@@ -143,7 +143,7 @@ func HeunMethod(a float64, b float64, N int, initialCondition float64, f *gcf.Fu
 	var kappa2 float64
 	var kappa3 float64
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f.Eval(theta, omega).Value().Real()
 		kappa2 = stepSize * f.Eval(theta+stepSize/3.0, omega+kappa/3.0).Value().Real()
 		kappa3 = stepSize * f.Eval(theta+2.0*stepSize/3.0, omega+2.0*kappa2/3.0).Value().Real()
