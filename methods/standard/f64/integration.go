@@ -95,8 +95,8 @@ func RungeKutta2(a float64, b float64, N int, initialCondition float64, f func(x
 	return solutionSet
 }
 
-// ModifiedEulerMethod returns a [][]float64
-func ModifiedEulerMethod(a float64, b float64, N int, initialCondition float64, f func(x, y float64) float64) [][]float64 {
+// ModifiedEuler returns a [][]float64
+func ModifiedEuler(a float64, b float64, N int, initialCondition float64, f func(x, y float64) float64) [][]float64 {
 	stepSize := (b - a) / float64(N)
 	theta := a
 	omega := initialCondition
@@ -113,12 +113,12 @@ func ModifiedEulerMethod(a float64, b float64, N int, initialCondition float64, 
 	var kappa float64
 	var kappa2 float64
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f(theta, omega)
+		theta += stepSize
 		kappa2 = stepSize * f(theta, omega+kappa)
 
 		omega += (kappa + kappa2) / 2.0
-		theta += stepSize
 
 		solutionSet[i+1][0] = theta
 		solutionSet[i+1][1] = omega
@@ -127,8 +127,8 @@ func ModifiedEulerMethod(a float64, b float64, N int, initialCondition float64, 
 	return solutionSet
 }
 
-// HeunMethod returns a solution to the 3rd order runge-kutta method
-func HeunMethod(a float64, b float64, N int, initialCondition float64, f func(x, y float64) float64) [][]float64 {
+// Heun returns a solution to the 3rd order runge-kutta method
+func Heun(a float64, b float64, N int, initialCondition float64, f func(x, y float64) float64) [][]float64 {
 	stepSize := (b - a) / float64(N)
 	theta := a
 	omega := initialCondition
@@ -146,7 +146,7 @@ func HeunMethod(a float64, b float64, N int, initialCondition float64, f func(x,
 	var kappa2 float64
 	var kappa3 float64
 
-	for i := 1; i < N; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f(theta, omega)
 		kappa2 = stepSize * f(theta+stepSize/3.0, omega+kappa/3.0)
 		kappa3 = stepSize * f(theta+2.0*stepSize/3.0, omega+2.0*kappa2/3.0)

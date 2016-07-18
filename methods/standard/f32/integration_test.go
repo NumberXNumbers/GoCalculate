@@ -91,3 +91,31 @@ func TestRungeKutta(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestModifiedEuler(t *testing.T) {
+	f := func(x, y float32) float32 {
+		return y - float32(math.Pow(float64(x), 2)) + 1
+	}
+	a := float32(0.0)
+	b := float32(2.0)
+	N := 10
+	initialCondition := float32(0.5)
+	solutionMatrix := ModifiedEuler(a, b, N, initialCondition, f)
+	if result := float64(solutionMatrix[10][1]); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+}
+
+func TestHeun(t *testing.T) {
+	f := func(x, y float32) float32 {
+		return y - float32(math.Pow(float64(x), 2)) + 1
+	}
+	a := float32(0.0)
+	b := float32(2.0)
+	N := 10
+	initialCondition := float32(0.5)
+	solutionMatrix := Heun(a, b, N, initialCondition, f)
+	if result := float64(solutionMatrix[10][1]); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+}
