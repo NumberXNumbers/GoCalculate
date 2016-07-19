@@ -119,3 +119,35 @@ func TestHeun(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestAdamsBashforth(t *testing.T) {
+	f := func(x, y float32) float32 {
+		return y - float32(math.Pow(float64(x), 2)) + 1
+	}
+	a := float32(0.0)
+	b := float32(2.0)
+	N := 10
+	initialCondition1 := float32(0.5)
+	initialCondition2 := float32(0.8292986)
+	initialCondition3 := float32(1.2140877)
+	initialCondition4 := float32(1.6489406)
+	initialCondition5 := float32(2.1272295)
+	solutionMatrixA := AdamsBashforth2(a, b, N, initialCondition1, initialCondition2, f)
+	if result := float64(solutionMatrixA[10][1]); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+	solutionMatrixB := AdamsBashforth3(a, b, N, initialCondition1, initialCondition2, initialCondition3, f)
+	if result := float64(solutionMatrixB[10][1]); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+	solutionMatrixC := AdamsBashforth4(a, b, N, initialCondition1, initialCondition2, initialCondition3, initialCondition4, f)
+
+	if result := float64(solutionMatrixC[10][1]); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+	solutionMatrixD := AdamsBashforth5(a, b, N, initialCondition1,
+		initialCondition2, initialCondition3, initialCondition4, initialCondition5, f)
+	if result := float64(solutionMatrixD[10][1]); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+}

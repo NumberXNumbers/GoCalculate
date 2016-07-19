@@ -125,3 +125,36 @@ func TestHeun(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestAdamsBashforth(t *testing.T) {
+	x := gcf.NewVar(gcf.Value)
+	y := gcf.NewVar(gcf.Value)
+	regVars := []gcf.Var{x, y}
+	f := gcf.MakeFunc(regVars, y, "-", x, "^", 2, "+", 1)
+	a := 0.0
+	b := 2.0
+	N := 10
+	initialCondition1 := 0.5
+	initialCondition2 := 0.8292986
+	initialCondition3 := 1.2140877
+	initialCondition4 := 1.6489406
+	initialCondition5 := 2.1272295
+	solutionMatrixA := AdamsBashforth2(a, b, N, initialCondition1, initialCondition2, f)
+	if result := solutionMatrixA.Get(10, 1).Real(); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+	solutionMatrixB := AdamsBashforth3(a, b, N, initialCondition1, initialCondition2, initialCondition3, f)
+	if result := solutionMatrixB.Get(10, 1).Real(); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+	solutionMatrixC := AdamsBashforth4(a, b, N, initialCondition1, initialCondition2, initialCondition3, initialCondition4, f)
+
+	if result := solutionMatrixC.Get(10, 1).Real(); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+	solutionMatrixD := AdamsBashforth5(a, b, N, initialCondition1,
+		initialCondition2, initialCondition3, initialCondition4, initialCondition5, f)
+	if result := solutionMatrixD.Get(10, 1).Real(); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+}

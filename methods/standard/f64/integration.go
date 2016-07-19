@@ -290,17 +290,16 @@ func AdamsBashforth2(a float64, b float64, N int, initialCondition1 float64,
 	solutionSet[1][1] = omega2
 
 	omega := omega2
-	scalingConstantFactor := stepSize / 2.0
 
 	var kappa float64
 	var kappa2 float64
 
-	for i := 2; i < N; i++ {
-		kappa = scalingConstantFactor * 3.0 * f(solutionSet[i][0], solutionSet[i][1])
-		kappa2 = scalingConstantFactor * f(solutionSet[i-1][0], solutionSet[i-1][1])
+	for i := 1; i < N; i++ {
+		kappa = 3.0 * f(solutionSet[i][0], solutionSet[i][1])
+		kappa2 = f(solutionSet[i-1][0], solutionSet[i-1][1])
 
-		omega += (kappa - kappa2)
-		theta += stepSize
+		omega += stepSize * (kappa - kappa2) / 2
+		theta = stepSize + solutionSet[i][0]
 
 		solutionSet[i+1][0] = theta
 		solutionSet[i+1][1] = omega
@@ -334,19 +333,18 @@ func AdamsBashforth3(a float64, b float64, N int, initialCondition1 float64,
 	solutionSet[2][1] = omega3
 
 	omega := omega3
-	scalingConstantFactor := stepSize / 12.0
 
 	var kappa float64
 	var kappa2 float64
 	var kappa3 float64
 
 	for i := 2; i < N; i++ {
-		kappa = scalingConstantFactor * 23.0 * f(solutionSet[i][0], solutionSet[i][1])
-		kappa2 = scalingConstantFactor * 16.0 * f(solutionSet[i-1][0], solutionSet[i-1][1])
-		kappa3 = scalingConstantFactor * 5.0 * f(solutionSet[i-2][0], solutionSet[i-2][1])
+		kappa = 23 * f(solutionSet[i][0], solutionSet[i][1])
+		kappa2 = 16 * f(solutionSet[i-1][0], solutionSet[i-1][1])
+		kappa3 = 5 * f(solutionSet[i-2][0], solutionSet[i-2][1])
 
-		omega += (kappa - kappa2 + kappa3)
-		theta += stepSize
+		omega += stepSize * (kappa - kappa2 + kappa3) / 12
+		theta = stepSize + solutionSet[i][0]
 
 		solutionSet[i+1][0] = theta
 		solutionSet[i+1][1] = omega
@@ -383,7 +381,6 @@ func AdamsBashforth4(a float64, b float64, N int, initialCondition1 float64,
 	solutionSet[3][1] = omega4
 
 	omega := omega4
-	scalingConstantFactor := stepSize / 24.0
 
 	var kappa float64
 	var kappa2 float64
@@ -391,13 +388,13 @@ func AdamsBashforth4(a float64, b float64, N int, initialCondition1 float64,
 	var kappa4 float64
 
 	for i := 3; i < N; i++ {
-		kappa = scalingConstantFactor * 55.0 * f(solutionSet[i][0], solutionSet[i][1])
-		kappa2 = scalingConstantFactor * 59.0 * f(solutionSet[i-1][0], solutionSet[i-1][1])
-		kappa3 = scalingConstantFactor * 37.0 * f(solutionSet[i-2][0], solutionSet[i-2][1])
-		kappa4 = scalingConstantFactor * 9.0 * f(solutionSet[i-3][0], solutionSet[i-3][1])
+		kappa = 55 * f(solutionSet[i][0], solutionSet[i][1])
+		kappa2 = 59 * f(solutionSet[i-1][0], solutionSet[i-1][1])
+		kappa3 = 37 * f(solutionSet[i-2][0], solutionSet[i-2][1])
+		kappa4 = 9 * f(solutionSet[i-3][0], solutionSet[i-3][1])
 
-		omega += (kappa - kappa2 + kappa3 - kappa4)
-		theta += stepSize
+		omega += stepSize * (kappa - kappa2 + kappa3 - kappa4) / 24
+		theta = stepSize + solutionSet[i][0]
 
 		solutionSet[i+1][0] = theta
 		solutionSet[i+1][1] = omega
@@ -436,7 +433,6 @@ func AdamsBashforth5(a float64, b float64, N int, initialCondition1 float64,
 	solutionSet[4][1] = omega5
 
 	omega := omega5
-	scalingConstantFactor := stepSize / 720.0
 
 	var kappa float64
 	var kappa2 float64
@@ -444,15 +440,15 @@ func AdamsBashforth5(a float64, b float64, N int, initialCondition1 float64,
 	var kappa4 float64
 	var kappa5 float64
 
-	for i := 3; i < N; i++ {
-		kappa = scalingConstantFactor * 1901.0 * f(solutionSet[i][0], solutionSet[i][1])
-		kappa2 = scalingConstantFactor * 2774.0 * f(solutionSet[i-1][0], solutionSet[i-1][1])
-		kappa3 = scalingConstantFactor * 2616.0 * f(solutionSet[i-2][0], solutionSet[i-2][1])
-		kappa4 = scalingConstantFactor * 1274.0 * f(solutionSet[i-3][0], solutionSet[i-3][1])
-		kappa5 = scalingConstantFactor * 251.0 * f(solutionSet[i-3][0], solutionSet[i-3][1])
+	for i := 4; i < N; i++ {
+		kappa = 1901 * f(solutionSet[i][0], solutionSet[i][1])
+		kappa2 = 2774 * f(solutionSet[i-1][0], solutionSet[i-1][1])
+		kappa3 = 2616 * f(solutionSet[i-2][0], solutionSet[i-2][1])
+		kappa4 = 1274 * f(solutionSet[i-3][0], solutionSet[i-3][1])
+		kappa5 = 251 * f(solutionSet[i-4][0], solutionSet[i-4][1])
 
-		omega += (kappa - kappa2 + kappa3 - kappa4 + kappa5)
-		theta += stepSize
+		omega += stepSize * (kappa - kappa2 + kappa3 - kappa4 + kappa5) / 720
+		theta = stepSize + solutionSet[i][0]
 
 		solutionSet[i+1][0] = theta
 		solutionSet[i+1][1] = omega
