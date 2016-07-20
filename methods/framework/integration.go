@@ -458,7 +458,7 @@ func AdamsBashforthMoulton3(a float64, b float64, N int, initialCondition float6
 	}
 
 	for i := 2; i < N; i++ {
-		theta += stepSize
+		theta = stepSize + solutionSet.Get(i, 0).Real()
 		omega = solutionSet.Get(i, 1).Real() + stepSize*(23.0*f.Eval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()-
 			16.0*f.Eval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()+
 			5.0*f.Eval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real())/12.0
@@ -489,7 +489,7 @@ func AdamsBashforthMoulton4(a float64, b float64, N int, initialCondition float6
 	var kappa3 float64
 	var kappa4 float64
 
-	for i := 0; i < 3; i++ {
+	for i := 0; i < N; i++ {
 		kappa = stepSize * f.Eval(theta, omega).Value().Real()
 		kappa2 = stepSize * f.Eval(theta+stepSize/2.0, omega+kappa/2.0).Value().Real()
 		kappa3 = stepSize * f.Eval(theta+stepSize/2.0, omega+kappa2/2.0).Value().Real()
@@ -503,7 +503,7 @@ func AdamsBashforthMoulton4(a float64, b float64, N int, initialCondition float6
 	}
 
 	for i := 3; i < N; i++ {
-		theta += stepSize
+		theta = stepSize + solutionSet.Get(i, 0).Real()
 		omega = solutionSet.Get(i, 1).Real() + stepSize*(55.0*f.Eval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()-
 			59.0*f.Eval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()+
 			37.0*f.Eval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real()-

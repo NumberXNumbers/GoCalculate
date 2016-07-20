@@ -151,3 +151,21 @@ func TestAdamsBashforth(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestAdamsBashforthMoulton(t *testing.T) {
+	f := func(x, y float64) float64 {
+		return y - math.Pow(x, 2) + 1
+	}
+	a := 0.0
+	b := 2.0
+	N := 10
+	initialCondition := 0.5
+	solutionMatrixA := AdamsBashforthMoulton3(a, b, N, initialCondition, f)
+	if result := solutionMatrixA[10][1]; math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+	solutionMatrixB := AdamsBashforthMoulton4(a, b, N, initialCondition, f)
+	if result := solutionMatrixB[10][1]; math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+}
