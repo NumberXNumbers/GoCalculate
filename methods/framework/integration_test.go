@@ -158,3 +158,22 @@ func TestAdamsBashforth(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestAdamsBashforthMoulton(t *testing.T) {
+	x := gcf.NewVar(gcf.Value)
+	y := gcf.NewVar(gcf.Value)
+	regVars := []gcf.Var{x, y}
+	f := gcf.MakeFunc(regVars, y, "-", x, "^", 2, "+", 1)
+	a := 0.0
+	b := 2.0
+	N := 10
+	initialCondition := 0.5
+	solutionMatrixA := AdamsBashforthMoulton3(a, b, N, initialCondition, f)
+	if result := solutionMatrixA.Get(10, 1).Real(); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+	solutionMatrixB := AdamsBashforthMoulton4(a, b, N, initialCondition, f)
+	if result := solutionMatrixB.Get(10, 1).Real(); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
+}
