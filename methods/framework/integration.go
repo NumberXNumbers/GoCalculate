@@ -562,6 +562,7 @@ func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
 	rk4Done = true
 
 	theta = set.Get(set.Len()-1).Get(0).Real() + stepSize
+
 	var predictor float64
 	var corrector float64
 	var sigma float64

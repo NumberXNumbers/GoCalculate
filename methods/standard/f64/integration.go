@@ -591,8 +591,7 @@ func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
 			o += (kappa + 2.0*kappa2 + 2.0*kappa3 + kappa4) / 6.0
 			t = tSet[len(tSet)-1] + h
 
-			tSet = append(tSet, t)
-			oSet = append(oSet, o)
+			tSet, oSet = append(tSet, t), append(oSet, o)
 		}
 
 		return tSet, oSet
@@ -621,8 +620,7 @@ func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
 		if sigma <= TOL {
 			omega = corrector
 
-			thetas = append(thetas, theta)
-			omegas = append(omegas, omega)
+			thetas, omegas = append(thetas, theta), append(omegas, omega)
 
 			if lastValueCalc {
 				done = true
@@ -661,8 +659,8 @@ func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
 				done = true
 			} else {
 				if rk4Done {
-					thetas = thetas[:len(thetas)-4]
-					omegas = omegas[:len(omegas)-4]
+					thetas = thetas[:len(thetas)-3]
+					omegas = omegas[:len(omegas)-3]
 				}
 
 				thetas, omegas = RK4(stepSize, thetas, omegas, f)
@@ -679,7 +677,7 @@ func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
 		return solutionSet, errors.New("Minimum step size exceeded")
 	}
 
-	for i := 0; i < len(thetas)-1; i++ {
+	for i := 0; i < len(thetas); i++ {
 		solutionSet = append(solutionSet, []float64{thetas[i], omegas[i]})
 	}
 

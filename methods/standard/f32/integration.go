@@ -588,17 +588,17 @@ func AdamsBashforthMoulton(a float32, b float32, initialCondition float32,
 			kappa3 = h * f(t+h/2, o+kappa2/2)
 			kappa4 = h * f(t+h, o+kappa3)
 
-			o += (kappa + 2*kappa2 + 2*kappa3 + kappa4) / 6
+			o += (kappa + 2*kappa2 + 2*kappa3 + kappa4) / 6.0
 			t = tSet[len(tSet)-1] + h
 
-			tSet = append(tSet, t)
-			oSet = append(oSet, o)
+			tSet, oSet = append(tSet, t), append(oSet, o)
 		}
 
 		return tSet, oSet
 	}
 
 	thetas, omegas = RK4(stepSize, thetas, omegas, f)
+
 	rk4Done = true
 
 	theta = thetas[len(thetas)-1] + stepSize
@@ -621,14 +621,13 @@ func AdamsBashforthMoulton(a float32, b float32, initialCondition float32,
 		if sigma <= TOL {
 			omega = corrector
 
-			thetas = append(thetas, theta)
-			omegas = append(omegas, omega)
+			thetas, omegas = append(thetas, theta), append(omegas, omega)
 
 			if lastValueCalc {
 				done = true
 			} else {
 				if sigma <= 0.1*TOL || thetas[len(thetas)-1]+stepSize > b {
-					zeta = float32(math.Pow(float64(TOL/(2*sigma)), 1/4))
+					zeta = float32(math.Pow(float64(TOL/(2*sigma)), 1/4.0))
 					if zeta > 4 {
 						stepSize = 4 * stepSize
 					} else {
@@ -649,7 +648,7 @@ func AdamsBashforthMoulton(a float32, b float32, initialCondition float32,
 				}
 			}
 		} else {
-			zeta = float32(math.Pow(float64(TOL/(2*sigma)), 1/4))
+			zeta = float32(math.Pow(float64(TOL/(2*sigma)), 1/4.0))
 
 			if zeta < 0.1 {
 				stepSize = 0.1 * stepSize
@@ -661,8 +660,8 @@ func AdamsBashforthMoulton(a float32, b float32, initialCondition float32,
 				done = true
 			} else {
 				if rk4Done {
-					thetas = thetas[:len(thetas)-4]
-					omegas = omegas[:len(omegas)-4]
+					thetas = thetas[:len(thetas)-3]
+					omegas = omegas[:len(omegas)-3]
 				}
 
 				thetas, omegas = RK4(stepSize, thetas, omegas, f)
@@ -679,7 +678,7 @@ func AdamsBashforthMoulton(a float32, b float32, initialCondition float32,
 		return solutionSet, errors.New("Minimum step size exceeded")
 	}
 
-	for i := 0; i < len(thetas)-1; i++ {
+	for i := 0; i < len(thetas); i++ {
 		solutionSet = append(solutionSet, []float32{thetas[i], omegas[i]})
 	}
 
