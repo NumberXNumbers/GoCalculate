@@ -168,4 +168,14 @@ func TestAdamsBashforthMoulton(t *testing.T) {
 	if result := float64(solutionMatrixB[10][1]); math.Abs(result-5.3054720) > 1e-1 {
 		t.Fail()
 	}
+	maxStep := float32(0.2)
+	minStep := float32(0.01)
+	TOL := float32(1e-5)
+	solutionMatrixC, err := AdamsBashforthMoulton(a, b, initialCondition, TOL, maxStep, minStep, f)
+	if err != nil {
+		t.Fail()
+	}
+	if result := float64(solutionMatrixC[21][1]); math.Abs(result-5.3054720) > 1e-1 {
+		t.Fail()
+	}
 }
