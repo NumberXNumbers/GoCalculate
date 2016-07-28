@@ -11,13 +11,15 @@ import (
 // Matrix takes a string and returns a matrix if string is
 // of matrix format, else error.
 // Example of matrix format: [1 2 3: 2+2i 2 0: 3.0 2.3 0+3i]
+// [1 2 3: 2+2i 2 0: 3.0 2.3 0+3i]' will return the transpose of the matrix
+// [1 2 3: 2+2i 2 0: 3.0 2.3 0+3i]* will return the conjugate transpose of the matrix
 func Matrix(s string) (matrix m.Matrix, err error) {
-	if !strings.HasPrefix(s, "[") || !strings.HasSuffix(s, "]") {
+	if !strings.HasPrefix(s, leftBracket) {
 		err = errors.New("String is not of type Matrix")
 		return
 	}
 
-	if strings.Count(s, "[") != 1 || strings.Count(s, "]") != 1 {
+	if strings.Count(s, leftBracket) != 1 || strings.Count(s, rightBracket) != 1 {
 		err = errors.New("String is not of type Matrix")
 		return
 	}
@@ -26,8 +28,32 @@ func Matrix(s string) (matrix m.Matrix, err error) {
 		err = errors.New("String is of type Vector")
 		return
 	}
-	s = strings.TrimLeft(s, "[")
-	s = strings.TrimRight(s, "]")
+
+	var transposeMatrix bool
+	var conjTransposeMatrix bool
+
+	if strings.HasSuffix(s, apostrophe) {
+		if strings.Index(s, rightBracket) == len(s)-offsetApostrophe {
+			transposeMatrix = true
+			s = strings.TrimRight(s, apostrophe)
+		} else {
+			err = errors.New("String is not of type Vector")
+			return
+		}
+	}
+
+	if strings.HasSuffix(s, star) {
+		if strings.Index(s, rightBracket) == len(s)-offsetStar {
+			conjTransposeMatrix = true
+			s = strings.TrimRight(s, star)
+		} else {
+			err = errors.New("String is not of type Vector")
+			return
+		}
+	}
+
+	s = strings.TrimLeft(s, leftBracket)
+	s = strings.TrimRight(s, rightBracket)
 	s = strings.Replace(s, ": ", ":", -1)
 	s = strings.Replace(s, " ", ",", -1)
 	sSlice := strings.Split(s, ":")
@@ -58,6 +84,13 @@ func Matrix(s string) (matrix m.Matrix, err error) {
 		}
 	}
 
-	// fmt.Println(matrix)
+	if transposeMatrix {
+		matrix.Trans()
+	}
+
+	if conjTransposeMatrix {
+		matrix.ConjTrans()
+	}
+
 	return
 }

@@ -36,6 +36,9 @@ type Matrix interface {
 	// Transpose of a Matrix
 	Trans()
 
+	// Conjugate (Hermitian) Transpose of a Matrix
+	ConjTrans()
+
 	// Returns a copy of Matrix
 	Copy() Matrix
 
@@ -105,7 +108,7 @@ func (m *matrix) Get(row int, col int) gcv.Value { return m.elements.Get(row).Ge
 // implementation of Set method
 func (m *matrix) Set(row int, col int, value interface{}) {
 	val := gcv.NewValue()
-	val.SetValue(value)
+	val.Set(value)
 	if m.Type() < val.Type() {
 		m.coreType = val.Type()
 	}
@@ -139,6 +142,23 @@ func (m *matrix) Tr() (gcv.Value, error) {
 
 // implementation of Trans method
 func (m *matrix) Trans() {
+	transMatrixNumCols := m.numRows
+	transMatrixNumRows := m.numCols
+	transMatrixElements := v.NewVectors(v.RowSpace, transMatrixNumRows, transMatrixNumCols)
+
+	for i := 0; i < transMatrixNumRows; i++ {
+		for j := 0; j < transMatrixNumCols; j++ {
+			transMatrixElements.SetValue(i, j, m.Get(j, i))
+		}
+	}
+
+	m.numRows = transMatrixNumRows
+	m.numCols = transMatrixNumCols
+	m.elements = transMatrixElements
+}
+
+// implementation of ConjTrans method
+func (m *matrix) ConjTrans() {
 	transMatrixNumCols := m.numRows
 	transMatrixNumRows := m.numCols
 	transMatrixElements := v.NewVectors(v.RowSpace, transMatrixNumRows, transMatrixNumCols)
@@ -366,9 +386,16 @@ func NewIdentityMatrix(degree int) Matrix {
 	return matrix
 }
 
-// MakeConjMatrix returns a new conj matrix of matrix
-func MakeConjMatrix(m Matrix) Matrix {
+// MakeTransMatrix returns a new transpose matrix of matrix
+func MakeTransMatrix(m Matrix) Matrix {
+	transMatrix := m.Copy()
+	transMatrix.Trans()
+	return transMatrix
+}
+
+// MakeConjTransMatrix returns a new conjugate transpose matrix of matrix
+func MakeConjTransMatrix(m Matrix) Matrix {
 	conjMatrix := m.Copy()
-	conjMatrix.Trans()
+	conjMatrix.ConjTrans()
 	return conjMatrix
 }

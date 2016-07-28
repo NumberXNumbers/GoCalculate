@@ -22,7 +22,7 @@ type Value interface {
 	Complex() complex128
 
 	// allows you to reset the value
-	SetValue(val interface{})
+	Set(val interface{})
 
 	// returns the type of raw value
 	Type() Type
@@ -44,7 +44,7 @@ func (v *value) Complex() complex128 { return complex(v.Real(), v.Imag()) }
 
 func (v *value) Type() Type { return v.valueType }
 
-func (v *value) SetValue(val interface{}) {
+func (v *value) Set(val interface{}) {
 	switch val.(type) {
 	case Value:
 		value := val.(Value)
@@ -116,13 +116,12 @@ func (v *value) Copy() Value {
 // NewValue returns the 0 real value
 func NewValue() Value {
 	value := new(value)
-	value.SetValue(0)
 	return value
 }
 
 // MakeValue returns a Value with value val
 func MakeValue(val interface{}) Value {
 	value := new(value)
-	value.SetValue(val)
+	value.Set(val)
 	return value
 }

@@ -199,7 +199,7 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 	omega := initialCondition
 	done := false
 
-	solutionSet := v.MakeVectors(v.RowSpace, v.MakeVectorPure(v.RowSpace, theta, omega))
+	solutionSet := v.MakeVectors(v.RowSpace, v.MakeVector(v.RowSpace, theta, omega))
 
 	var kappa float64
 	var kappa2 float64
@@ -227,7 +227,7 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 			theta += stepSize
 			omega += 25.0*kappa/216.0 + 1408.0*kappa3/2565.0 + 2197.0*kappa4/4104.0 - kappa5/5.0
 
-			solutionSet.Append(v.MakeVectorPure(v.RowSpace, theta, omega))
+			solutionSet.Append(v.MakeVector(v.RowSpace, theta, omega))
 		}
 
 		delta = 0.84 * math.Pow(TOL/remainder, 1.0/4.0)
@@ -530,7 +530,7 @@ func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
 	rk4Done := false
 	lastValueCalc := false
 
-	set := v.MakeVectors(v.RowSpace, v.MakeVectorPure(v.RowSpace, theta, omega))
+	set := v.MakeVectors(v.RowSpace, v.MakeVector(v.RowSpace, theta, omega))
 
 	RK4 := func(h float64, set v.Vectors, f *gcf.Function) v.Vectors {
 		var kappa float64
@@ -552,7 +552,7 @@ func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
 			o += (kappa + 2.0*kappa2 + 2.0*kappa3 + kappa4) / 6.0
 			t += h
 
-			set.Append(v.MakeVectorPure(v.RowSpace, t, o))
+			set.Append(v.MakeVector(v.RowSpace, t, o))
 		}
 
 		return set
@@ -586,7 +586,7 @@ func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
 		if sigma <= TOL {
 			omega = corrector
 
-			set.Append(v.MakeVectorPure(v.RowSpace, theta, omega))
+			set.Append(v.MakeVector(v.RowSpace, theta, omega))
 
 			if lastValueCalc {
 				done = true
