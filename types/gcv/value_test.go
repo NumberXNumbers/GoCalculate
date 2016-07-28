@@ -84,7 +84,7 @@ func TestMakeValueSetValueTypePrint(t *testing.T) {
 
 	valueTestH := NewValue()
 	value := MakeValue(complexTestValueA)
-	valueTestH.SetValue(value)
+	valueTestH.Set(value)
 
 	if valueTestH.Type() != Complex {
 		t.Fail()
@@ -194,7 +194,7 @@ func TestMakeValuesAndValues(t *testing.T) {
 func TestGetandSetValues(t *testing.T) {
 	testValueA := MakeValue(0.5)
 	testValueB := MakeValue(0.6)
-	testValues := MakeValuesPure(0.5, 0.6)
+	testValues := MakeValues(0.5, 0.6)
 
 	if !reflect.DeepEqual(testValues.Get(0), testValueA) || !reflect.DeepEqual(testValues.Get(1), testValueB) {
 		t.Fail()
@@ -228,7 +228,7 @@ func TestCopyValues(t *testing.T) {
 
 	testValues := values.Copy()
 
-	testValueB.SetValue(4)
+	testValueB.Set(4)
 
 	if !reflect.DeepEqual(testValues, values) {
 		t.Fail()
@@ -245,7 +245,7 @@ func TestCopyValues(t *testing.T) {
 		t.Fail()
 	}
 
-	copyC.SetValue(2)
+	copyC.Set(2)
 
 	if copyC.Type() != Real {
 		t.Fail()

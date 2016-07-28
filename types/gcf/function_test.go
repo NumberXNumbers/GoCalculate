@@ -36,7 +36,7 @@ func TestFn2(t *testing.T) {
 	x := NewVar(Value)
 	y := NewVar(Matrix)
 	regVars := []Var{x, y}
-	vector := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	vector := v.MakeVector(v.RowSpace, 2, 4, 6)
 	constVect := MakeConst(vector)
 	function := MakeFunc(regVars, constVect, "*", y, "*", x, "/", MakeConst(4))
 	matrix := m.NewIdentityMatrix(3)
@@ -51,7 +51,7 @@ func TestFn2(t *testing.T) {
 func TestFn3(t *testing.T) {
 	x := NewVar(Vector)
 	regVars := []Var{x}
-	vector := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	vector := v.MakeVector(v.RowSpace, 2, 4, 6)
 	function := MakeFunc(regVars, x, "+", "(", MakeConst(5), "*", x, ")")
 	value := function.Eval(vector)
 	if value.Vector().Get(0).Real() != 12 ||
@@ -69,8 +69,8 @@ func TestFn4(t *testing.T) {
 	regVars := []Var{x, y, a, b}
 	matrixA := m.NewIdentityMatrix(3)
 	matrixB := m.NewIdentityMatrix(3)
-	vectorA := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
-	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	vectorA := v.MakeVector(v.RowSpace, 2, 4, 6)
+	vectorB := v.MakeVector(v.RowSpace, 2, 4, 6)
 	function := MakeFunc(regVars, a, "*", "(", x, "+", "(", y, "*", MakeConst(2), "-", x, ")", "/", MakeConst(2), ")", "-", b, "/", MakeConst(2))
 	value := function.Eval(matrixA, matrixB, vectorA, vectorB)
 	if value.Vector().Get(0).Real() != 2 ||
@@ -88,8 +88,8 @@ func TestFn5(t *testing.T) {
 	regVars := []Var{x, y, a, b}
 	matrixA := m.NewIdentityMatrix(2)
 	matrixB := m.NewIdentityMatrix(2)
-	vectorA := v.MakeVectorPure(v.RowSpace, 1, 0)
-	vectorB := v.MakeVectorPure(v.ColSpace, 0, 1)
+	vectorA := v.MakeVector(v.RowSpace, 1, 0)
+	vectorB := v.MakeVector(v.ColSpace, 0, 1)
 	function := MakeFunc(regVars, a, "*", b, "*", x, "+", y, "+", b, "*", a)
 
 	value := function.Eval(matrixA, matrixB, vectorA, vectorB)
@@ -108,7 +108,7 @@ func TestFn6(t *testing.T) {
 	regVars := []Var{x, y, a}
 	matrixA := m.NewIdentityMatrix(2)
 	matrixB := m.NewIdentityMatrix(2)
-	vectorA := v.MakeVectorPure(v.ColSpace, 1, 0)
+	vectorA := v.MakeVector(v.ColSpace, 1, 0)
 	function := MakeFunc(regVars, x, "*", y, "*", a)
 	value := function.Eval(matrixA, matrixB, vectorA)
 	if value.Vector().Get(0).Real() != 1 ||
@@ -212,8 +212,8 @@ func TestFn15(t *testing.T) {
 func TestCalculateA(t *testing.T) {
 	matrixA := m.NewIdentityMatrix(3)
 	matrixB := m.NewIdentityMatrix(3)
-	vectorA := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
-	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	vectorA := v.MakeVector(v.RowSpace, 2, 4, 6)
+	vectorB := v.MakeVector(v.RowSpace, 2, 4, 6)
 	calculation := Calculate(vectorA, "*", "(", matrixA, "+", "(", matrixB, "*", MakeConst(2), "-", matrixA, ")", "/", 2, ")", "-", vectorB, "/", gcv.MakeValue(2))
 	if calculation.Vector().Get(0).Real() != 2 ||
 		calculation.Vector().Get(1).Real() != 4 ||
@@ -223,7 +223,7 @@ func TestCalculateA(t *testing.T) {
 }
 
 func TestCalculateB(t *testing.T) {
-	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	vectorB := v.MakeVector(v.RowSpace, 2, 4, 6)
 	calculation := Calculate("(", MakeConst(2), ")", "*", vectorB)
 	if calculation.Vector().Get(0).Real() != 4 ||
 		calculation.Vector().Get(1).Real() != 8 ||
@@ -298,7 +298,7 @@ func TestCalculateK(t *testing.T) {
 }
 
 func TestFunctionPanicOperatorNotSupported(t *testing.T) {
-	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	vectorB := v.MakeVector(v.RowSpace, 2, 4, 6)
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -317,7 +317,7 @@ func TestFunctionPanicOperatorNotSupported(t *testing.T) {
 }
 
 func TestFunctionPanicOperatorParensMismatch(t *testing.T) {
-	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	vectorB := v.MakeVector(v.RowSpace, 2, 4, 6)
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -336,7 +336,7 @@ func TestFunctionPanicOperatorParensMismatch(t *testing.T) {
 }
 
 func TestCalculatePanicOperatorsOperandMismatch(t *testing.T) {
-	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	vectorB := v.MakeVector(v.RowSpace, 2, 4, 6)
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -352,7 +352,7 @@ func TestCalculatePanicOperatorsOperandMismatch(t *testing.T) {
 }
 
 func TestCalculatePanicOperatorParensMismatch(t *testing.T) {
-	vectorB := v.MakeVectorPure(v.RowSpace, 2, 4, 6)
+	vectorB := v.MakeVector(v.RowSpace, 2, 4, 6)
 
 	defer func() {
 		if r := recover(); r != nil {

@@ -41,6 +41,9 @@ type Vector interface {
 	// Returns the len of the values
 	Len() int
 
+	// Conjugate Transpose of vector. i.e changes a row into a column vector and vice versa
+	ConjTrans()
+
 	// Transpose of vector. i.e changes a row into a column vector and vice versa
 	Trans()
 
@@ -88,10 +91,19 @@ func (v *vector) Append(val gcv.Value) { v.Elements().Append(val) }
 
 // implementation of Trans method
 func (v *vector) Trans() {
+	if v.Space() == ColSpace {
+		v.space = RowSpace
+	} else {
+		v.space = ColSpace
+	}
+}
+
+// implementation of ConjTrans method
+func (v *vector) ConjTrans() {
 	if v.Type() == gcv.Complex {
 		for i := 0; i < v.Len(); i++ {
 			value := v.Get(i)
-			value.SetValue(gcvops.Conj(value))
+			value.Set(gcvops.Conj(value))
 			v.Set(i, value)
 		}
 	}
@@ -106,7 +118,7 @@ func (v *vector) Trans() {
 // implementation of Norm method
 func (v *vector) Norm() gcv.Value {
 	dotProduct := gcv.NewValue()
-	conjVector := MakeConjVector(v)
+	conjVector := MakeConjTransVector(v)
 	for i := 0; i < v.Len(); i++ {
 		dotProduct = gcvops.Add(dotProduct, gcvops.Mult(v.Get(i), conjVector.Get(i)))
 	}
@@ -121,9 +133,9 @@ func NewVector(space Space, length int) Vector {
 	vector := new(vector)
 	vector.space = space
 	vector.coreType = gcv.Real
-	elements := make([]gcv.Value, length)
+	elements := make([]interface{}, length)
 	for index := range elements {
-		val := gcv.MakeValue(0)
+		val := gcv.NewValue()
 		elements[index] = val
 	}
 	vector.elements = gcv.MakeValues(elements...)
@@ -139,23 +151,25 @@ func MakeVectorAlt(space Space, elements gcv.Values) Vector {
 	return vector
 }
 
-// MakeVectorPure returns Vector, requires a pure interfaces
-func MakeVectorPure(space Space, elements ...interface{}) Vector {
-	values := gcv.MakeValuesPure(elements...)
+// MakeVector returns Vector, takes in a slice of interfaces.
+// in an interface is not a supported type, that interface will be forced to the zero
+// Value
+func MakeVector(space Space, elements ...interface{}) Vector {
+	values := gcv.MakeValues(elements...)
 	vector := MakeVectorAlt(space, values)
 	return vector
 }
 
-// MakeVector returns Vector, requires a framework Value type
-func MakeVector(space Space, elements ...gcv.Value) Vector {
-	values := gcv.MakeValuesAlt(elements)
-	vector := MakeVectorAlt(space, values)
-	return vector
+// MakeTransVector returns a new conjugate vector of vector
+func MakeTransVector(v Vector) Vector {
+	transVector := v.Copy()
+	transVector.Trans()
+	return transVector
 }
 
-// MakeConjVector returns a new conjugate vector of vector
-func MakeConjVector(v Vector) Vector {
+// MakeConjTransVector returns a new conjugate transpose vector of vector
+func MakeConjTransVector(v Vector) Vector {
 	conjVector := v.Copy()
-	conjVector.Trans()
+	conjVector.ConjTrans()
 	return conjVector
 }

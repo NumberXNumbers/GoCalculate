@@ -1,6 +1,7 @@
 package parsers
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -117,8 +118,8 @@ func TestValue(t *testing.T) {
 
 func TestMatrix(t *testing.T) {
 	testStrA := "[1 2 3: 4 5 6: 7 8 9]"
-	testStrB := "[1.0 -5+4i 5.0: 4 3 2]"
-	testStrC := "[2 3: 4 5: 6 6: 7 7]"
+	testStrB := "[1.0 -5+4i 5.0: 4 3 2]*"
+	testStrC := "[2 3: 4 5: 6 6: 7 7]'"
 	testStrD := "[1000 123.0 2345.5 34.3: 3 4 5 6]"
 	testStrE := "[1 2 3: 4 5 6: 7 8]"
 	testStrFa := "1 2 3: 4 5 6: 7 8]"
@@ -127,6 +128,8 @@ func TestMatrix(t *testing.T) {
 	testStrGb := "[1 2 3] 4 5 6] 7 8]]"
 	testStrH := "[1 2 3 4 5 6 7 8 9]"
 	testStrI := "[1 2 3: 1 * 3]"
+	testStrJ := "[1 2 3: 1 2 3]9*"
+	testStrK := "[1 2 3: 1 2 3]9'"
 
 	valueA, errA := Matrix(testStrA)
 	valueB, errB := Matrix(testStrB)
@@ -139,11 +142,13 @@ func TestMatrix(t *testing.T) {
 	_, errGb := Value(testStrGb)
 	_, errH := Matrix(testStrH)
 	_, errI := Matrix(testStrI)
+	_, errJ := Matrix(testStrJ)
+	_, errK := Matrix(testStrK)
 
-	solMatrixA := m.MakeMatrix(v.MakeVectorPure(v.RowSpace, 1, 2, 3), v.MakeVectorPure(v.RowSpace, 4, 5, 6), v.MakeVectorPure(v.RowSpace, 7, 8, 9))
-	solMatrixB := m.MakeMatrix(v.MakeVectorPure(v.RowSpace, 1.0, -5+4i, 5.0), v.MakeVectorPure(v.RowSpace, 4, 3, 2))
-	solMatrixC := m.MakeMatrix(v.MakeVectorPure(v.RowSpace, 2, 3), v.MakeVectorPure(v.RowSpace, 4, 5), v.MakeVectorPure(v.RowSpace, 6, 6), v.MakeVectorPure(v.RowSpace, 7, 7))
-	solMatrixD := m.MakeMatrix(v.MakeVectorPure(v.RowSpace, 1000, 123.0, 2345.5, 34.3), v.MakeVectorPure(v.RowSpace, 3, 4, 5, 6))
+	solMatrixA := m.MakeMatrix(v.MakeVector(v.RowSpace, 1, 2, 3), v.MakeVector(v.RowSpace, 4, 5, 6), v.MakeVector(v.RowSpace, 7, 8, 9))
+	solMatrixB := m.MakeMatrix(v.MakeVector(v.RowSpace, 1.0, 4), v.MakeVector(v.RowSpace, -5-4i, 3), v.MakeVector(v.RowSpace, 5, 2))
+	solMatrixC := m.MakeMatrix(v.MakeVector(v.RowSpace, 2, 4, 6, 7), v.MakeVector(v.RowSpace, 3, 5, 6, 7))
+	solMatrixD := m.MakeMatrix(v.MakeVector(v.RowSpace, 1000, 123.0, 2345.5, 34.3), v.MakeVector(v.RowSpace, 3, 4, 5, 6))
 
 	if errA != nil {
 		t.Fail()
@@ -204,79 +209,82 @@ func TestMatrix(t *testing.T) {
 	if errI == nil {
 		t.Error("Expected Error")
 	}
+
+	fmt.Println(errJ)
+	if errJ == nil {
+
+		t.Error("Expected Error")
+	}
+
+	if errK == nil {
+		t.Error("Expected Error")
+	}
 }
 
 func TestVector(t *testing.T) {
 	testStrA := "[1 2 3 4 5 6 7 8 9]"
-	testStrB := "`[1.0 -5+4i 5.0 4 3 2]"
+	testStrB := "[1.0 -5+4i 5.0 4 3 2]*"
 	testStrC := "[2 3 4 5 6 6 7 7]'"
-	testStrD := "`[1000 123.0 2345.5 34.3 3 4 5 6]'"
 	testStrE := "[1 2 3: 4 5 6: 7 8]"
 	testStrFa := "1 2 3 4 5 6 7 8]"
 	testStrFb := "[1 2 3 4 5 6 7 8"
-	testStrG := "`1.0 [ -5+4i 5.0 4 3 2]"
+	testStrG := "1.0 [ -5+4i 5.0 4 3 2]"
 	testStrH := "[1 2 3 1 * 3]"
 	testStrI := "[2 3 4 5 6 6 7 ] 7'"
-	testStrJ := "[2 3 4 5 6 6 7 ] 7"
+	testStrJ := "[2 3 4 5 6 6 7 ] 7*"
 
-	valueA, errA := Vector(testStrA)
-	valueB, errB := Vector(testStrB)
-	valueC, errC := Vector(testStrC)
-	valueD, errD := Vector(testStrD)
-	_, errE := Vector(testStrE)
-	_, errFa := Vector(testStrFa)
-	_, errFb := Vector(testStrFb)
-	_, errG := Vector(testStrG)
-	_, errH := Vector(testStrH)
-	_, errI := Vector(testStrI)
-	_, errJ := Vector(testStrJ)
+	vectorA, errA := Vector(testStrA)
+	vectorB, errB := Vector(testStrB)
+	vectorC, errC := Vector(testStrC)
+	_, errD := Vector(testStrE)
+	_, errEa := Vector(testStrFa)
+	_, errEb := Vector(testStrFb)
+	_, errF := Vector(testStrG)
+	_, errG := Vector(testStrH)
+	_, errH := Vector(testStrI)
+	_, errI := Vector(testStrJ)
 
-	solVectorA := v.MakeVectorPure(v.RowSpace, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-	solVectorB := v.MakeVectorPure(v.ColSpace, 1.0, -5+4i, 5.0, 4, 3, 2)
-	solVectorC := v.MakeVectorPure(v.ColSpace, 2, 3, 4, 5, 6, 6, 7, 7)
-	solVectorD := v.MakeVectorPure(v.RowSpace, 1000, 123.0, 2345.5, 34.3, 3, 4, 5, 6)
+	solVectorA := v.MakeVector(v.RowSpace, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+	solVectorB := v.MakeVector(v.ColSpace, 1.0, -5-4i, 5.0, 4, 3, 2)
+	solVectorC := v.MakeVector(v.ColSpace, 2, 3, 4, 5, 6, 6, 7, 7)
 
 	if errA != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(valueA, solVectorA) {
-		t.Errorf("Expected %v, received %v", solVectorA, valueA)
+	if !reflect.DeepEqual(vectorA, solVectorA) {
+		t.Errorf("Expected %v, received %v", solVectorA, vectorA)
 	}
 
 	if errB != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(valueB, solVectorB) {
-		t.Errorf("Expected %v, received %v", solVectorB, valueB)
+	if !reflect.DeepEqual(vectorB, solVectorB) {
+		t.Errorf("Expected %v, received %v", solVectorB, vectorB)
 	}
 
 	if errC != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(valueC, solVectorC) {
-		t.Errorf("Expected %v, received %v", solVectorC, valueC)
+	if !reflect.DeepEqual(vectorC, solVectorC) {
+		t.Errorf("Expected %v, received %v", solVectorC, vectorC)
 	}
 
-	if errD != nil {
-		t.Fail()
-	}
-
-	if !reflect.DeepEqual(valueD, solVectorD) {
-		t.Errorf("Expected %v, received %v", solVectorD, valueD)
-	}
-
-	if errE == nil {
+	if errD == nil {
 		t.Error("Expected Error")
 	}
 
-	if errFa == nil {
+	if errEa == nil {
 		t.Error("Expected Error")
 	}
 
-	if errFb == nil {
+	if errEb == nil {
+		t.Error("Expected Error")
+	}
+
+	if errF == nil {
 		t.Error("Expected Error")
 	}
 
@@ -289,10 +297,6 @@ func TestVector(t *testing.T) {
 	}
 
 	if errI == nil {
-		t.Error("Expected Error")
-	}
-
-	if errJ == nil {
 		t.Error("Expected Error")
 	}
 }

@@ -50,7 +50,7 @@ func TestCopy(t *testing.T) {
 	}
 }
 
-func TestTrans(t *testing.T) {
+func TestConjTrans(t *testing.T) {
 	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testMatrixA := MakeMatrix(testVectorAa, testVectorAb)
@@ -59,7 +59,7 @@ func TestTrans(t *testing.T) {
 	testVectorAd := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(2))
 	testMatrixTransA := MakeMatrix(testVectorAc, testVectorAd)
 
-	testMatrixA.Trans()
+	testMatrixA.ConjTrans()
 	if !reflect.DeepEqual(testMatrixTransA, testMatrixA) {
 		t.Errorf("Expected %v, received %v", testMatrixTransA, testMatrixA)
 	}
@@ -72,7 +72,7 @@ func TestTrans(t *testing.T) {
 	testVectorBd := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(2-1i))
 	testMatrixTransB := MakeMatrix(testVectorBc, testVectorBd)
 
-	testMatrixB.Trans()
+	testMatrixB.ConjTrans()
 	if !reflect.DeepEqual(testMatrixTransB.Get(0, 0), testMatrixB.Get(0, 0)) ||
 		testMatrixTransB.Get(0, 1).Complex() != testMatrixB.Get(0, 1).Complex() ||
 		testMatrixTransB.Get(1, 0).Complex() != testMatrixB.Get(1, 0).Complex() ||
@@ -182,12 +182,25 @@ func TestGetElements(t *testing.T) {
 	}
 }
 
-func TestMakeConj(t *testing.T) {
+func TestMakeCTransMatrix(t *testing.T) {
 	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb)
 	testMatrixA := MakeMatrixAlt(testVectorsA)
-	solutionMatrixA := MakeConjMatrix(testMatrixA)
+	solutionMatrixA := MakeConjTransMatrix(testMatrixA)
+
+	testMatrixA.ConjTrans()
+	if !reflect.DeepEqual(testMatrixA, solutionMatrixA) {
+		t.Errorf("Expected %v, received %v", solutionMatrixA, testMatrixA)
+	}
+}
+
+func TestMakeTransMatrix(t *testing.T) {
+	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
+	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
+	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb)
+	testMatrixA := MakeMatrixAlt(testVectorsA)
+	solutionMatrixA := MakeTransMatrix(testMatrixA)
 
 	testMatrixA.Trans()
 	if !reflect.DeepEqual(testMatrixA, solutionMatrixA) {
@@ -196,8 +209,8 @@ func TestMakeConj(t *testing.T) {
 }
 
 func TestSwap(t *testing.T) {
-	testVectorAa := v.MakeVectorPure(v.RowSpace, 1, 2)
-	testVectorAb := v.MakeVectorPure(v.RowSpace, 3, 2)
+	testVectorAa := v.MakeVector(v.RowSpace, 1, 2)
+	testVectorAb := v.MakeVector(v.RowSpace, 3, 2)
 	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb)
 	testMatrixA := MakeMatrixAlt(testVectorsA)
 	solutionMatrixA := MakeMatrix(testVectorAb, testVectorAa)
@@ -209,8 +222,8 @@ func TestSwap(t *testing.T) {
 }
 
 func TestDet(t *testing.T) {
-	testVectorAa := v.MakeVectorPure(v.RowSpace, 1, 2)
-	testVectorAb := v.MakeVectorPure(v.RowSpace, 3, 2)
+	testVectorAa := v.MakeVector(v.RowSpace, 1, 2)
+	testVectorAb := v.MakeVector(v.RowSpace, 3, 2)
 	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb)
 	testMatrixA := MakeMatrixAlt(testVectorsA)
 	detA, errA := testMatrixA.Det()
@@ -223,8 +236,8 @@ func TestDet(t *testing.T) {
 		t.Errorf("Expected %v, received %v", -4, detA)
 	}
 
-	testVectorBa := v.MakeVectorPure(v.RowSpace, 4, 2)
-	testVectorBb := v.MakeVectorPure(v.RowSpace, 3, 2)
+	testVectorBa := v.MakeVector(v.RowSpace, 4, 2)
+	testVectorBb := v.MakeVector(v.RowSpace, 3, 2)
 	testVectorsB := v.MakeVectors(v.RowSpace, testVectorBa, testVectorBb)
 	testMatrixB := MakeMatrixAlt(testVectorsB)
 	detB, errB := testMatrixB.Det()
@@ -237,9 +250,9 @@ func TestDet(t *testing.T) {
 		t.Errorf("Expected %v, received %v", 2, detB)
 	}
 
-	testVectorCa := v.MakeVectorPure(v.RowSpace, 1, 2, 1)
-	testVectorCb := v.MakeVectorPure(v.RowSpace, 3, 2, 3)
-	testVectorCc := v.MakeVectorPure(v.RowSpace, 2, 3, 4)
+	testVectorCa := v.MakeVector(v.RowSpace, 1, 2, 1)
+	testVectorCb := v.MakeVector(v.RowSpace, 3, 2, 3)
+	testVectorCc := v.MakeVector(v.RowSpace, 2, 3, 4)
 	testVectorsC := v.MakeVectors(v.RowSpace, testVectorCa, testVectorCb, testVectorCc)
 	testMatrixC := MakeMatrixAlt(testVectorsC)
 	detC, errC := testMatrixC.Det()
@@ -264,9 +277,9 @@ func TestDet(t *testing.T) {
 func TestAug(t *testing.T) {
 	testMatrixA := NewIdentityMatrix(3)
 	testMatrixB := NewIdentityMatrix(3)
-	testVectorAa := v.MakeVectorPure(v.RowSpace, 1, 0, 0, 1, 0, 0)
-	testVectorAb := v.MakeVectorPure(v.RowSpace, 0, 1, 0, 0, 1, 0)
-	testVectorAc := v.MakeVectorPure(v.RowSpace, 0, 0, 1, 0, 0, 1)
+	testVectorAa := v.MakeVector(v.RowSpace, 1, 0, 0, 1, 0, 0)
+	testVectorAb := v.MakeVector(v.RowSpace, 0, 1, 0, 0, 1, 0)
+	testVectorAc := v.MakeVector(v.RowSpace, 0, 0, 1, 0, 0, 1)
 	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb, testVectorAc)
 	solutionMatrixA := MakeMatrixAlt(testVectorsA)
 	resultMatrixABa := testMatrixA.Aug(testMatrixB)
@@ -275,11 +288,11 @@ func TestAug(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionMatrixA, resultMatrixABa)
 	}
 
-	testVectorB := v.MakeVectorPure(v.ColSpace, 1, 1, 1)
+	testVectorB := v.MakeVector(v.ColSpace, 1, 1, 1)
 
-	testVectorBa := v.MakeVectorPure(v.RowSpace, 1, 0, 0, 1)
-	testVectorBb := v.MakeVectorPure(v.RowSpace, 0, 1, 0, 1)
-	testVectorBc := v.MakeVectorPure(v.RowSpace, 0, 0, 1, 1)
+	testVectorBa := v.MakeVector(v.RowSpace, 1, 0, 0, 1)
+	testVectorBb := v.MakeVector(v.RowSpace, 0, 1, 0, 1)
+	testVectorBc := v.MakeVector(v.RowSpace, 0, 0, 1, 1)
 	testVectorsB := v.MakeVectors(v.RowSpace, testVectorBa, testVectorBb, testVectorBc)
 	solutionMatrixB := MakeMatrixAlt(testVectorsB)
 	resultMatrixABb := testMatrixA.Aug(testVectorB)
@@ -365,9 +378,9 @@ func TestTrim(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionMatrixA, resultMatrixA)
 	}
 
-	testVectorBa := v.MakeVectorPure(v.RowSpace, 1, 0)
-	testVectorBb := v.MakeVectorPure(v.RowSpace, 0, 1)
-	testVectorBc := v.MakeVectorPure(v.RowSpace, 0, 0)
+	testVectorBa := v.MakeVector(v.RowSpace, 1, 0)
+	testVectorBb := v.MakeVector(v.RowSpace, 0, 1)
+	testVectorBc := v.MakeVector(v.RowSpace, 0, 0)
 	testVectorsB := v.MakeVectors(v.RowSpace, testVectorBa, testVectorBb, testVectorBc)
 	solutionMatrixB := MakeMatrixAlt(testVectorsB)
 	resultMatrixB := testMatrixA.Trim(1, 0, 1, 1)
@@ -376,9 +389,9 @@ func TestTrim(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionMatrixB, resultMatrixB)
 	}
 
-	testVectorCa := v.MakeVectorPure(v.RowSpace, 1, 0, 0, 0)
-	testVectorCb := v.MakeVectorPure(v.RowSpace, 0, 1, 0, 0)
-	testVectorCc := v.MakeVectorPure(v.RowSpace, 0, 0, 1, 0)
+	testVectorCa := v.MakeVector(v.RowSpace, 1, 0, 0, 0)
+	testVectorCb := v.MakeVector(v.RowSpace, 0, 1, 0, 0)
+	testVectorCc := v.MakeVector(v.RowSpace, 0, 0, 1, 0)
 	testVectorsC := v.MakeVectors(v.RowSpace, testVectorCa, testVectorCb, testVectorCc)
 	solutionMatrixC := MakeMatrixAlt(testVectorsC)
 	resultMatrixC := testMatrixA.Trim(0, 1, 0, 0)
@@ -387,9 +400,9 @@ func TestTrim(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionMatrixC, resultMatrixC)
 	}
 
-	testVectorDa := v.MakeVectorPure(v.RowSpace, 0, 0)
-	testVectorDb := v.MakeVectorPure(v.RowSpace, 1, 0)
-	testVectorDc := v.MakeVectorPure(v.RowSpace, 0, 1)
+	testVectorDa := v.MakeVector(v.RowSpace, 0, 0)
+	testVectorDb := v.MakeVector(v.RowSpace, 1, 0)
+	testVectorDc := v.MakeVector(v.RowSpace, 0, 1)
 	testVectorsD := v.MakeVectors(v.RowSpace, testVectorDa, testVectorDb, testVectorDc)
 	solutionMatrixD := MakeMatrixAlt(testVectorsD)
 	resultMatrixD := testMatrixA.Trim(0, 1, 1, 1)
@@ -398,9 +411,9 @@ func TestTrim(t *testing.T) {
 		t.Errorf("Expected %v, received %v", solutionMatrixD, resultMatrixD)
 	}
 
-	testVectorEa := v.MakeVectorPure(v.RowSpace, 0, 0, 0)
-	testVectorEb := v.MakeVectorPure(v.RowSpace, 1, 0, 0)
-	testVectorEc := v.MakeVectorPure(v.RowSpace, 0, 1, 0)
+	testVectorEa := v.MakeVector(v.RowSpace, 0, 0, 0)
+	testVectorEb := v.MakeVector(v.RowSpace, 1, 0, 0)
+	testVectorEc := v.MakeVector(v.RowSpace, 0, 1, 0)
 	testVectorsE := v.MakeVectors(v.RowSpace, testVectorEa, testVectorEb, testVectorEc)
 	solutionMatrixE := MakeMatrixAlt(testVectorsE)
 	resultMatrixE := testMatrixA.Trim(0, 1, 1, 0)
@@ -427,9 +440,9 @@ func TestTrimPanicDimOutOfBounds(t *testing.T) {
 }
 
 func TestInv(t *testing.T) {
-	testVectorAa := v.MakeVectorPure(v.RowSpace, 0, 2, 4)
-	testVectorAb := v.MakeVectorPure(v.RowSpace, 4, 1, 5)
-	testVectorAc := v.MakeVectorPure(v.RowSpace, 3, 3, 0)
+	testVectorAa := v.MakeVector(v.RowSpace, 0, 2, 4)
+	testVectorAb := v.MakeVector(v.RowSpace, 4, 1, 5)
+	testVectorAc := v.MakeVector(v.RowSpace, 3, 3, 0)
 	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb, testVectorAc)
 	testMatrixA, errA := MakeMatrixAlt(testVectorsA).Inv()
 

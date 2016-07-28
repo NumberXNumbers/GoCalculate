@@ -68,8 +68,8 @@ func TestLenMethodVector(t *testing.T) {
 	}
 }
 
-func TestTransMethodVector(t *testing.T) {
-	testElementsA := gcv.MakeValuesPure(1, 2, 3)
+func TestTransMethods(t *testing.T) {
+	testElementsA := gcv.MakeValues(1, 2, 3)
 	testVectorA := MakeVectorAlt(ColSpace, testElementsA)
 	testTransVectorA := MakeVectorAlt(RowSpace, testElementsA)
 
@@ -79,10 +79,10 @@ func TestTransMethodVector(t *testing.T) {
 		t.Errorf("Expected %v, received %v", testVectorA, testTransVectorA)
 	}
 
-	testVectorB := MakeVectorPure(ColSpace, 1+1i, 2, 3-3i)
+	testVectorB := MakeVector(ColSpace, 1+1i, 2, 3-3i)
 	testTransVectorB := MakeVector(RowSpace, gcv.MakeValue(1-1i), gcv.MakeValue(2), gcv.MakeValue(3+3i))
 
-	testVectorB.Trans()
+	testVectorB.ConjTrans()
 
 	if !reflect.DeepEqual(testVectorB.Get(0), testTransVectorB.Get(0)) &&
 		!reflect.DeepEqual(testVectorB.Get(1), testTransVectorB.Get(1)) &&
@@ -114,9 +114,20 @@ func TestNormMethodVector(t *testing.T) {
 	}
 }
 
-func TestMakeNewConjVector(t *testing.T) {
+func TestMakeNewTransVector(t *testing.T) {
 	testVectorA := NewVector(RowSpace, 4)
-	testTransVectorA := MakeConjVector(testVectorA)
+	testTransVectorA := MakeTransVector(testVectorA)
+
+	testVectorA.Trans()
+
+	if !reflect.DeepEqual(testVectorA, testTransVectorA) {
+		t.Errorf("Expected %v, received %v", true, reflect.DeepEqual(testVectorA, testTransVectorA))
+	}
+}
+
+func TestMakeNewConjTransVector(t *testing.T) {
+	testVectorA := NewVector(RowSpace, 4)
+	testTransVectorA := MakeConjTransVector(testVectorA)
 
 	testVectorA.Trans()
 
@@ -126,7 +137,7 @@ func TestMakeNewConjVector(t *testing.T) {
 }
 
 func TestNewVectorsGet(t *testing.T) {
-	testVectors := []Vector{MakeVectorPure(RowSpace, 3, 4), MakeVectorPure(ColSpace, 6, 7)}
+	testVectors := []Vector{MakeVector(RowSpace, 3, 4), MakeVector(ColSpace, 6, 7)}
 	testVectorsA := MakeVectorsAlt(RowSpace, testVectors)
 
 	if !reflect.DeepEqual(testVectors[0], testVectorsA.Get(0)) {

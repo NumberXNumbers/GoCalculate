@@ -108,17 +108,13 @@ func MakeValuesAlt(vals []Value) Values {
 	return newValues
 }
 
-// MakeValuesPure returns a Values type, requires pure interfaces
-func MakeValuesPure(vals ...interface{}) Values {
+// MakeValues returns a Values type, takes in a slice of interfaces.
+// in an interface is not a supported type, that interface will be forced to the zero
+// Value
+func MakeValues(vals ...interface{}) Values {
 	var values []Value
 	for _, val := range vals {
 		values = append(values, MakeValue(val))
 	}
 	return MakeValuesAlt(values)
-}
-
-// MakeValues returns a Values type, requires a framework Value type
-func MakeValues(vals ...Value) Values {
-	newValues := MakeValuesAlt(vals)
-	return newValues
 }
