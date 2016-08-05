@@ -36,6 +36,9 @@ type Matrix interface {
 	// Transpose of a Matrix
 	Trans()
 
+	// Conjuate of a Matrix
+	Conj()
+
 	// Conjugate (Hermitian) Transpose of a Matrix
 	ConjTrans()
 
@@ -157,21 +160,31 @@ func (m *matrix) Trans() {
 	m.elements = transMatrixElements
 }
 
+// implementation of Conj method
+func (m *matrix) Conj() {
+	rows, cols := m.Dim()
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			m.Set(i, j, gcvops.Conj(m.Get(i, j)))
+		}
+	}
+}
+
 // implementation of ConjTrans method
 func (m *matrix) ConjTrans() {
-	transMatrixNumCols := m.numRows
-	transMatrixNumRows := m.numCols
-	transMatrixElements := v.NewVectors(v.RowSpace, transMatrixNumRows, transMatrixNumCols)
+	conjTransMatrixNumCols := m.numRows
+	conjTransMatrixNumRows := m.numCols
+	conjTransMatrixElements := v.NewVectors(v.RowSpace, conjTransMatrixNumRows, conjTransMatrixNumCols)
 
-	for i := 0; i < transMatrixNumRows; i++ {
-		for j := 0; j < transMatrixNumCols; j++ {
-			transMatrixElements.SetValue(i, j, gcvops.Conj(m.Get(j, i)))
+	for i := 0; i < conjTransMatrixNumRows; i++ {
+		for j := 0; j < conjTransMatrixNumCols; j++ {
+			conjTransMatrixElements.SetValue(i, j, gcvops.Conj(m.Get(j, i)))
 		}
 	}
 
-	m.numRows = transMatrixNumRows
-	m.numCols = transMatrixNumCols
-	m.elements = transMatrixElements
+	m.numRows = conjTransMatrixNumRows
+	m.numCols = conjTransMatrixNumCols
+	m.elements = conjTransMatrixElements
 }
 
 // implementation of Swap
@@ -393,9 +406,16 @@ func MakeTransMatrix(m Matrix) Matrix {
 	return transMatrix
 }
 
+// MakeConjMatrix returns a new complex conjuate matrix of matrix
+func MakeConjMatrix(m Matrix) Matrix {
+	conjMatrix := m.Copy()
+	conjMatrix.Conj()
+	return conjMatrix
+}
+
 // MakeConjTransMatrix returns a new conjugate transpose matrix of matrix
 func MakeConjTransMatrix(m Matrix) Matrix {
-	conjMatrix := m.Copy()
-	conjMatrix.ConjTrans()
-	return conjMatrix
+	conjTransMatrix := m.Copy()
+	conjTransMatrix.ConjTrans()
+	return conjTransMatrix
 }

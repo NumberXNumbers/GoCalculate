@@ -59,7 +59,7 @@ func TestConjTrans(t *testing.T) {
 	testVectorAd := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(2))
 	testMatrixTransA := MakeMatrix(testVectorAc, testVectorAd)
 
-	testMatrixA.ConjTrans()
+	testMatrixA.Trans()
 	if !reflect.DeepEqual(testMatrixTransA, testMatrixA) {
 		t.Errorf("Expected %v, received %v", testMatrixTransA, testMatrixA)
 	}
@@ -79,6 +79,23 @@ func TestConjTrans(t *testing.T) {
 		!reflect.DeepEqual(testMatrixTransB.Get(1, 1), testMatrixB.Get(1, 1)) ||
 		testMatrixTransB.Type() != gcv.Complex {
 		t.Errorf("Expected %v, received %v", testMatrixTransB, testMatrixB)
+	}
+
+	testVectorCa := v.MakeVector(v.RowSpace, gcv.MakeValue(1+1i), gcv.MakeValue(2-2i))
+	testVectorCb := v.MakeVector(v.RowSpace, gcv.MakeValue(1-2i), gcv.MakeValue(2+1i))
+	testMatrixC := MakeMatrix(testVectorCa, testVectorCb)
+
+	testVectorCc := v.MakeVector(v.RowSpace, gcv.MakeValue(1-1i), gcv.MakeValue(2+2i))
+	testVectorCd := v.MakeVector(v.RowSpace, gcv.MakeValue(1+2i), gcv.MakeValue(2-1i))
+	testMatrixTransC := MakeMatrix(testVectorCc, testVectorCd)
+
+	testMatrixC.Conj()
+	if testMatrixTransC.Get(0, 0).Complex() != testMatrixC.Get(0, 0).Complex() ||
+		testMatrixTransC.Get(0, 1).Complex() != testMatrixC.Get(0, 1).Complex() ||
+		testMatrixTransC.Get(1, 0).Complex() != testMatrixC.Get(1, 0).Complex() ||
+		testMatrixTransC.Get(1, 1).Complex() != testMatrixC.Get(1, 1).Complex() ||
+		testMatrixTransC.Type() != gcv.Complex {
+		t.Errorf("Expected %v, received %v", testMatrixTransC, testMatrixC)
 	}
 }
 
@@ -203,6 +220,19 @@ func TestMakeTransMatrix(t *testing.T) {
 	solutionMatrixA := MakeTransMatrix(testMatrixA)
 
 	testMatrixA.Trans()
+	if !reflect.DeepEqual(testMatrixA, solutionMatrixA) {
+		t.Errorf("Expected %v, received %v", solutionMatrixA, testMatrixA)
+	}
+}
+
+func TestMakeConjMatrix(t *testing.T) {
+	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
+	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
+	testVectorsA := v.MakeVectors(v.RowSpace, testVectorAa, testVectorAb)
+	testMatrixA := MakeMatrixAlt(testVectorsA)
+	solutionMatrixA := MakeConjMatrix(testMatrixA)
+
+	testMatrixA.Conj()
 	if !reflect.DeepEqual(testMatrixA, solutionMatrixA) {
 		t.Errorf("Expected %v, received %v", solutionMatrixA, testMatrixA)
 	}
