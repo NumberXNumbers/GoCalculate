@@ -124,9 +124,17 @@ func Mult(constA Const, constB Const) Const {
 }
 
 // Pow will raise one constant to the power of another constant
+// for matrix consts, it is assumed that the value it will be raised to is an integer
 func Pow(constA Const, constB Const) Const {
 	if constA.Type() == Value && constB.Type() == Value {
 		return MakeConst(gcvops.Pow(constA.Value(), constB.Value()))
+	}
+	if constA.Type() == Matrix && constB.Type() == Value {
+		matrix, err := mops.Pow(constA.Matrix(), int(constB.Value().Real()))
+		if err != nil {
+			panic(err)
+		}
+		return MakeConst(matrix)
 	}
 	panic("One or More Types are not supported")
 }
@@ -137,6 +145,20 @@ func Sqrt(constant Const) Const {
 		return MakeConst(gcvops.Sqrt(constant.Value()))
 	}
 	panic("Const Type is not supported for Sqrt")
+}
+
+// Conj will find the conjuage of a Const
+func Conj(constant Const) Const {
+	if constant.Type() == Value {
+		return MakeConst(gcvops.Conj(constant.Value()))
+	}
+	if constant.Type() == Vector {
+		return MakeConst(v.MakeConjVector(constant.Vector()))
+	}
+	if constant.Type() == Matrix {
+		return MakeConst(m.MakeConjMatrix(constant.Matrix()))
+	}
+	panic("Const Type is not supported for Conj")
 }
 
 // Sin will find the sine of a Const
