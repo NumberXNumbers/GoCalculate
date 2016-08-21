@@ -135,3 +135,59 @@ func Sub(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) {
 	}
 	return matrixAB, nil
 }
+
+func squareAndMultiplyHelper(matrixA, matrixB m.Matrix, n int) (m.Matrix, error) {
+	if n < 0 {
+		newMatrix, err := matrixB.Copy().Inv()
+		if err != nil {
+			return nil, err
+		}
+		return squareAndMultiplyHelper(matrixA, newMatrix, -n)
+	} else if n == 0 {
+		return matrixA, nil
+	} else if n == 1 {
+		return MultSimple(matrixA, matrixB)
+	} else if n%2 == 0 {
+		newMatrix, err := MultSimple(matrixB, matrixB)
+		if err != nil {
+			return nil, err
+		}
+		return squareAndMultiplyHelper(matrixA, newMatrix, n/2)
+	}
+
+	newMatrixA, errA := MultSimple(matrixB, matrixA)
+	if errA != nil {
+		return nil, errA
+	}
+	newMatrixB, errB := MultSimple(matrixB, matrixB)
+	if errB != nil {
+		return nil, errB
+	}
+	return squareAndMultiplyHelper(newMatrixA, newMatrixB, (n-1)/2)
+
+}
+
+// squareAndMultiply will solve the power of a matrix by squaring and multiplying
+func squareAndMultply(matrix m.Matrix, n int) (m.Matrix, error) {
+	degree, _ := matrix.Dim()
+	identityMatrix := m.NewIdentityMatrix(degree)
+	return squareAndMultiplyHelper(identityMatrix, matrix, n)
+}
+
+// Pow is an operation that will raise a square Matrix to int n
+func Pow(matrix m.Matrix, n int) (m.Matrix, error) {
+	if !matrix.IsSquare() {
+		return nil, errors.New("Matrix is not square")
+	}
+
+	if matrix.IsIdentity() {
+		return matrix, nil
+	}
+
+	return squareAndMultply(matrix, n)
+}
+
+//Exp will give the matrix exponential of matrix
+func Exp(matrix m.Matrix) m.Matrix {
+	return matrix
+}

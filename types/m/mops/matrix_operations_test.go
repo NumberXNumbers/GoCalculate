@@ -290,3 +290,22 @@ func TestSub(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestPow(t *testing.T) {
+	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(1))
+	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
+	testMatrixA := m.MakeMatrix(testVectorAa, testVectorAb)
+
+	resultMatrixA, errA := Pow(testMatrixA, 20)
+
+	if errA != nil {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual(resultMatrixA.Get(0, 0), gcv.MakeValue(1743392201)) ||
+		!reflect.DeepEqual(resultMatrixA.Get(0, 1), gcv.MakeValue(1743392200)) ||
+		!reflect.DeepEqual(resultMatrixA.Get(1, 0), gcv.MakeValue(1743392200)) ||
+		!reflect.DeepEqual(resultMatrixA.Get(1, 1), gcv.MakeValue(1743392201)) {
+		t.Error("Failure: Test2")
+	}
+}

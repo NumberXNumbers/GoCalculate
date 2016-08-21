@@ -41,11 +41,14 @@ type Vector interface {
 	// Returns the len of the values
 	Len() int
 
-	// Conjugate Transpose of vector. i.e changes a row into a column vector and vice versa
-	ConjTrans()
-
 	// Transpose of vector. i.e changes a row into a column vector and vice versa
 	Trans()
+
+	// Conjugate of a vector
+	Conj()
+
+	// Conjugate Transpose of vector. i.e changes a row into a column vector and vice versa
+	ConjTrans()
 
 	// Append a value to vector
 	Append(val gcv.Value)
@@ -98,8 +101,8 @@ func (v *vector) Trans() {
 	}
 }
 
-// implementation of ConjTrans method
-func (v *vector) ConjTrans() {
+// implementation of Conj method
+func (v *vector) Conj() {
 	if v.Type() == gcv.Complex {
 		for i := 0; i < v.Len(); i++ {
 			value := v.Get(i)
@@ -107,12 +110,12 @@ func (v *vector) ConjTrans() {
 			v.Set(i, value)
 		}
 	}
+}
 
-	if v.Space() == ColSpace {
-		v.space = RowSpace
-	} else {
-		v.space = ColSpace
-	}
+// implementation of ConjTrans method
+func (v *vector) ConjTrans() {
+	v.Conj()
+	v.Trans()
 }
 
 // implementation of Norm method
@@ -160,16 +163,23 @@ func MakeVector(space Space, elements ...interface{}) Vector {
 	return vector
 }
 
-// MakeTransVector returns a new conjugate vector of vector
+// MakeTransVector returns a new transpose vector of vector
 func MakeTransVector(v Vector) Vector {
 	transVector := v.Copy()
 	transVector.Trans()
 	return transVector
 }
 
+// MakeConjVector returns a new conjugate vector of vector
+func MakeConjVector(v Vector) Vector {
+	conjVector := v.Copy()
+	conjVector.Conj()
+	return conjVector
+}
+
 // MakeConjTransVector returns a new conjugate transpose vector of vector
 func MakeConjTransVector(v Vector) Vector {
-	conjVector := v.Copy()
-	conjVector.ConjTrans()
-	return conjVector
+	conjTransVector := v.Copy()
+	conjTransVector.ConjTrans()
+	return conjTransVector
 }
