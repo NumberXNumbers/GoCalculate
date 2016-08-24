@@ -1,0 +1,10 @@
+comment:
+  layout: header, changes, diff, sunburst
+coverage:
+  status:
+    patch:
+      default:
+        target: '85.0'
+    project:
+      default:
+target: auto
