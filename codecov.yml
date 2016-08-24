@@ -12,4 +12,4 @@ coverage:
         target: '85.0'
     project:
       default:
-target: auto
+        target: auto
