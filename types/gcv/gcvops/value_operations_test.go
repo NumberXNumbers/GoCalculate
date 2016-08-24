@@ -1,6 +1,7 @@
 package gcvops
 
 import (
+	"fmt"
 	"math"
 	"reflect"
 	"testing"
@@ -369,6 +370,20 @@ func TestMod(t *testing.T) {
 	}
 }
 
+func TestMustMod(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustMod(testValueC, testValueD)
+
+	if result != nil {
+		t.Error("Expected Panic")
+	}
+}
+
 func TestMax(t *testing.T) {
 	resultA, errA := Max(testValueB, testValueA)
 	solution = gcv.MakeValue(2)
@@ -382,6 +397,20 @@ func TestMax(t *testing.T) {
 	_, errB := Max(testValueC, testValueD)
 	if errB == nil {
 		t.Error("Expected An Error")
+	}
+}
+
+func TestMustMax(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustMax(testValueC, testValueD)
+
+	if result != nil {
+		t.Error("Expected Panic")
 	}
 }
 
@@ -401,6 +430,20 @@ func TestMin(t *testing.T) {
 	}
 }
 
+func TestMustMin(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustMin(testValueC, testValueD)
+
+	if result != nil {
+		t.Error("Expected Panic")
+	}
+}
+
 func TestCeil(t *testing.T) {
 	resultA, errA := Ceil(testValueB)
 	solution = gcv.MakeValue(2)
@@ -414,6 +457,20 @@ func TestCeil(t *testing.T) {
 	_, errB := Ceil(testValueC)
 	if errB == nil {
 		t.Error("Expected An Error")
+	}
+}
+
+func TestMustCeil(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustCeil(testValueC)
+
+	if result != nil {
+		t.Error("Expected Panic")
 	}
 }
 
@@ -433,6 +490,20 @@ func TestFloor(t *testing.T) {
 	}
 }
 
+func TestMustFloor(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustFloor(testValueC)
+
+	if result != nil {
+		t.Error("Expected Panic")
+	}
+}
+
 func TestErf(t *testing.T) {
 	resultA, errA := Erf(testValueB)
 	solution = gcv.MakeValue(0.9953222650189527)
@@ -446,5 +517,19 @@ func TestErf(t *testing.T) {
 	_, errB := Erf(testValueC)
 	if errB == nil {
 		t.Error("Expected An Error")
+	}
+}
+
+func TestMustErf(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustErf(testValueC)
+
+	if result != nil {
+		t.Error("Expected Panic")
 	}
 }

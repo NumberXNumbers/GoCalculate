@@ -17,7 +17,7 @@ func Euler1D(a float64, b float64, N int, initValue float64, f *gcf.Function) gc
 	omega := initValue
 
 	for i := 0; i < N; i++ {
-		omega += h * f.Eval(x, omega).Value().Real()
+		omega += h * f.MustEval(x, omega).Value().Real()
 		x += h
 	}
 
@@ -30,7 +30,7 @@ func TrapezoidRule(a float64, b float64, f *gcf.Function) gcv.Value {
 	h := (b - a)
 	x := a
 
-	omega = f.Eval(x+h).Value().Real() + f.Eval(x).Value().Real()
+	omega = f.MustEval(x+h).Value().Real() + f.MustEval(x).Value().Real()
 
 	return gcv.MakeValue(h / 2 * omega)
 }
@@ -41,7 +41,7 @@ func SimpsonRule(a float64, b float64, f *gcf.Function) gcv.Value {
 	h := (b - a) / 2
 	x := a
 
-	omega = f.Eval(x).Value().Real() + 4*f.Eval(x+h).Value().Real() + f.Eval(x+2*h).Value().Real()
+	omega = f.MustEval(x).Value().Real() + 4*f.MustEval(x+h).Value().Real() + f.MustEval(x+2*h).Value().Real()
 
 	return gcv.MakeValue(h / 3 * omega)
 }
@@ -52,7 +52,7 @@ func Simpson38Rule(a float64, b float64, f *gcf.Function) gcv.Value {
 	h := (b - a) / 3
 	x := a
 
-	omega = f.Eval(x).Value().Real() + 3*f.Eval(x+h).Value().Real() + 3*f.Eval(x+2*h).Value().Real() + f.Eval(x+3*h).Value().Real()
+	omega = f.MustEval(x).Value().Real() + 3*f.MustEval(x+h).Value().Real() + 3*f.MustEval(x+2*h).Value().Real() + f.MustEval(x+3*h).Value().Real()
 
 	return gcv.MakeValue(3 * h / 8 * omega)
 }
@@ -63,11 +63,11 @@ func BooleRule(a float64, b float64, f *gcf.Function) gcv.Value {
 	h := (b - a) / 4
 	x := a
 
-	omega = 7*f.Eval(x).Value().Real() +
-		32*f.Eval(x+h).Value().Real() +
-		12*f.Eval(x+2*h).Value().Real() +
-		32*f.Eval(x+3*h).Value().Real() +
-		7*f.Eval(x+4*h).Value().Real()
+	omega = 7*f.MustEval(x).Value().Real() +
+		32*f.MustEval(x+h).Value().Real() +
+		12*f.MustEval(x+2*h).Value().Real() +
+		32*f.MustEval(x+3*h).Value().Real() +
+		7*f.MustEval(x+4*h).Value().Real()
 
 	return gcv.MakeValue(2 * h / 45 * omega)
 }
@@ -87,8 +87,8 @@ func RungeKutta2(a float64, b float64, N int, initialCondition float64, f *gcf.F
 	var kappa2 float64
 
 	for i := 0; i < N; i++ {
-		kappa = stepSize * f.Eval(theta, omega).Value().Real()
-		kappa2 = stepSize * f.Eval(theta+stepSize/2.0, omega+kappa/2.0).Value().Real()
+		kappa = stepSize * f.MustEval(theta, omega).Value().Real()
+		kappa2 = stepSize * f.MustEval(theta+stepSize/2.0, omega+kappa/2.0).Value().Real()
 
 		omega += kappa2
 		theta += stepSize
@@ -115,9 +115,9 @@ func ModifiedEuler(a float64, b float64, N int, initialCondition float64, f *gcf
 	var kappa2 float64
 
 	for i := 0; i < N; i++ {
-		kappa = stepSize * f.Eval(theta, omega).Value().Real()
+		kappa = stepSize * f.MustEval(theta, omega).Value().Real()
 		theta += stepSize
-		kappa2 = stepSize * f.Eval(theta, omega+kappa).Value().Real()
+		kappa2 = stepSize * f.MustEval(theta, omega+kappa).Value().Real()
 
 		omega += (kappa + kappa2) / 2.0
 
@@ -144,9 +144,9 @@ func Heun(a float64, b float64, N int, initialCondition float64, f *gcf.Function
 	var kappa3 float64
 
 	for i := 0; i < N; i++ {
-		kappa = stepSize * f.Eval(theta, omega).Value().Real()
-		kappa2 = stepSize * f.Eval(theta+stepSize/3.0, omega+kappa/3.0).Value().Real()
-		kappa3 = stepSize * f.Eval(theta+2.0*stepSize/3.0, omega+2.0*kappa2/3.0).Value().Real()
+		kappa = stepSize * f.MustEval(theta, omega).Value().Real()
+		kappa2 = stepSize * f.MustEval(theta+stepSize/3.0, omega+kappa/3.0).Value().Real()
+		kappa3 = stepSize * f.MustEval(theta+2.0*stepSize/3.0, omega+2.0*kappa2/3.0).Value().Real()
 
 		omega += (kappa + 3.0*kappa3) / 4.0
 		theta += stepSize
@@ -175,10 +175,10 @@ func RungeKutta4(a float64, b float64, N int, initialCondition float64, f *gcf.F
 	var kappa4 float64
 
 	for i := 0; i < N; i++ {
-		kappa = stepSize * f.Eval(theta, omega).Value().Real()
-		kappa2 = stepSize * f.Eval(theta+stepSize/2.0, omega+kappa/2.0).Value().Real()
-		kappa3 = stepSize * f.Eval(theta+stepSize/2.0, omega+kappa2/2.0).Value().Real()
-		kappa4 = stepSize * f.Eval(theta+stepSize, omega+kappa3).Value().Real()
+		kappa = stepSize * f.MustEval(theta, omega).Value().Real()
+		kappa2 = stepSize * f.MustEval(theta+stepSize/2.0, omega+kappa/2.0).Value().Real()
+		kappa3 = stepSize * f.MustEval(theta+stepSize/2.0, omega+kappa2/2.0).Value().Real()
+		kappa4 = stepSize * f.MustEval(theta+stepSize, omega+kappa3).Value().Real()
 
 		omega += (kappa + 2.0*kappa2 + 2.0*kappa3 + kappa4) / 6.0
 		theta += stepSize
@@ -212,14 +212,14 @@ func RungeKuttaFehlbery(a float64, b float64, initialCondition float64,
 	var delta float64
 
 	for !done {
-		kappa = stepSize * f.Eval(theta, omega).Value().Real()
-		kappa2 = stepSize * f.Eval(theta+stepSize/4.0, omega+kappa/4.0).Value().Real()
-		kappa3 = stepSize * f.Eval(theta+3.0*stepSize/8.0, omega+3.0*kappa/32.0+9.0*kappa2/32.0).Value().Real()
-		kappa4 = stepSize * f.Eval(theta+12.0*stepSize/13.0, omega+1932.0*kappa/2197.0-
+		kappa = stepSize * f.MustEval(theta, omega).Value().Real()
+		kappa2 = stepSize * f.MustEval(theta+stepSize/4.0, omega+kappa/4.0).Value().Real()
+		kappa3 = stepSize * f.MustEval(theta+3.0*stepSize/8.0, omega+3.0*kappa/32.0+9.0*kappa2/32.0).Value().Real()
+		kappa4 = stepSize * f.MustEval(theta+12.0*stepSize/13.0, omega+1932.0*kappa/2197.0-
 			7200.0*kappa2/2197.0+7296.0*kappa3/2197.0).Value().Real()
-		kappa5 = stepSize * f.Eval(theta+stepSize, omega+439.0*kappa/216.0-8.0*kappa2+
+		kappa5 = stepSize * f.MustEval(theta+stepSize, omega+439.0*kappa/216.0-8.0*kappa2+
 			3680.0*kappa3/513.0-845.0*kappa4/4104.0).Value().Real()
-		kappa6 = stepSize * f.Eval(theta+stepSize/2.0, omega-8.0*kappa/27.0+2.0*kappa2-
+		kappa6 = stepSize * f.MustEval(theta+stepSize/2.0, omega-8.0*kappa/27.0+2.0*kappa2-
 			3544.0*kappa3/2565.0+1859.0*kappa4/4104.0-11.0*kappa5/40.0).Value().Real()
 
 		remainder = math.Abs(kappa/360.0-128.0*kappa3/4275.0-2197.0*kappa4/75240.0+kappa5/50.0+2.0*kappa6/55.0) / stepSize
@@ -280,8 +280,8 @@ func AdamsBashforth2(a float64, b float64, N int, initialCondition1 float64,
 	var kappa2 float64
 
 	for i := 1; i < N; i++ {
-		kappa = 3.0 * f.Eval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()
-		kappa2 = f.Eval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()
+		kappa = 3.0 * f.MustEval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()
+		kappa2 = f.MustEval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()
 
 		omega += stepSize * (kappa - kappa2) / 2.0
 		theta = stepSize + solutionSet.Get(i, 0).Real()
@@ -320,9 +320,9 @@ func AdamsBashforth3(a float64, b float64, N int, initialCondition1 float64,
 	var kappa3 float64
 
 	for i := 2; i < N; i++ {
-		kappa = 23.0 * f.Eval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()
-		kappa2 = 16.0 * f.Eval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()
-		kappa3 = 5.0 * f.Eval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real()
+		kappa = 23.0 * f.MustEval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()
+		kappa2 = 16.0 * f.MustEval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()
+		kappa3 = 5.0 * f.MustEval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real()
 
 		omega += stepSize * (kappa - kappa2 + kappa3) / 12.0
 		theta = stepSize + solutionSet.Get(i, 0).Real()
@@ -365,10 +365,10 @@ func AdamsBashforth4(a float64, b float64, N int, initialCondition1 float64,
 	var kappa4 float64
 
 	for i := 3; i < N; i++ {
-		kappa = 55.0 * f.Eval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()
-		kappa2 = 59.0 * f.Eval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()
-		kappa3 = 37.0 * f.Eval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real()
-		kappa4 = 9.0 * f.Eval(solutionSet.Get(i-3, 0), solutionSet.Get(i-3, 1)).Value().Real()
+		kappa = 55.0 * f.MustEval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()
+		kappa2 = 59.0 * f.MustEval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()
+		kappa3 = 37.0 * f.MustEval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real()
+		kappa4 = 9.0 * f.MustEval(solutionSet.Get(i-3, 0), solutionSet.Get(i-3, 1)).Value().Real()
 
 		omega += stepSize * (kappa - kappa2 + kappa3 - kappa4) / 24.0
 		theta = stepSize + solutionSet.Get(i, 0).Real()
@@ -414,11 +414,11 @@ func AdamsBashforth5(a float64, b float64, N int, initialCondition1 float64,
 	var kappa5 float64
 
 	for i := 4; i < N; i++ {
-		kappa = 1901.0 * f.Eval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()
-		kappa2 = 2774.0 * f.Eval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()
-		kappa3 = 2616.0 * f.Eval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real()
-		kappa4 = 1274.0 * f.Eval(solutionSet.Get(i-3, 0), solutionSet.Get(i-3, 1)).Value().Real()
-		kappa5 = 251.0 * f.Eval(solutionSet.Get(i-4, 0), solutionSet.Get(i-4, 1)).Value().Real()
+		kappa = 1901.0 * f.MustEval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()
+		kappa2 = 2774.0 * f.MustEval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()
+		kappa3 = 2616.0 * f.MustEval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real()
+		kappa4 = 1274.0 * f.MustEval(solutionSet.Get(i-3, 0), solutionSet.Get(i-3, 1)).Value().Real()
+		kappa5 = 251.0 * f.MustEval(solutionSet.Get(i-4, 0), solutionSet.Get(i-4, 1)).Value().Real()
 
 		omega += stepSize * (kappa - kappa2 + kappa3 - kappa4 + kappa5) / 720.0
 		theta = stepSize + solutionSet.Get(i, 0).Real()
@@ -446,9 +446,9 @@ func AdamsBashforthMoulton3(a float64, b float64, N int, initialCondition float6
 	var kappa3 float64
 
 	for i := 0; i < 2; i++ {
-		kappa = stepSize * f.Eval(theta, omega).Value().Real()
-		kappa2 = stepSize * f.Eval(theta+stepSize/3.0, omega+kappa/3.0).Value().Real()
-		kappa3 = stepSize * f.Eval(theta+2.0*stepSize/3.0, omega+2.0*kappa2/3.0).Value().Real()
+		kappa = stepSize * f.MustEval(theta, omega).Value().Real()
+		kappa2 = stepSize * f.MustEval(theta+stepSize/3.0, omega+kappa/3.0).Value().Real()
+		kappa3 = stepSize * f.MustEval(theta+2.0*stepSize/3.0, omega+2.0*kappa2/3.0).Value().Real()
 
 		omega += (kappa + 3.0*kappa3) / 4.0
 		theta += stepSize
@@ -459,12 +459,12 @@ func AdamsBashforthMoulton3(a float64, b float64, N int, initialCondition float6
 
 	for i := 2; i < N; i++ {
 		theta = stepSize + solutionSet.Get(i, 0).Real()
-		omega = solutionSet.Get(i, 1).Real() + stepSize*(23.0*f.Eval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()-
-			16.0*f.Eval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()+
-			5.0*f.Eval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real())/12.0
-		omega = solutionSet.Get(i, 1).Real() + stepSize*(5.0*f.Eval(theta, omega).Value().Real()+
-			8.0*f.Eval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()-
-			f.Eval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real())/12.0
+		omega = solutionSet.Get(i, 1).Real() + stepSize*(23.0*f.MustEval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()-
+			16.0*f.MustEval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()+
+			5.0*f.MustEval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real())/12.0
+		omega = solutionSet.Get(i, 1).Real() + stepSize*(5.0*f.MustEval(theta, omega).Value().Real()+
+			8.0*f.MustEval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()-
+			f.MustEval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real())/12.0
 
 		solutionSet.Set(i+1, 0, theta)
 		solutionSet.Set(i+1, 1, omega)
@@ -490,10 +490,10 @@ func AdamsBashforthMoulton4(a float64, b float64, N int, initialCondition float6
 	var kappa4 float64
 
 	for i := 0; i < N; i++ {
-		kappa = stepSize * f.Eval(theta, omega).Value().Real()
-		kappa2 = stepSize * f.Eval(theta+stepSize/2.0, omega+kappa/2.0).Value().Real()
-		kappa3 = stepSize * f.Eval(theta+stepSize/2.0, omega+kappa2/2.0).Value().Real()
-		kappa4 = stepSize * f.Eval(theta+stepSize, omega+kappa3).Value().Real()
+		kappa = stepSize * f.MustEval(theta, omega).Value().Real()
+		kappa2 = stepSize * f.MustEval(theta+stepSize/2.0, omega+kappa/2.0).Value().Real()
+		kappa3 = stepSize * f.MustEval(theta+stepSize/2.0, omega+kappa2/2.0).Value().Real()
+		kappa4 = stepSize * f.MustEval(theta+stepSize, omega+kappa3).Value().Real()
 
 		omega += (kappa + 2.0*kappa2 + 2.0*kappa3 + kappa4) / 6.0
 		theta += stepSize
@@ -504,14 +504,14 @@ func AdamsBashforthMoulton4(a float64, b float64, N int, initialCondition float6
 
 	for i := 3; i < N; i++ {
 		theta = stepSize + solutionSet.Get(i, 0).Real()
-		omega = solutionSet.Get(i, 1).Real() + stepSize*(55.0*f.Eval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()-
-			59.0*f.Eval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()+
-			37.0*f.Eval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real()-
-			9.0*f.Eval(solutionSet.Get(i-3, 0), solutionSet.Get(i-3, 1)).Value().Real())/24.0
-		omega = solutionSet.Get(i, 1).Real() + stepSize*(9.0*f.Eval(theta, omega).Value().Real()+
-			19.0*f.Eval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()-
-			5.0*f.Eval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()+
-			f.Eval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real())/24.0
+		omega = solutionSet.Get(i, 1).Real() + stepSize*(55.0*f.MustEval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()-
+			59.0*f.MustEval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()+
+			37.0*f.MustEval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real()-
+			9.0*f.MustEval(solutionSet.Get(i-3, 0), solutionSet.Get(i-3, 1)).Value().Real())/24.0
+		omega = solutionSet.Get(i, 1).Real() + stepSize*(9.0*f.MustEval(theta, omega).Value().Real()+
+			19.0*f.MustEval(solutionSet.Get(i, 0), solutionSet.Get(i, 1)).Value().Real()-
+			5.0*f.MustEval(solutionSet.Get(i-1, 0), solutionSet.Get(i-1, 1)).Value().Real()+
+			f.MustEval(solutionSet.Get(i-2, 0), solutionSet.Get(i-2, 1)).Value().Real())/24.0
 
 		solutionSet.Set(i+1, 0, theta)
 		solutionSet.Set(i+1, 1, omega)
@@ -544,10 +544,10 @@ func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
 			t = set.Get(set.Len() - 1).Get(0).Real()
 			o = set.Get(set.Len() - 1).Get(1).Real()
 
-			kappa = h * f.Eval(t, o).Value().Real()
-			kappa2 = h * f.Eval(t+h/2.0, o+kappa/2.0).Value().Real()
-			kappa3 = h * f.Eval(t+h/2.0, o+kappa2/2.0).Value().Real()
-			kappa4 = h * f.Eval(t+h, o+kappa3).Value().Real()
+			kappa = h * f.MustEval(t, o).Value().Real()
+			kappa2 = h * f.MustEval(t+h/2.0, o+kappa/2.0).Value().Real()
+			kappa3 = h * f.MustEval(t+h/2.0, o+kappa2/2.0).Value().Real()
+			kappa4 = h * f.MustEval(t+h, o+kappa3).Value().Real()
 
 			o += (kappa + 2.0*kappa2 + 2.0*kappa3 + kappa4) / 6.0
 			t += h
@@ -573,14 +573,14 @@ func AdamsBashforthMoulton(a float64, b float64, initialCondition float64,
 		theta2, omega2 := set.Get(set.Len()-2).Get(0).Real(), set.Get(set.Len()-2).Get(1).Real()
 		theta3, omega3 := set.Get(set.Len()-3).Get(0).Real(), set.Get(set.Len()-3).Get(1).Real()
 		theta4, omega4 := set.Get(set.Len()-4).Get(0).Real(), set.Get(set.Len()-4).Get(1).Real()
-		predictor = omega1 + stepSize*(55.0*f.Eval(theta1, omega1).Value().Real()-
-			59.0*f.Eval(theta2, omega2).Value().Real()+
-			37.0*f.Eval(theta3, omega3).Value().Real()-
-			9.0*f.Eval(theta4, omega4).Value().Real())/24.0
-		corrector = omega1 + stepSize*(9.0*f.Eval(theta, predictor).Value().Real()+
-			19.0*f.Eval(theta1, omega1).Value().Real()-
-			5.0*f.Eval(theta2, omega2).Value().Real()+
-			f.Eval(theta3, omega3).Value().Real())/24.0
+		predictor = omega1 + stepSize*(55.0*f.MustEval(theta1, omega1).Value().Real()-
+			59.0*f.MustEval(theta2, omega2).Value().Real()+
+			37.0*f.MustEval(theta3, omega3).Value().Real()-
+			9.0*f.MustEval(theta4, omega4).Value().Real())/24.0
+		corrector = omega1 + stepSize*(9.0*f.MustEval(theta, predictor).Value().Real()+
+			19.0*f.MustEval(theta1, omega1).Value().Real()-
+			5.0*f.MustEval(theta2, omega2).Value().Real()+
+			f.MustEval(theta3, omega3).Value().Real())/24.0
 
 		sigma = 19.0 * math.Abs(corrector-predictor) / (270.0 * stepSize)
 		if sigma <= TOL {

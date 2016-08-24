@@ -30,7 +30,7 @@ func InfixCalculator(args []string) gcf.Const {
 		}
 	}
 
-	calculation := gcf.Calculate(argsForCalculation...)
+	calculation := gcf.MustCalculate(argsForCalculation...)
 
 	return calculation
 }

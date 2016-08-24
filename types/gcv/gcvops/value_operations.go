@@ -203,6 +203,15 @@ func Mod(valueA gcv.Value, valueB gcv.Value) (gcv.Value, error) {
 	return gcv.MakeValue(math.Mod(valueA.Real(), valueB.Real())), nil
 }
 
+// MustMod is the same as Mod but will panic if either value is complex
+func MustMod(valueA gcv.Value, valueB gcv.Value) gcv.Value {
+	value, err := Mod(valueA, valueB)
+	if err != nil {
+		panic(err)
+	}
+	return value
+}
+
 // Floor returns the floor (rounded down) of a gcv Value.
 // if either Value is of type Complex an error is returned
 func Floor(value gcv.Value) (gcv.Value, error) {
@@ -210,6 +219,15 @@ func Floor(value gcv.Value) (gcv.Value, error) {
 		return nil, errors.New("Floor is not supported for Complex numbers")
 	}
 	return gcv.MakeValue(math.Floor(value.Real())), nil
+}
+
+// MustFloor is the same as Floor but will panic if value is complex
+func MustFloor(value gcv.Value) gcv.Value {
+	val, err := Floor(value)
+	if err != nil {
+		panic(err)
+	}
+	return val
 }
 
 // Ceil returns the ceil (rounded up) of a gcv Value
@@ -221,6 +239,15 @@ func Ceil(value gcv.Value) (gcv.Value, error) {
 	return gcv.MakeValue(math.Ceil(value.Real())), nil
 }
 
+// MustCeil is the same as Ceil but will panic if value is complex
+func MustCeil(value gcv.Value) gcv.Value {
+	val, err := Ceil(value)
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
+
 // Max returns the max of two gcv Value
 // if either Value is of type Complex an error is returned
 func Max(valueA gcv.Value, valueB gcv.Value) (gcv.Value, error) {
@@ -228,6 +255,15 @@ func Max(valueA gcv.Value, valueB gcv.Value) (gcv.Value, error) {
 		return nil, errors.New("Max is not supported for Complex numbers")
 	}
 	return gcv.MakeValue(math.Max(valueA.Real(), valueB.Real())), nil
+}
+
+// MustMax is the same as Max but will panic if value is complex
+func MustMax(valueA gcv.Value, valueB gcv.Value) gcv.Value {
+	val, err := Max(valueA, valueB)
+	if err != nil {
+		panic(err)
+	}
+	return val
 }
 
 // Min returns the minimum of two gcv Value.
@@ -239,6 +275,15 @@ func Min(valueA gcv.Value, valueB gcv.Value) (gcv.Value, error) {
 	return gcv.MakeValue(math.Min(valueA.Real(), valueB.Real())), nil
 }
 
+// MustMin is the same as Min but will panic if value is complex
+func MustMin(valueA gcv.Value, valueB gcv.Value) gcv.Value {
+	val, err := Min(valueA, valueB)
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
+
 // Erf returns the error function of a gcv Value.
 // if either Value is of type Complex an error is returned
 func Erf(value gcv.Value) (gcv.Value, error) {
@@ -246,4 +291,13 @@ func Erf(value gcv.Value) (gcv.Value, error) {
 		return nil, errors.New("Erf is not supported for Complex numbers")
 	}
 	return gcv.MakeValue(math.Erf(value.Real())), nil
+}
+
+// MustErf is the same as Erf but will panic if value is complex
+func MustErf(value gcv.Value) gcv.Value {
+	val, err := Erf(value)
+	if err != nil {
+		panic(err)
+	}
+	return val
 }
