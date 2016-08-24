@@ -1,6 +1,7 @@
 package mops
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -66,6 +67,23 @@ func TestVMMult(t *testing.T) {
 	}
 }
 
+func TestMustVMMult(t *testing.T) {
+	testVectorA := v.MakeVector(v.ColSpace, gcv.MakeValue(1), gcv.MakeValue(1))
+	testMatrix := m.MakeMatrix(testVectorA, testVectorA)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustVMMult(testVectorA, testMatrix)
+
+	if result != nil {
+		t.Error("Expected Panic")
+	}
+}
+
 func TestMVMult(t *testing.T) {
 	testVectorA := v.MakeVector(v.ColSpace, gcv.MakeValue(1), gcv.MakeValue(2))
 	testMatrix := m.MakeMatrix(testVectorA, testVectorA)
@@ -94,6 +112,23 @@ func TestMVMult(t *testing.T) {
 
 	if errC == nil {
 		t.Fail()
+	}
+}
+
+func TestMustMVMult(t *testing.T) {
+	testVectorA := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(1))
+	testMatrix := m.MakeMatrix(testVectorA, testVectorA)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustMVMult(testVectorA, testMatrix)
+
+	if result != nil {
+		t.Error("Expected Panic")
 	}
 }
 
@@ -199,6 +234,24 @@ func TestMultSimple(t *testing.T) {
 	}
 }
 
+func TestMustMultSimple(t *testing.T) {
+	testVectorCa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0), gcv.MakeValue(1))
+	testVectorCb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
+	testMatrixC := m.MakeMatrix(testVectorCa, testVectorCb)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustMultSimple(testMatrixC, testMatrixC)
+
+	if result != nil {
+		t.Error("Expected Panic")
+	}
+}
+
 func TestAdd(t *testing.T) {
 	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0))
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
@@ -242,6 +295,28 @@ func TestAdd(t *testing.T) {
 
 	if errC == nil {
 		t.Fail()
+	}
+}
+
+func TestMustAdd(t *testing.T) {
+	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0))
+	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
+	testMatrixA := m.MakeMatrix(testVectorAa, testVectorAb)
+
+	testVectorCa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0), gcv.MakeValue(1))
+	testVectorCb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
+	testMatrixC := m.MakeMatrix(testVectorCa, testVectorCb)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustAdd(testMatrixA, testMatrixC)
+
+	if result != nil {
+		t.Error("Expected Panic")
 	}
 }
 
@@ -291,6 +366,28 @@ func TestSub(t *testing.T) {
 	}
 }
 
+func TestMustSub(t *testing.T) {
+	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0))
+	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
+	testMatrixA := m.MakeMatrix(testVectorAa, testVectorAb)
+
+	testVectorCa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0), gcv.MakeValue(1))
+	testVectorCb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
+	testMatrixC := m.MakeMatrix(testVectorCa, testVectorCb)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustSub(testMatrixA, testMatrixC)
+
+	if result != nil {
+		t.Error("Expected Panic")
+	}
+}
+
 func TestPow(t *testing.T) {
 	testVectorAa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(1))
 	testVectorAb := v.MakeVector(v.RowSpace, gcv.MakeValue(1), gcv.MakeValue(2))
@@ -307,5 +404,23 @@ func TestPow(t *testing.T) {
 		!reflect.DeepEqual(resultMatrixA.Get(1, 0), gcv.MakeValue(1743392200)) ||
 		!reflect.DeepEqual(resultMatrixA.Get(1, 1), gcv.MakeValue(1743392201)) {
 		t.Error("Failure: Test2")
+	}
+}
+
+func TestMustPow(t *testing.T) {
+	testVectorCa := v.MakeVector(v.RowSpace, gcv.MakeValue(2), gcv.MakeValue(0), gcv.MakeValue(1))
+	testVectorCb := v.MakeVector(v.RowSpace, gcv.MakeValue(0), gcv.MakeValue(2))
+	testMatrixC := m.MakeMatrix(testVectorCa, testVectorCb)
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf("Recovered from %v error\n", r)
+		}
+	}()
+
+	result := MustPow(testMatrixC, 3)
+
+	if result != nil {
+		t.Error("Expected Panic")
 	}
 }

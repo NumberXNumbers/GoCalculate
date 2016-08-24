@@ -53,6 +53,15 @@ func VMMult(vector v.Vector, matrix m.Matrix) (v.Vector, error) {
 	return newVector, nil
 }
 
+// MustVMMult is the same as VMMult, but will panic
+func MustVMMult(vector v.Vector, matrix m.Matrix) v.Vector {
+	newVector, err := VMMult(vector, matrix)
+	if err != nil {
+		panic(err)
+	}
+	return newVector
+}
+
 // MVMult will multiply a vector V and a matrix M together by M*V
 func MVMult(vector v.Vector, matrix m.Matrix) (v.Vector, error) {
 	if vector.Space() != v.ColSpace {
@@ -71,6 +80,15 @@ func MVMult(vector v.Vector, matrix m.Matrix) (v.Vector, error) {
 		newVector.Set(i, sum)
 	}
 	return newVector, nil
+}
+
+// MustMVMult is the same as MVMult, but will panic
+func MustMVMult(vector v.Vector, matrix m.Matrix) v.Vector {
+	newVector, err := MVMult(vector, matrix)
+	if err != nil {
+		panic(err)
+	}
+	return newVector
 }
 
 // MultSimple is an operation that will multiple two matrices of any size (m X k) and (k X n) together
@@ -104,6 +122,15 @@ func MultSimple(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) {
 	return matrixAB, nil
 }
 
+// MustMultSimple is the same as MultSimple, but will panic
+func MustMultSimple(matrixA m.Matrix, matrixB m.Matrix) m.Matrix {
+	matrixAB, err := MultSimple(matrixA, matrixB)
+	if err != nil {
+		panic(err)
+	}
+	return matrixAB
+}
+
 // Add is an operation that will add two matrices together
 func Add(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) {
 	if matrixA.GetNumCols() != matrixB.GetNumCols() || matrixA.GetNumRows() != matrixB.GetNumRows() {
@@ -118,6 +145,15 @@ func Add(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) {
 		}
 	}
 	return matrixAB, nil
+}
+
+// MustAdd is the same as Add, but will panic
+func MustAdd(matrixA m.Matrix, matrixB m.Matrix) m.Matrix {
+	matrixAB, err := Add(matrixA, matrixB)
+	if err != nil {
+		panic(err)
+	}
+	return matrixAB
 }
 
 // Sub is an operation that will subtract two matrices from one another
@@ -136,6 +172,15 @@ func Sub(matrixA m.Matrix, matrixB m.Matrix) (m.Matrix, error) {
 	return matrixAB, nil
 }
 
+// MustSub is the same as Sub, but will panic
+func MustSub(matrixA m.Matrix, matrixB m.Matrix) m.Matrix {
+	matrixAB, err := Sub(matrixA, matrixB)
+	if err != nil {
+		panic(err)
+	}
+	return matrixAB
+}
+
 func squareAndMultiplyHelper(matrixA, matrixB m.Matrix, n int) (m.Matrix, error) {
 	if n < 0 {
 		newMatrix, err := matrixB.Copy().Inv()
@@ -148,23 +193,13 @@ func squareAndMultiplyHelper(matrixA, matrixB m.Matrix, n int) (m.Matrix, error)
 	} else if n == 1 {
 		return MultSimple(matrixA, matrixB)
 	} else if n%2 == 0 {
-		newMatrix, err := MultSimple(matrixB, matrixB)
-		if err != nil {
-			return nil, err
-		}
+		newMatrix, _ := MultSimple(matrixB, matrixB)
 		return squareAndMultiplyHelper(matrixA, newMatrix, n/2)
 	}
 
-	newMatrixA, errA := MultSimple(matrixB, matrixA)
-	if errA != nil {
-		return nil, errA
-	}
-	newMatrixB, errB := MultSimple(matrixB, matrixB)
-	if errB != nil {
-		return nil, errB
-	}
+	newMatrixA, _ := MultSimple(matrixB, matrixA)
+	newMatrixB, _ := MultSimple(matrixB, matrixB)
 	return squareAndMultiplyHelper(newMatrixA, newMatrixB, (n-1)/2)
-
 }
 
 // squareAndMultiply will solve the power of a matrix by squaring and multiplying
@@ -185,6 +220,15 @@ func Pow(matrix m.Matrix, n int) (m.Matrix, error) {
 	}
 
 	return squareAndMultply(matrix, n)
+}
+
+// MustPow is the same as Pow, but wil panic
+func MustPow(matrix m.Matrix, n int) m.Matrix {
+	newMatrix, err := Pow(matrix, n)
+	if err != nil {
+		panic(err)
+	}
+	return newMatrix
 }
 
 //Exp will give the matrix exponential of matrix

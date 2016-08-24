@@ -1,3 +1,3 @@
-## Folder for housing variables and sub-folders related to variables
+## Folder for housing variables and sub-folders related to GoCalculate functions
 
-gcvar (GoCalculate Variable)
+gcf (GoCalculate Function)
