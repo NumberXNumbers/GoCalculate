@@ -1,8 +1,8 @@
 package calculators
 
 import (
-	"github.com/NumberXNumbers/GoCalculate/types/gcf"
 	"github.com/NumberXNumbers/GoCalculate/utils/parsers"
+	gcf "github.com/NumberXNumbers/types/gc/functions"
 )
 
 var (

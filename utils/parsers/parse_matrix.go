@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/NumberXNumbers/GoCalculate/types/gcv"
-	"github.com/NumberXNumbers/GoCalculate/types/m"
+	m "github.com/NumberXNumbers/types/gc/matrices"
+	gcv "github.com/NumberXNumbers/types/gc/values"
 )
 
 // Matrix takes a string and returns a matrix if string is

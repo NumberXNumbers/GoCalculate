@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/NumberXNumbers/GoCalculate/types/m"
-	"github.com/NumberXNumbers/GoCalculate/types/v"
+	m "github.com/NumberXNumbers/types/gc/matrices"
+	v "github.com/NumberXNumbers/types/gc/vectors"
 )
 
 func TestValue(t *testing.T) {

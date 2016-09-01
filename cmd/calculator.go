@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/NumberXNumbers/GoCalculate/calculators"
-	"github.com/NumberXNumbers/GoCalculate/types/gcv"
+	gcv "github.com/NumberXNumbers/types/gc/values"
 	"github.com/spf13/cobra"
 )
 
