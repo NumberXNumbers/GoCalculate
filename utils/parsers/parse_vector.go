@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/NumberXNumbers/GoCalculate/types/gcv"
-	"github.com/NumberXNumbers/GoCalculate/types/v"
+	gcv "github.com/NumberXNumbers/types/gc/values"
+	v "github.com/NumberXNumbers/types/gc/vectors"
 )
 
 var (

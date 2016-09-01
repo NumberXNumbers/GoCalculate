@@ -3,8 +3,8 @@ package calculators
 import (
 	"errors"
 
-	"github.com/NumberXNumbers/GoCalculate/types/gcv"
 	"github.com/NumberXNumbers/GoCalculate/utils/parsers"
+	gcv "github.com/NumberXNumbers/types/gc/values"
 )
 
 // PolishCalculator is a simple reverse polish calculator

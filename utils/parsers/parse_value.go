@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/NumberXNumbers/GoCalculate/types/gcv"
+	gcv "github.com/NumberXNumbers/types/gc/values"
 )
 
 var (

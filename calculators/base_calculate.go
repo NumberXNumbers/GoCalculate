@@ -3,8 +3,8 @@ package calculators
 import (
 	"errors"
 
-	"github.com/NumberXNumbers/GoCalculate/types/gcv"
-	"github.com/NumberXNumbers/GoCalculate/types/gcv/gcvops"
+	gcv "github.com/NumberXNumbers/types/gc/values"
+	gcvops "github.com/NumberXNumbers/types/gc/values/ops"
 )
 
 func pop(stack gcv.Values) (gcv.Value, gcv.Values) {
