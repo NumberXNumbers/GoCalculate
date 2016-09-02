@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/NumberXNumbers/GoCalculate.svg?branch=master)](https://travis-ci.org/NumberXNumbers/GoCalculate)
 [![codecov.io](https://codecov.io/github/NumberXNumbers/GoCalculate/coverage.svg?branch=master)](https://codecov.io/github/NumberXNumbers/GoCalculate?branch=master)
-[![Issue Stats](http://issuestats.com/github/NumberXNumbers/GoCalculate/badge/pr?style=flat)](http://issuestats.com/github/NumberXNumbers/GoCalculate)
 [![Go Report Card](https://goreportcard.com/badge/github.com/NumberXNumbers/GoCalculate)](https://goreportcard.com/report/github.com/NumberXNumbers/GoCalculate)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/NumberXNumbers/GoCalculate/master/LICENSE)
 
