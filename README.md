@@ -7,7 +7,7 @@
 
 ## Overview
 
-**_GoCalculate_** is a library built with Google's [Go](https://golang.org/) programming language containing many Numerical Methods, Functions and Algorithms useful in math and science.
+**_GoCalculate_** is a CLI tool built with the [Cobra](https://github.com/spf13/cobra) CLI framework, using the [NumberXNumbers/types](https://github.com/NumberXNumbers/types) and [NumberXNumbers/methods](https://github.com/NumberXNumbers/methods) libraries which contain many Custom Numeric Types, Numerical Methods, Functions and Algorithms useful in math and science written with Google's [Go](https://golang.org/) programming language.
 
 ## Contributing
 
