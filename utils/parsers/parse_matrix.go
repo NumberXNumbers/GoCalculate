@@ -80,7 +80,7 @@ func Matrix(s string) (matrix m.Matrix, err error) {
 			if err != nil {
 				return
 			}
-			matrix.Set(indexI, indexJ, value.Copy())
+			matrix.Set(indexI, indexJ, value)
 		}
 	}
 
