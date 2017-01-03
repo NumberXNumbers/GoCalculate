@@ -73,7 +73,7 @@ func Vector(s string) (vector v.Vector, err error) {
 		if err != nil {
 			return
 		}
-		vector.Set(index, value.Copy())
+		vector.Set(index, value)
 	}
 
 	if transposeVector {
